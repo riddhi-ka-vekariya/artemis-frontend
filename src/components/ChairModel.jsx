@@ -3,11 +3,14 @@ import { useGLTF, Float, Html } from '@react-three/drei'
 import { useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
 
-// Target height for the chair in Three.js units (roughly 1.5 = 1.5m, fits nicely in view)
+// Resolve GLB path relative to Vite base (works on GitHub Pages and locally)
+const GLB_PATH = `${import.meta.env.BASE_URL}chair.glb`
+
+// Target height for the chair in Three.js units (1.5 = ~1.5m, fits nicely in view)
 const TARGET_HEIGHT = 1.5
 
 export function ChairModel({ floatEnabled = false, accentColor = '#38bdf8', showAnnotations = false }) {
-  const { scene } = useGLTF('/chair.glb')
+  const { scene } = useGLTF(GLB_PATH)
   const modelRef = useRef()
   const [transform, setTransform] = useState({ scale: 1, groundY: 0 })
 
@@ -104,4 +107,4 @@ export function ChairModel({ floatEnabled = false, accentColor = '#38bdf8', show
   )
 }
 
-useGLTF.preload('/chair.glb')
+useGLTF.preload(GLB_PATH)
