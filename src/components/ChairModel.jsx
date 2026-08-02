@@ -1,4 +1,4 @@
-import React, { useRef, useMemo } from 'react'
+import React, { useRef, useMemo, useLayoutEffect } from 'react'
 import { useGLTF } from '@react-three/drei'
 import { useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
@@ -6,16 +6,14 @@ import * as THREE from 'three'
 const GLB1 = `${import.meta.env.BASE_URL}chair.glb`
 const GLB2 = `${import.meta.env.BASE_URL}chair2.glb`
 
-const TARGET_HEIGHT    = 1.5  // normalized height in Three.js units
-const SCROLL_ROTATIONS = 3    // total full rotations over the entire scroll range
-const FADE_SPEED       = 0.08
+const TARGET_HEIGHT     = 1.5
+const SCROLL_ROTATIONS  = 3
 
 /**
- * Clone the raw useGLTF scene so we fully own it.
- * Uses a screen-space dither dissolve shader so transparent=false and depthWrite=true
- * remain active — preventing complex 3D meshes from rendering inner/back faces through outer faces.
+ * Clone the raw useGLTF scene so we fully own it (no shared-cache mutations).
+ * Measures bounding box in clean model space, returns { scene, scale, groundY }.
  */
-function prepareScene(rawScene, correctionEuler = null) {
+function prepareScene(rawScene) {
   const scene = rawScene.clone(true)
 
   scene.traverse((child) => {
@@ -23,42 +21,16 @@ function prepareScene(rawScene, correctionEuler = null) {
       child.castShadow    = true
       child.receiveShadow = true
       if (child.material) {
-        const mat = child.material.clone()
-        mat.envMapIntensity = 1.2
-        mat.transparent     = false
-        mat.depthWrite      = true
-
-        mat.customProgramCacheKey = () => 'ditherFadeShader'
-        mat.onBeforeCompile = (shader) => {
-          shader.uniforms.uFadeOpacity = { value: 1.0 }
-          shader.fragmentShader = `
-            uniform float uFadeOpacity;
-          ` + shader.fragmentShader
-          shader.fragmentShader = shader.fragmentShader.replace(
-            '#include <clipping_planes_fragment>',
-            `
-            #include <clipping_planes_fragment>
-            if (uFadeOpacity < 0.999) {
-              float rng = fract(sin(dot(gl_FragCoord.xy, vec2(12.9898, 78.233))) * 43758.5453);
-              if (uFadeOpacity < rng) discard;
-            }
-            `
-          )
-          mat.userData.shader = shader
-        }
-
-        child.material = mat
+        child.material = child.material.clone()
+        child.material.envMapIntensity = 1.2
+        child.material.needsUpdate = true
       }
     }
   })
 
-  if (correctionEuler) {
-    scene.rotation.copy(correctionEuler)
-  } else {
-    scene.rotation.set(0, 0, 0)
-  }
   scene.position.set(0, 0, 0)
   scene.scale.set(1, 1, 1)
+  scene.rotation.set(0, 0, 0)
   scene.updateMatrixWorld(true)
 
   const box = new THREE.Box3().setFromObject(scene)
@@ -74,16 +46,64 @@ function prepareScene(rawScene, correctionEuler = null) {
   return { scene, scale, groundY }
 }
 
-function applyOpacity(group, value) {
-  if (!group) return
-  const clamped = THREE.MathUtils.clamp(value, 0, 1)
-  group.traverse((child) => {
-    if (child.isMesh && child.material) {
-      if (child.material.userData?.shader?.uniforms?.uFadeOpacity) {
-        child.material.userData.shader.uniforms.uFadeOpacity.value = clamped
+/**
+ * Sample the dominant color from a scene's largest-mesh texture.
+ * Draws the texture to a tiny offscreen canvas and averages non-extreme pixels.
+ * Returns a THREE.Color, or null if no texture is found.
+ */
+function sampleDominantColor(scene) {
+  // Find the mesh with the most vertices that has an albedo texture
+  let bestMesh = null
+  let bestCount = 0
+
+  scene.traverse((child) => {
+    if (child.isMesh && child.material?.map?.image) {
+      const count = child.geometry?.attributes?.position?.count ?? 0
+      if (count > bestCount) {
+        bestCount = count
+        bestMesh = child
       }
     }
   })
+
+  // Fall back to any mesh with a solid material color
+  if (!bestMesh) {
+    let fallbackColor = null
+    scene.traverse((child) => {
+      if (child.isMesh && child.material?.color && !fallbackColor) {
+        fallbackColor = child.material.color.clone()
+      }
+    })
+    return fallbackColor
+  }
+
+  try {
+    const img = bestMesh.material.map.image
+    const canvas = document.createElement('canvas')
+    canvas.width  = 16
+    canvas.height = 16
+    const ctx = canvas.getContext('2d')
+    ctx.drawImage(img, 0, 0, 16, 16)
+    const data = ctx.getImageData(0, 0, 16, 16).data
+
+    let r = 0, g = 0, b = 0, n = 0
+    for (let i = 0; i < data.length; i += 4) {
+      // Skip near-black and near-white pixels — they skew the average
+      const brightness = (data[i] + data[i + 1] + data[i + 2]) / 3
+      if (brightness > 25 && brightness < 235) {
+        r += data[i]
+        g += data[i + 1]
+        b += data[i + 2]
+        n++
+      }
+    }
+
+    if (n === 0) return null
+    return new THREE.Color(r / n / 255, g / n / 255, b / n / 255)
+  } catch {
+    // Canvas tainted (shouldn't happen on same origin) or image not ready
+    return null
+  }
 }
 
 export function ChairModel({ scrollProgress = 0 }) {
@@ -95,8 +115,33 @@ export function ChairModel({ scrollProgress = 0 }) {
 
   const ref1 = useRef()
   const ref2 = useRef()
-  const o1   = useRef(1)
-  const o2   = useRef(0)
+
+  // Sample chair 1's dominant color and apply it to all of chair 2's meshes
+  useLayoutEffect(() => {
+    const color = sampleDominantColor(c1.scene)
+    if (!color) return
+
+    // Also grab roughness + metalness from chair 1's primary material for a closer match
+    let roughness = 0.6
+    let metalness = 0.1
+    c1.scene.traverse((child) => {
+      if (child.isMesh && child.material) {
+        roughness = child.material.roughness ?? roughness
+        metalness = child.material.metalness ?? metalness
+      }
+    })
+
+    c2.scene.traverse((child) => {
+      if (child.isMesh) {
+        child.material = new THREE.MeshStandardMaterial({
+          color,
+          roughness,
+          metalness,
+          envMapIntensity: 1.2,
+        })
+      }
+    })
+  }, [c1, c2])
 
   useFrame(() => {
     if (!ref1.current || !ref2.current) return
@@ -108,14 +153,8 @@ export function ChairModel({ scrollProgress = 0 }) {
     ref2.current.rotation.y = ref1.current.rotation.y
 
     const showChair2 = Math.floor(totalRot) % 2 === 1
-    o1.current = THREE.MathUtils.lerp(o1.current, showChair2 ? 0 : 1, FADE_SPEED)
-    o2.current = THREE.MathUtils.lerp(o2.current, showChair2 ? 1 : 0, FADE_SPEED)
-
-    applyOpacity(ref1.current, o1.current)
-    applyOpacity(ref2.current, o2.current)
-
-    ref1.current.visible = o1.current > 0.001
-    ref2.current.visible = o2.current > 0.001
+    ref1.current.visible = !showChair2
+    ref2.current.visible = showChair2
   })
 
   return (
@@ -125,7 +164,7 @@ export function ChairModel({ scrollProgress = 0 }) {
         <primitive object={c1.scene} />
       </group>
 
-      {/* Chair 2 */}
+      {/* Chair 2 — 180° Y offset so correct side faces camera */}
       <group ref={ref2} scale={c2.scale} position={[0, c2.groundY, 0]}>
         <primitive object={c2.scene} rotation={[0, Math.PI, 0]} />
       </group>
