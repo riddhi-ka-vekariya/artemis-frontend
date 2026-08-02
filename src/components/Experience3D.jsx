@@ -1,13 +1,13 @@
-import React, { useRef, useEffect, useCallback, useState } from 'react'
-import { Canvas, useThree, useFrame } from '@react-three/fiber'
-import { OrbitControls, Environment, ContactShadows } from '@react-three/drei'
+import React, { /*useRef,*/ useEffect, /*useCallback, useState*/ } from 'react'
+import { Canvas, useThree, /*useFrame*/ } from '@react-three/fiber'
+import { /*OrbitControls,*/ Environment, ContactShadows } from '@react-three/drei'
 import { ChairModel } from './ChairModel'
 import * as THREE from 'three'
 
-// Detects if the device is mobile/touch
-const isMobile = () =>
-  typeof window !== 'undefined' &&
-  /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent)
+// // Detects if the device is mobile/touch
+// const isMobile = () =>
+//   typeof window !== 'undefined' &&
+//   /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent)
 
 // Sets camera position imperatively — works even through Vite HMR
 function CameraSetup() {
@@ -20,67 +20,67 @@ function CameraSetup() {
   return null
 }
 
-// Reads DeviceOrientation and smoothly rotates the chair group on mobile
-function GyroChairRotation({ gyroRef, enabled }) {
-  useFrame(() => {
-    if (!enabled || !gyroRef.current) return
-    gyroRef.current.rotation.y = THREE.MathUtils.lerp(
-      gyroRef.current.rotation.y,
-      gyroRef.current.userData.targetY ?? 0,
-      0.08
-    )
-    gyroRef.current.rotation.x = THREE.MathUtils.lerp(
-      gyroRef.current.rotation.x,
-      gyroRef.current.userData.targetX ?? 0,
-      0.08
-    )
-  })
-  return null
-}
+// // Reads DeviceOrientation and smoothly rotates the chair group on mobile
+// function GyroChairRotation({ gyroRef, enabled }) {
+//   useFrame(() => {
+//     if (!enabled || !gyroRef.current) return
+//     gyroRef.current.rotation.y = THREE.MathUtils.lerp(
+//       gyroRef.current.rotation.y,
+//       gyroRef.current.userData.targetY ?? 0,
+//       0.08
+//     )
+//     gyroRef.current.rotation.x = THREE.MathUtils.lerp(
+//       gyroRef.current.rotation.x,
+//       gyroRef.current.userData.targetX ?? 0,
+//       0.08
+//     )
+//   })
+//   return null
+// }
 
 export function Experience3D({ scrollProgress = 0 }) {
-  const controlsRef = useRef()
-  const chairGroupRef = useRef()
-  const [gyroEnabled, setGyroEnabled] = useState(false)
-  const baseAlpha = useRef(null)
+  // const controlsRef = useRef()
+  // const chairGroupRef = useRef()
+  // const [gyroEnabled, setGyroEnabled] = useState(false)
+  // const baseAlpha = useRef(null)
 
-  // DeviceOrientation handler
-  const handleOrientation = useCallback((e) => {
-    if (!chairGroupRef.current) return
-    const alpha = e.alpha ?? 0
-    const beta = e.beta ?? 0
-    const gamma = e.gamma ?? 0
+  // // DeviceOrientation handler
+  // const handleOrientation = useCallback((e) => {
+  //   if (!chairGroupRef.current) return
+  //   const alpha = e.alpha ?? 0
+  //   const beta = e.beta ?? 0
+  //   const gamma = e.gamma ?? 0
 
-    if (baseAlpha.current === null) baseAlpha.current = alpha
+  //   if (baseAlpha.current === null) baseAlpha.current = alpha
 
-    const targetY = THREE.MathUtils.degToRad(gamma) * 1.2
-    const targetX = THREE.MathUtils.degToRad(THREE.MathUtils.clamp(beta - 45, -30, 30)) * 0.4
+  //   const targetY = THREE.MathUtils.degToRad(gamma) * 1.2
+  //   const targetX = THREE.MathUtils.degToRad(THREE.MathUtils.clamp(beta - 45, -30, 30)) * 0.4
 
-    chairGroupRef.current.userData.targetY = targetY
-    chairGroupRef.current.userData.targetX = targetX
-  }, [])
+  //   chairGroupRef.current.userData.targetY = targetY
+  //   chairGroupRef.current.userData.targetX = targetX
+  // }, [])
 
-  // Auto-enable gyro on mobile (no prompt needed)
-  useEffect(() => {
-    if (!isMobile()) return
+  // // Auto-enable gyro on mobile (no prompt needed)
+  // useEffect(() => {
+  //   if (!isMobile()) return
 
-    const tryEnable = async () => {
-      if (typeof DeviceOrientationEvent === 'undefined') return
-      if (typeof DeviceOrientationEvent.requestPermission === 'function') {
-        try {
-          const permission = await DeviceOrientationEvent.requestPermission()
-          if (permission !== 'granted') return
-        } catch {
-          return
-        }
-      }
-      window.addEventListener('deviceorientation', handleOrientation, true)
-      setGyroEnabled(true)
-    }
+  //   const tryEnable = async () => {
+  //     if (typeof DeviceOrientationEvent === 'undefined') return
+  //     if (typeof DeviceOrientationEvent.requestPermission === 'function') {
+  //       try {
+  //         const permission = await DeviceOrientationEvent.requestPermission()
+  //         if (permission !== 'granted') return
+  //       } catch {
+  //         return
+  //       }
+  //     }
+  //     window.addEventListener('deviceorientation', handleOrientation, true)
+  //     setGyroEnabled(true)
+  //   }
 
-    tryEnable()
-    return () => window.removeEventListener('deviceorientation', handleOrientation, true)
-  }, [handleOrientation])
+  //   tryEnable()
+  //   return () => window.removeEventListener('deviceorientation', handleOrientation, true)
+  // }, [handleOrientation])
 
   return (
     <div className="canvas-container">
@@ -108,12 +108,12 @@ export function Experience3D({ scrollProgress = 0 }) {
         <Environment preset="studio" background={false} />
 
         {/* Chair group — gyro rotates this group */}
-        <group ref={chairGroupRef} position={[0, 0, 0]}>
+        {/* <group ref={chairGroupRef} position={[0, 0, 0]}> */}
           <ChairModel scrollProgress={scrollProgress} />
-        </group>
+        {/* </group> */}
 
         {/* Gyro rotation driver (runs in render loop) */}
-        <GyroChairRotation gyroRef={chairGroupRef} enabled={gyroEnabled} />
+        {/* <GyroChairRotation gyroRef={chairGroupRef} enabled={gyroEnabled} /> */}
 
         <ContactShadows
           position={[0, -0.001, 0]}
@@ -124,7 +124,7 @@ export function Experience3D({ scrollProgress = 0 }) {
           color="#000000"
         />
 
-        <OrbitControls
+        {/* <OrbitControls
           ref={controlsRef}
           makeDefault
           target={[0, 0.75, 0]}
@@ -137,7 +137,7 @@ export function Experience3D({ scrollProgress = 0 }) {
           autoRotate={false}
           autoRotateSpeed={1.5}
           dampingFactor={0.05}
-        />
+        /> */}
       </Canvas>
     </div>
   )
