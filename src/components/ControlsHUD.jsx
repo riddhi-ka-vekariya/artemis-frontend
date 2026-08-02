@@ -70,7 +70,7 @@ export function ControlsHUD({
       <div style={{ alignSelf: 'center', pointerEvents: 'auto' }}>
         <div className="hint-badge">
           <Compass size={14} color="#38bdf8" />
-          <span>Click & Drag to Rotate &bull; Scroll to Zoom &bull; Right-Click to Pan</span>
+          <span>Scroll to Rotate &bull; Drag to Orbit &bull; Pinch to Zoom</span>
         </div>
       </div>
 
