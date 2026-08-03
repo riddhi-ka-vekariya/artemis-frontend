@@ -1,0 +1,140 @@
+{
+  "schemaVersion": 3,
+  "source": {
+    "url": "https://unseen.co",
+    "canonicalUrl": "https://unseen.co/",
+    "route": "homepage",
+    "viewport": { "width": 1440, "height": 900, "dpr": 1 },
+    "browser": "static-fetch (Playwright unavailable)",
+    "backend": "None – HTML + JS fetched directly",
+    "capturedAt": "2026-08-03T11:42:00Z"
+  },
+  "candidates": [
+    {
+      "id": "surface-1",
+      "selector": "canvas (Three.js managed, no id/class in HTML)",
+      "frame": "main",
+      "bounds": "fullscreen",
+      "cssSize": "window × window",
+      "backingSize": "window × dpr",
+      "dpr": "devicePixelRatio (capped at 2)",
+      "visibility": "visible",
+      "zIndex": "auto",
+      "context": "webgl (Three.js WebGLRenderer)",
+      "owner": "main-thread",
+      "routePersistence": "single-route (ProjectMenu page only)",
+      "notes": [
+        "Confirmed from theme.js: o.Gl = new Gl() global WebGL renderer",
+        "Projects rendered into a sub-scene with a cloned camera",
+        "canvas element is created by Three.js, not present in SSR HTML"
+      ]
+    }
+  ],
+  "lockStatus": "locked",
+  "targetSet": ["surface-1"],
+  "alternatives": [
+    "CSS 3D transforms (eliminated: no perspective/rotateX on project cards in CSS)",
+    "GSAP ScrollTrigger DOM animation (eliminated: no ScrollTrigger import found in bundle)"
+  ],
+  "effectBoundary": "surface-only",
+  "hypotheses": [
+    {
+      "id": "hyp-1",
+      "statement": "The curl is a Three.js WebGL vertex shader displacement on a PlaneGeometry",
+      "status": "supported",
+      "evidenceFor": ["ev-001", "ev-002", "ev-003"],
+      "evidenceAgainst": [],
+      "truth": "SOURCE"
+    },
+    {
+      "id": "hyp-2",
+      "statement": "The curl is CSS 3D transforms (perspective + rotateX) on DOM elements",
+      "status": "contradicted",
+      "evidenceFor": [],
+      "evidenceAgainst": ["ev-001", "ev-004"],
+      "truth": "SOURCE"
+    },
+    {
+      "id": "hyp-3",
+      "statement": "The curl uses GSAP ScrollTrigger timeline",
+      "status": "contradicted",
+      "evidenceFor": [],
+      "evidenceAgainst": ["ev-004"],
+      "truth": "SOURCE"
+    }
+  ],
+  "interactions": [
+    { "type": "scroll", "coupling": "projectsGroup.position.y = smoothScrollPos (lerp 0.05)" },
+    { "type": "mouse-move", "coupling": "camera angle tweak + fluid sim (desktop only)" },
+    { "type": "drag", "coupling": "same as scroll, 1.5× multiplier" }
+  ],
+  "scopeRisk": "low",
+  "blockingUnknowns": [],
+  "evidence": [
+    {
+      "id": "ev-001",
+      "type": "source-bundle-slice",
+      "description": "vertexShader variable `Ts` in theme.js at byte offset ~300713 — confirms PlaneGeometry curl via smoothstep Z-displacement",
+      "path": "evidence/source/theme.js",
+      "truth": "SOURCE"
+    },
+    {
+      "id": "ev-002",
+      "type": "source-bundle-slice",
+      "description": "fragmentShader variable `Ss` in theme.js at byte offset ~298981 — cover-UV + fog + depth fade",
+      "path": "evidence/source/theme.js",
+      "truth": "SOURCE"
+    },
+    {
+      "id": "ev-003",
+      "type": "source-bundle-slice",
+      "description": "buildProjects() confirms: new s._12(1,1,12,12) = PlaneGeometry(1,1,12,12), u_bendPoint=(100,530)",
+      "path": "evidence/source/theme.js",
+      "truth": "SOURCE"
+    },
+    {
+      "id": "ev-004",
+      "type": "source-bundle-slice",
+      "description": "HTML html.class='asscroll-disabled', o.ASScroll used for scroll; no CSS rotateX/perspective on project cards; GSAP imported but used only for tweening (not ScrollTrigger timeline driving the curl)",
+      "path": "evidence/source/theme.js",
+      "truth": "SOURCE"
+    }
+  ],
+  "gateDecision": {
+    "targetAttributed": true,
+    "targetLocked": true,
+    "requiredEvidence": {
+      "visualAttribution": [{ "status": "passed", "evidenceId": "ev-001", "path": "evidence/source/theme.js", "truth": "SOURCE", "notes": "vertexShader Ts found in source bundle" }],
+      "targetSet": [{ "status": "passed", "evidenceId": "ev-001", "path": "evidence/source/theme.js", "truth": "SOURCE", "notes": "" }],
+      "contextAndOwner": [{ "status": "passed", "evidenceId": "ev-003", "path": "evidence/source/theme.js", "truth": "SOURCE", "notes": "Three.js WebGLRenderer, main thread" }],
+      "targetBoundSourceOrFramework": [{ "status": "passed", "evidenceId": "ev-001", "path": "evidence/source/theme.js", "truth": "SOURCE", "notes": "Three.js r(unknown minor) confirmed via vendor.js" }],
+      "effectBoundary": [{ "status": "passed", "evidenceId": "ev-003", "path": "evidence/source/theme.js", "truth": "SOURCE", "notes": "Only projects scene, not global" }],
+      "primaryTraceRoute": [{ "status": "passed", "evidenceId": "ev-001", "path": "evidence/source/theme.js", "truth": "SOURCE", "notes": "PIPELINE_REPLAY via extracted shader + uniforms" }],
+      "alternativesExcluded": [{ "status": "passed", "evidenceId": "ev-004", "path": "evidence/source/theme.js", "truth": "SOURCE", "notes": "CSS/GSAP hypotheses contradicted" }]
+    },
+    "blockers": [],
+    "decidedAt": "2026-08-03T12:00:00Z"
+  },
+  "truthNotes": {
+    "source": [
+      "Both shaders (Ts, Ss) extracted verbatim",
+      "Geometry: PlaneGeometry(1,1,12,12)",
+      "meshSize base: (820, 430)",
+      "meshSizeMultipliers: {default:0.21, sm:0.30, md:0.28, lg:0.35}",
+      "u_bendPoint defaults: (100, 530) default / (100, 700) for lg/md",
+      "Scroll lerp: 0.05",
+      "Velocity: 5e-4 * delta, lerp 0.075",
+      "Camera: z=2000, fov=2*atan(h/2/z)*180/PI",
+      "Fog: near=500, far=4500"
+    ],
+    "partial": [
+      "Three.js minor version not confirmed (CDN r158 used)",
+      "Exact ASScroll version not confirmed"
+    ],
+    "guess": [
+      "Card image textures: not fetched (canvas-drawn placeholders used)",
+      "Card colours: procedurally generated",
+      "Initial scroll position relative to page layout: unknown (cards positioned at z=1000 in world space, confirmed from source)"
+    ]
+  }
+}

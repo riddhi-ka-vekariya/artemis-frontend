@@ -1,0 +1,59 @@
+{
+  "schemaVersion": 3,
+  "state": "QUICK_SCOUT",
+  "gateStatus": {
+    "targetAttributed": false,
+    "targetLocked": false,
+    "replayReady": false,
+    "baselineVerified": false,
+    "projectVerified": false
+  },
+  "strategy": {
+    "primaryTraceRoute": "",
+    "replayRoute": "",
+    "toolProfile": "navigate, runtime-eval, preload-script, network-metadata, canvas-screenshot, interaction"
+  },
+  "attempts": [],
+  "targetSet": [],
+  "targetUrl": "https://unseen.co",
+  "targetEffect": "Selected Projects scrollable grid - card curl/wrap over viewport top on scroll",
+  "unknowns": {
+    "blocking": [
+      "surface-type: is the curl effect WebGL/Canvas or CSS 3D/GSAP DOM animation?",
+      "render-owner: which canvas (if any) produces the curl?",
+      "technique: what implementation drives the card wrap?"
+    ],
+    "important": [],
+    "deferred": [],
+    "external": []
+  },
+  "evidenceIndex": [],
+  "artifacts": {
+    "scoutCard": "scout-card.json",
+    "manifest": "replay-manifest.json",
+    "qaReport": "qa-report.md",
+    "knownGaps": "known-gaps.md"
+  },
+  "gateArtifacts": {
+    "targetAttribution": { "artifact": "scout-card.json", "status": "missing" },
+    "targetLock": { "artifact": "scout-card.json", "status": "missing" },
+    "replayReady": { "artifact": "replay-manifest.json", "status": "missing" },
+    "baselineVerify": { "artifact": "qa-report.md", "status": "missing" },
+    "projectVerify": { "artifact": "qa-report.md", "status": "missing" }
+  },
+  "budgets": {
+    "sameStrategyMax": 2,
+    "captureStrategyCategoriesMax": 3,
+    "repairRoundsMax": 6,
+    "plateauRoundsMax": 2
+  },
+  "plateau": { "roundsWithoutProgress": 0, "lastProgress": "" },
+  "nextAction": {
+    "state": "QUICK_SCOUT",
+    "unknown": "surface-type: WebGL canvas or CSS/DOM animation?",
+    "action": "Open unseen.co, enumerate all canvas elements, inspect DOM around Selected Projects section, probe scroll interaction",
+    "expectedEvidence": "canvas count/IDs, DOM structure of project grid, scroll animation approach"
+  },
+  "replayTier": "",
+  "qa": { "sourceToBaseline": [], "baselineToEditable": [] }
+}

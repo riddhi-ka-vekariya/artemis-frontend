@@ -49,6 +49,32 @@ export default function App() {
       ref={scrollRef}
       style={{ width: '100vw', height: '100vh', overflowY: 'scroll', overflowX: 'hidden', position: 'relative' }}
     >
+      {/* Floating navigation bar */}
+      <nav style={{
+        position: 'fixed', top: '1.25rem', left: '1.5rem', right: '1.5rem', zIndex: 100,
+        display: 'flex', justifyContent: 'space-between', alignItems: 'center', pointerEvents: 'none'
+      }}>
+        <div style={{
+          background: 'rgba(18, 18, 18, 0.75)', backdropFilter: 'blur(16px)',
+          border: '1px solid rgba(255,255,255,0.12)', padding: '0.45rem 1rem',
+          borderRadius: '99px', color: '#fff', fontSize: '0.8rem', fontWeight: 600,
+          display: 'flex', alignItems: 'center', gap: '0.5rem', pointerEvents: 'auto'
+        }}>
+          <span style={{ width: 7, height: 7, background: '#38bdf8', borderRadius: '50%', boxShadow: '0 0 8px #38bdf8' }} />
+          ARTEMIS POC
+        </div>
+
+        <div style={{ display: 'flex', gap: '0.5rem', pointerEvents: 'auto' }}>
+          <a href="/artemis-frontend/unseen" style={{
+            background: 'rgba(56, 189, 248, 0.2)', backdropFilter: 'blur(16px)',
+            border: '1px solid rgba(56, 189, 248, 0.4)', padding: '0.45rem 0.9rem',
+            borderRadius: '99px', color: '#38bdf8', fontSize: '0.78rem', textDecoration: 'none', fontWeight: 600
+          }}>
+            WebGL Curl ↗
+          </a>
+        </div>
+      </nav>
+
       {/* Sticky 3D viewport */}
       <div style={{ position: 'sticky', top: 0, width: '100%', height: '100vh', zIndex: 1 }}>
         <Suspense fallback={<LoadingScreen />}>

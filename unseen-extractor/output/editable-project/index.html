@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Selected Projects — Architect Portfolio</title>
+  <link rel="stylesheet" href="src/style.css" />
+</head>
+<body>
+
+  <div class="scroll-container">
+    <div class="sticky-viewport">
+      <canvas id="gl-canvas"></canvas>
+
+      <!-- Left HUD -->
+      <div class="hud-left">
+        <div class="hud-eyebrow">Portfolio</div>
+        <div class="hud-title">Selected Projects</div>
+        <div class="hud-scroll-bar">
+          <div class="hud-scroll-fill" id="scroll-fill"></div>
+        </div>
+        <div class="hud-sub">Scroll to explore</div>
+        <div class="hud-breakpoint" id="hud-breakpoint"></div>
+      </div>
+
+      <!-- Control panel -->
+      <aside class="ctrl-panel" id="ctrl-panel">
+
+        <button class="ctrl-toggle" id="ctrl-toggle" aria-label="Toggle controls">
+          <span></span><span></span><span></span>
+        </button>
+
+        <div class="ctrl-inner" id="ctrl-inner">
+
+          <!-- CURL -->
+          <div class="ctrl-group">
+            <div class="ctrl-group-label">Curl</div>
+
+            <label class="ctrl-row">
+              <span>Bend start</span>
+              <div class="ctrl-row-right">
+                <span class="ctrl-val" id="lbl-ctrl-bend-start">100</span>
+                <input type="range" id="ctrl-bend-start" min="0" max="600" step="5" value="100" />
+              </div>
+            </label>
+
+            <label class="ctrl-row">
+              <span>Bend end</span>
+              <div class="ctrl-row-right">
+                <span class="ctrl-val" id="lbl-ctrl-bend-end">700</span>
+                <input type="range" id="ctrl-bend-end" min="100" max="1400" step="5" value="700" />
+              </div>
+            </label>
+
+            <label class="ctrl-row">
+              <span>Z depth</span>
+              <div class="ctrl-row-right">
+                <span class="ctrl-val" id="lbl-ctrl-z-depth">1200</span>
+                <input type="range" id="ctrl-z-depth" min="0" max="3000" step="50" value="1200" />
+              </div>
+            </label>
+          </div>
+
+          <!-- WAVE -->
+          <div class="ctrl-group">
+            <div class="ctrl-group-label">Wave</div>
+
+            <label class="ctrl-row">
+              <span>Noise</span>
+              <div class="ctrl-row-right">
+                <span class="ctrl-val" id="lbl-ctrl-noise-amp">50</span>
+                <input type="range" id="ctrl-noise-amp" min="0" max="200" step="1" value="50" />
+              </div>
+            </label>
+          </div>
+
+          <!-- SCENE -->
+          <div class="ctrl-group">
+            <div class="ctrl-group-label">Scene</div>
+
+            <label class="ctrl-row">
+              <span>Card gap</span>
+              <div class="ctrl-row-right">
+                <span class="ctrl-val" id="lbl-ctrl-card-gap">24</span>
+                <input type="range" id="ctrl-card-gap" min="0" max="200" step="2" value="24" />
+              </div>
+            </label>
+
+            <label class="ctrl-row">
+              <span>Image zoom</span>
+              <div class="ctrl-row-right">
+                <span class="ctrl-val" id="lbl-ctrl-inner-scale">1.00</span>
+                <input type="range" id="ctrl-inner-scale" min="0.5" max="2" step="0.01" value="1" />
+              </div>
+            </label>
+          </div>
+
+          <!-- THEME -->
+          <div class="ctrl-group ctrl-group--inline">
+            <div class="ctrl-group-label">Theme</div>
+            <label class="toggle-switch">
+              <input type="checkbox" id="ctrl-dark-mode" />
+              <span class="toggle-track">
+                <span class="toggle-thumb"></span>
+              </span>
+              <span class="toggle-label">Dark</span>
+            </label>
+          </div>
+
+          <button class="btn-reset" id="btn-reset">Reset to defaults</button>
+
+        </div>
+      </aside>
+
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/three@0.158.0/build/three.min.js"></script>
+  <script src="src/main.js" type="module"></script>
+
+  <script>
+    // Panel toggle (mobile bottom sheet)
+    document.getElementById('ctrl-toggle')
+      .addEventListener('click', () =>
+        document.getElementById('ctrl-panel').classList.toggle('open')
+      );
+  </script>
+</body>
+</html>

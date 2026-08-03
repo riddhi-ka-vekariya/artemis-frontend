@@ -1,0 +1,304 @@
+/* ─────────────────────────────────────────────────────────────────────────────
+   Unseen WebGL Curl Effect Demo Page — Dark Mode & Centered Layout
+   ───────────────────────────────────────────────────────────────────────────── */
+
+:root {
+  --curl-bg:          #121212;
+  --curl-panel-bg:    rgba(24, 24, 27, 0.82);
+  --curl-panel-brd:   rgba(255, 255, 255, 0.10);
+  --curl-text:        #f4f4f5;
+  --curl-text-muted:  rgba(255, 255, 255, 0.45);
+  --curl-accent:      #38bdf8;
+  --curl-track:       rgba(255, 255, 255, 0.15);
+  --curl-thumb:       #ffffff;
+  --curl-btn-bg:      rgba(255, 255, 255, 0.08);
+  --curl-btn-hover:   rgba(255, 255, 255, 0.16);
+}
+
+.unseen-curl-page {
+  width: 100vw;
+  height: 100vh;
+  background: var(--curl-bg);
+  color: var(--curl-text);
+  font-family: 'Neue Montreal', 'Inter', system-ui, -apple-system, sans-serif;
+  overflow: hidden;
+  position: fixed;
+  inset: 0;
+  user-select: none;
+}
+
+/* ─── Scroll Container ────────────────────────────────────────────────────── */
+.unseen-scroll-container {
+  width: 100%;
+  height: 800vh;
+  position: relative;
+}
+
+.unseen-sticky-viewport {
+  position: sticky;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+}
+
+#unseen-gl-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100% !important;
+  height: 100% !important;
+  display: block;
+  touch-action: none;
+}
+
+/* ─── Top Header Navigation ────────────────────────────────────────────────── */
+.unseen-nav {
+  position: absolute;
+  top: 1.25rem;
+  left: 1.5rem;
+  right: 1.5rem;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  pointer-events: none;
+}
+
+.unseen-nav__back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.45rem 0.9rem;
+  background: var(--curl-panel-bg);
+  border: 1px solid var(--curl-panel-brd);
+  border-radius: 99px;
+  color: var(--curl-text);
+  font-size: 0.78rem;
+  font-weight: 500;
+  text-decoration: none;
+  pointer-events: auto;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  transition: all 0.2s ease;
+}
+
+.unseen-nav__back:hover {
+  background: var(--curl-btn-hover);
+  border-color: rgba(255, 255, 255, 0.25);
+  transform: translateX(-2px);
+}
+
+.unseen-nav__center {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--curl-panel-bg);
+  border: 1px solid var(--curl-panel-brd);
+  padding: 0.4rem 1rem;
+  border-radius: 99px;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+.unseen-nav__dot {
+  width: 7px;
+  height: 7px;
+  background: #22c55e;
+  border-radius: 50%;
+  box-shadow: 0 0 8px #22c55e;
+  display: inline-block;
+}
+
+.unseen-nav__title {
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--curl-text);
+}
+
+.unseen-nav__route-links {
+  display: flex;
+  gap: 0.5rem;
+  pointer-events: auto;
+}
+
+.unseen-nav__route-btn {
+  padding: 0.45rem 0.9rem;
+  background: var(--curl-panel-bg);
+  border: 1px solid var(--curl-panel-brd);
+  border-radius: 99px;
+  color: var(--curl-text);
+  font-size: 0.78rem;
+  font-weight: 500;
+  text-decoration: none;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  transition: all 0.2s ease;
+}
+
+.unseen-nav__route-btn:hover {
+  background: var(--curl-btn-hover);
+  border-color: rgba(255, 255, 255, 0.25);
+}
+
+/* ─── Bottom HUD Overlay ──────────────────────────────────────────────────── */
+.unseen-hud-bottom {
+  position: absolute;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  pointer-events: none;
+}
+
+.unseen-scroll-sub {
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--curl-text-muted);
+}
+
+.unseen-hud-scroll-bar {
+  width: 180px;
+  height: 2px;
+  background: var(--curl-track);
+  border-radius: 99px;
+  overflow: hidden;
+}
+
+.unseen-hud-scroll-fill {
+  height: 100%;
+  width: 0%;
+  background: var(--curl-accent);
+  border-radius: 99px;
+  transition: width 0.06s linear;
+}
+
+.unseen-hud-breakpoint {
+  font-size: 0.62rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--curl-text-muted);
+  opacity: 0.7;
+}
+
+/* ─── Control Panel ───────────────────────────────────────────────────────── */
+.unseen-ctrl-panel {
+  position: absolute;
+  top: 4.5rem;
+  right: 1.5rem;
+  width: 250px;
+  z-index: 25;
+  background: var(--curl-panel-bg);
+  border: 1px solid var(--curl-panel-brd);
+  border-radius: 16px;
+  backdrop-filter: blur(20px) saturate(1.6);
+  -webkit-backdrop-filter: blur(20px) saturate(1.6);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+}
+
+.unseen-ctrl-inner {
+  padding: 0.75rem 0.9rem;
+  max-height: 75vh;
+  overflow-y: auto;
+}
+
+.unseen-ctrl-group {
+  margin-bottom: 0.8rem;
+  padding-bottom: 0.7rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.unseen-ctrl-group:last-of-type {
+  border-bottom: none;
+  margin-bottom: 0.4rem;
+}
+
+.unseen-ctrl-group-label {
+  font-size: 0.62rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--curl-accent);
+  margin-bottom: 0.5rem;
+  font-weight: 700;
+}
+
+.unseen-ctrl-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.55rem;
+  cursor: pointer;
+}
+
+.unseen-ctrl-row span {
+  font-size: 0.72rem;
+  color: var(--curl-text);
+}
+
+.unseen-ctrl-val {
+  font-size: 0.65rem;
+  color: var(--curl-text-muted);
+  font-variant-numeric: tabular-nums;
+  min-width: 32px;
+  text-align: right;
+}
+
+.unseen-ctrl-row input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 95px;
+  height: 3px;
+  border-radius: 99px;
+  background: var(--curl-track);
+  outline: none;
+  cursor: pointer;
+}
+
+.unseen-ctrl-row input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: var(--curl-thumb);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.4);
+}
+
+.unseen-btn-reset {
+  display: block;
+  width: 100%;
+  padding: 0.55rem 0;
+  background: var(--curl-btn-bg);
+  border: 1px solid var(--curl-panel-brd);
+  color: var(--curl-text);
+  border-radius: 8px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-top: 0.4rem;
+}
+
+.unseen-btn-reset:hover {
+  background: var(--curl-btn-hover);
+  border-color: rgba(255, 255, 255, 0.25);
+}
+
+/* Responsive Hide for Control Panel on Small Screens */
+@media (max-width: 768px) {
+  .unseen-ctrl-panel {
+    display: none;
+  }
+  .unseen-nav__center {
+    display: none;
+  }
+}

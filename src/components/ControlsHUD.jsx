@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 import {
   RotateCcw,
   Play,
@@ -8,7 +9,8 @@ import {
   Layers,
   Info,
   Box,
-  Compass
+  Compass,
+  ArrowRight
 } from 'lucide-react'
 
 export function ControlsHUD({
@@ -53,6 +55,30 @@ export function ControlsHUD({
             <div className="brand-tag">Drei & Three.js POC</div>
           </div>
         </div>
+
+        {/* Studio Page Link */}
+        <Link
+          to="/studio"
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+            padding: '8px 16px',
+            background: 'rgba(200, 240, 96, 0.1)',
+            border: '1px solid rgba(200, 240, 96, 0.35)',
+            borderRadius: '100px',
+            color: '#c8f060',
+            textDecoration: 'none',
+            fontSize: '12px',
+            fontWeight: '700',
+            letterSpacing: '0.08em',
+            textTransform: 'uppercase',
+            cursor: 'pointer',
+            transition: 'background 0.25s ease',
+          }}
+        >
+          Studio Portfolio <ArrowRight size={14} />
+        </Link>
 
         {/* Info Card */}
         <div className="top-right-info hud-interactive">
