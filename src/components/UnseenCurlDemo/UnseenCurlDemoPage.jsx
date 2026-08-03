@@ -440,28 +440,14 @@ export default function UnseenCurlDemoPage() {
         <div className="unseen-sticky-viewport">
           <canvas ref={canvasRef} id="unseen-gl-canvas" />
 
-          {/* Top Header Navigation */}
-          <nav className="unseen-nav">
-            <a href="/artemis-frontend/" className="unseen-nav__back">
-              ← Home
-            </a>
-
-            <div className="unseen-nav__center">
-              <span className="unseen-nav__dot" />
-              <span className="unseen-nav__title">WebGL Card Curl POC</span>
-            </div>
-          </nav>
-
           {/* Bottom HUD */}
           <div className="unseen-hud-bottom">
-            <span className="unseen-scroll-sub">Scroll to explore</span>
             <div className="unseen-hud-scroll-bar">
               <div
                 className="unseen-hud-scroll-fill"
                 style={{ width: `${scrollProgress}%` }}
               />
             </div>
-            <span className="unseen-hud-breakpoint">{breakpointLabel}</span>
           </div>
 
           {/* Control Panel */}
