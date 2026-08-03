@@ -1,15 +1,6 @@
 import React, { Suspense, useEffect, useRef, useState } from 'react'
 import { Experience3D } from './components/Experience3D'
 
-function LoadingScreen() {
-  return (
-    <div className="loading-screen">
-      <div className="spinner-glow" />
-      <div className="loading-text">Loading 3D Chair Model...</div>
-    </div>
-  )
-}
-
 // 6 sections × 100vh = 3 full rotations = 3 chair swaps
 const SECTIONS = [
   { tag: 'Ergonomic Design',  heading: 'Built for the',       accent: 'long haul',          color: 'var(--accent-cyan)'    },
@@ -49,11 +40,9 @@ export default function App() {
       ref={scrollRef}
       style={{ width: '100vw', height: '100vh', overflowY: 'scroll', overflowX: 'hidden', position: 'relative' }}
     >
-
-
       {/* Sticky 3D viewport */}
       <div style={{ position: 'sticky', top: 0, width: '100%', height: '100vh', zIndex: 1 }}>
-        <Suspense fallback={<LoadingScreen />}>
+        <Suspense fallback={null}>
           <Experience3D scrollProgress={scrollProgress} />
         </Suspense>
       </div>
