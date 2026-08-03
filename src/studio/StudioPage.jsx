@@ -259,7 +259,7 @@ export default function StudioPage() {
       {/* ── Compact fixed nav bar ────────────────────────────────────────── */}
       <header className="studio-header" ref={headerRef}>
         <nav className="studio-nav">
-          <a href="/" className="studio-nav__back" aria-label="Back to home">
+          <a href="#/" className="studio-nav__back" aria-label="Back to home">
             <svg
               width="16" height="16" viewBox="0 0 24 24"
               fill="none" stroke="currentColor"
@@ -277,7 +277,7 @@ export default function StudioPage() {
           </div>
 
           <div className="studio-nav__links">
-            <a href="/artemis-frontend/unseen" style={{ color: '#38bdf8', fontWeight: 600 }}>WebGL Curl ↗</a>
+            <a href="#/unseen" style={{ color: '#38bdf8', fontWeight: 600 }}>WebGL Curl ↗</a>
             <a href="#contact">Contact</a>
           </div>
         </nav>
