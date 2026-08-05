@@ -1,18 +1,19 @@
 :root {
-  --bg-dark: #0a0c10;
-  --bg-gradient: radial-gradient(circle at 50% 30%, #171b26 0%, #08090d 100%);
-  --panel-bg: rgba(18, 22, 31, 0.65);
-  --panel-border: rgba(255, 255, 255, 0.08);
-  --panel-border-hover: rgba(255, 255, 255, 0.2);
+  --bg-dark: #06070a;
+  --bg-gradient: radial-gradient(circle at 50% 30%, #12151f 0%, #06070a 100%);
+  --panel-bg: rgba(14, 16, 22, 0.75);
+  --panel-border: rgba(212, 175, 55, 0.2);
+  --panel-border-hover: rgba(212, 175, 55, 0.5);
   --text-primary: #f3f4f6;
   --text-secondary: #9ca3af;
   --text-muted: #6b7280;
+  --accent-gold: #ffd700;
   --accent-cyan: #38bdf8;
   --accent-purple: #a855f7;
   --accent-amber: #f59e0b;
   --accent-emerald: #10b981;
   --accent-rose: #f43f5e;
-  --glow-cyan: rgba(56, 189, 248, 0.25);
+  --glow-gold: rgba(255, 215, 0, 0.25);
   --font-main: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
   --font-display: 'Space Grotesk', sans-serif;
 }
@@ -46,215 +47,120 @@ body,
   background: var(--bg-gradient);
 }
 
-/* Glassmorphism Panel */
-.glass-panel {
-  background: var(--panel-bg);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid var(--panel-border);
-  border-radius: 16px;
-  box-shadow: 0 12px 32px 0 rgba(0, 0, 0, 0.37);
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-}
+/* ─── Cartier Luxury HUD Panel ────────────────────────────────── */
 
-.glass-panel:hover {
-  border-color: var(--panel-border-hover);
-}
-
-/* UI Overlay HUD */
-.hud-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 10;
-  pointer-events: none;
+.cartier-hud-panel {
+  position: fixed;
+  top: 24px;
+  right: 24px;
+  z-index: 99;
+  width: 280px;
+  background: rgba(10, 12, 18, 0.82);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(212, 175, 55, 0.25);
+  border-radius: 20px;
+  padding: 20px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6), 0 0 20px rgba(255, 215, 0, 0.08);
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  padding: 24px;
-}
-
-.hud-interactive {
+  gap: 16px;
   pointer-events: auto;
 }
 
-/* Header Badge */
-.header-brand {
-  display: flex;
-  align-items: center;
-  gap: 12px;
+.cartier-hud-header {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding-bottom: 12px;
 }
 
-.brand-icon-box {
-  width: 40px;
-  height: 40px;
-  border-radius: 12px;
-  background: linear-gradient(135deg, rgba(56, 189, 248, 0.2), rgba(168, 85, 247, 0.2));
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--accent-cyan);
-  box-shadow: 0 0 20px var(--glow-cyan);
-}
-
-.brand-title {
-  font-family: var(--font-display);
-  font-size: 18px;
-  font-weight: 700;
-  letter-spacing: 0.5px;
-  background: linear-gradient(to right, #ffffff, #94a3b8);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-.brand-tag {
-  font-size: 11px;
-  font-weight: 600;
+.cartier-hud-badge {
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 2px;
   text-transform: uppercase;
-  letter-spacing: 1.5px;
-  color: var(--accent-cyan);
+  color: var(--accent-gold);
+  margin-bottom: 2px;
 }
 
-/* Bottom HUD Toolbar */
-.toolbar-container {
-  align-self: center;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 10px 16px;
-  border-radius: 24px;
-}
-
-.toolbar-btn {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  color: var(--text-secondary);
-  padding: 10px 16px;
-  border-radius: 14px;
-  font-size: 13px;
-  font-weight: 500;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.toolbar-btn:hover {
-  background: rgba(255, 255, 255, 0.12);
+.cartier-hud-title {
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 700;
   color: #fff;
-  transform: translateY(-2px);
+  letter-spacing: 0.5px;
 }
 
-.toolbar-btn.active {
-  background: linear-gradient(135deg, rgba(56, 189, 248, 0.25), rgba(56, 189, 248, 0.1));
-  border-color: var(--accent-cyan);
-  color: #fff;
-  box-shadow: 0 0 15px var(--glow-cyan);
-}
-
-/* Lighting Preset Selector */
-.presets-group {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  background: rgba(0, 0, 0, 0.3);
-  padding: 4px;
-  border-radius: 12px;
-}
-
-.preset-dot-btn {
-  padding: 6px 12px;
-  border-radius: 8px;
-  border: none;
-  background: transparent;
-  color: var(--text-secondary);
-  font-size: 12px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.preset-dot-btn:hover {
-  color: #fff;
-}
-
-.preset-dot-btn.active {
-  background: rgba(255, 255, 255, 0.15);
-  color: #fff;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
-}
-
-/* Floating Info Cards */
-.top-right-info {
+.hud-section {
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  max-width: 240px;
+  gap: 8px;
 }
 
-.info-card {
-  padding: 16px;
-  font-size: 13px;
-}
-
-.info-title {
+.hud-section-label {
   font-size: 11px;
+  font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 1px;
-  color: var(--text-muted);
-  margin-bottom: 6px;
-  font-weight: 600;
-}
-
-.info-val {
-  font-size: 15px;
-  font-weight: 700;
-  color: #fff;
-  font-family: var(--font-display);
-}
-
-.hint-badge {
-  display: inline-flex;
+  color: var(--text-secondary);
+  display: flex;
   align-items: center;
   gap: 6px;
-  font-size: 12px;
-  color: var(--text-secondary);
-  background: rgba(255, 255, 255, 0.04);
-  padding: 8px 14px;
-  border-radius: 20px;
-  border: 1px solid rgba(255, 255, 255, 0.06);
 }
 
-
-
-/* Color Accent Options */
-.color-picker-group {
+.hud-button-group {
   display: flex;
-  gap: 8px;
-  align-items: center;
+  gap: 4px;
+  background: rgba(0, 0, 0, 0.4);
+  padding: 4px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-.color-swatch {
-  width: 22px;
-  height: 22px;
-  border-radius: 50%;
-  border: 2px solid transparent;
+.hud-btn {
+  flex: 1;
+  padding: 6px 8px;
+  font-size: 11px;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--text-secondary);
   cursor: pointer;
-  transition: transform 0.2s ease, border-color 0.2s ease;
+  transition: all 0.2s ease;
 }
 
-.color-swatch:hover {
-  transform: scale(1.2);
+.hud-btn:hover {
+  color: #fff;
 }
 
-.color-swatch.active {
-  border-color: #ffffff;
-  transform: scale(1.15);
-  box-shadow: 0 0 10px rgba(255, 255, 255, 0.4);
+.hud-btn.active {
+  background: linear-gradient(135deg, rgba(255, 215, 0, 0.3), rgba(255, 215, 0, 0.1));
+  color: var(--accent-gold);
+  border: 1px solid rgba(255, 215, 0, 0.4);
+  box-shadow: 0 0 10px rgba(255, 215, 0, 0.2);
+}
+
+.hud-toggle-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.hud-toggle-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--text-primary);
+  cursor: pointer;
+  user-select: none;
+}
+
+.hud-toggle-item input[type='checkbox'] {
+  accent-color: var(--accent-gold);
+  width: 14px;
+  height: 14px;
+  cursor: pointer;
 }
 
 /* ─── Scroll Sections ─────────────────────────────────────────── */
@@ -274,17 +180,17 @@ body,
 }
 
 .scroll-section-inner {
-  max-width: 360px;
+  max-width: 380px;
   display: flex;
   flex-direction: column;
   gap: 16px;
-  background: rgba(10, 12, 16, 0.7);
+  background: rgba(10, 12, 18, 0.78);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(212, 175, 55, 0.2);
   border-radius: 24px;
   padding: 32px 28px;
-  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.6);
   animation: fadeSlideIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
@@ -304,9 +210,9 @@ body,
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 2px;
-  color: var(--accent-cyan);
-  background: rgba(56, 189, 248, 0.1);
-  border: 1px solid rgba(56, 189, 248, 0.25);
+  color: var(--accent-gold);
+  background: rgba(255, 215, 0, 0.1);
+  border: 1px solid rgba(255, 215, 0, 0.25);
   border-radius: 20px;
   padding: 4px 12px;
   width: fit-content;

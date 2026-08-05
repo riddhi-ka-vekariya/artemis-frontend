@@ -1,87 +1,32 @@
-import React, { /*useRef,*/ useEffect, /*useCallback, useState*/ } from 'react'
-import { Canvas, useThree, /*useFrame*/ } from '@react-three/fiber'
-import { /*OrbitControls,*/ Environment, ContactShadows } from '@react-three/drei'
+import React, { useEffect } from 'react'
+import { Canvas, useThree } from '@react-three/fiber'
+import { Environment, ContactShadows } from '@react-three/drei'
+import { EffectComposer, Bloom, Vignette, Noise, ChromaticAberration } from '@react-three/postprocessing'
+import { BlendFunction } from 'postprocessing'
 import { ChairModel } from './ChairModel'
+import { ManufactureEnvironment } from './ManufactureEnvironment'
 import * as THREE from 'three'
 
-// // Detects if the device is mobile/touch
-// const isMobile = () =>
-//   typeof window !== 'undefined' &&
-//   /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent)
-
-// Sets camera position imperatively — works even through Vite HMR
+// Sets camera position & ACES Filmic Tone Mapping
 function CameraSetup() {
-  const { camera } = useThree()
+  const { camera, gl } = useThree()
   useEffect(() => {
     camera.position.set(0, 1.8, 4.5)
     camera.fov = 50
     camera.updateProjectionMatrix()
-  }, [camera])
+
+    gl.toneMapping = THREE.ACESFilmicToneMapping
+    gl.toneMappingExposure = 1.15
+  }, [camera, gl])
   return null
 }
 
-// // Reads DeviceOrientation and smoothly rotates the chair group on mobile
-// function GyroChairRotation({ gyroRef, enabled }) {
-//   useFrame(() => {
-//     if (!enabled || !gyroRef.current) return
-//     gyroRef.current.rotation.y = THREE.MathUtils.lerp(
-//       gyroRef.current.rotation.y,
-//       gyroRef.current.userData.targetY ?? 0,
-//       0.08
-//     )
-//     gyroRef.current.rotation.x = THREE.MathUtils.lerp(
-//       gyroRef.current.rotation.x,
-//       gyroRef.current.userData.targetX ?? 0,
-//       0.08
-//     )
-//   })
-//   return null
-// }
-
-export function Experience3D({ scrollProgress = 0 }) {
-  // const controlsRef = useRef()
-  // const chairGroupRef = useRef()
-  // const [gyroEnabled, setGyroEnabled] = useState(false)
-  // const baseAlpha = useRef(null)
-
-  // // DeviceOrientation handler
-  // const handleOrientation = useCallback((e) => {
-  //   if (!chairGroupRef.current) return
-  //   const alpha = e.alpha ?? 0
-  //   const beta = e.beta ?? 0
-  //   const gamma = e.gamma ?? 0
-
-  //   if (baseAlpha.current === null) baseAlpha.current = alpha
-
-  //   const targetY = THREE.MathUtils.degToRad(gamma) * 1.2
-  //   const targetX = THREE.MathUtils.degToRad(THREE.MathUtils.clamp(beta - 45, -30, 30)) * 0.4
-
-  //   chairGroupRef.current.userData.targetY = targetY
-  //   chairGroupRef.current.userData.targetX = targetX
-  // }, [])
-
-  // // Auto-enable gyro on mobile (no prompt needed)
-  // useEffect(() => {
-  //   if (!isMobile()) return
-
-  //   const tryEnable = async () => {
-  //     if (typeof DeviceOrientationEvent === 'undefined') return
-  //     if (typeof DeviceOrientationEvent.requestPermission === 'function') {
-  //       try {
-  //         const permission = await DeviceOrientationEvent.requestPermission()
-  //         if (permission !== 'granted') return
-  //       } catch {
-  //         return
-  //       }
-  //     }
-  //     window.addEventListener('deviceorientation', handleOrientation, true)
-  //     setGyroEnabled(true)
-  //   }
-
-  //   tryEnable()
-  //   return () => window.removeEventListener('deviceorientation', handleOrientation, true)
-  // }, [handleOrientation])
-
+export function Experience3D({
+  scrollProgress = 0,
+  materialPreset = 'gold',
+  lightsConfig = { keySpot: true, tealPanels: true, rimLight: true },
+  postConfig = { bloom: true, vignette: true, noise: true }
+}) {
   return (
     <div className="canvas-container">
       <Canvas
@@ -90,54 +35,96 @@ export function Experience3D({ scrollProgress = 0 }) {
         gl={{ antialias: true, alpha: false, powerPreference: 'high-performance' }}
       >
         <CameraSetup />
-        <color attach="background" args={['#0a0c10']} />
+        <color attach="background" args={['#06070a']} />
 
-        <ambientLight intensity={0.7} />
-        <spotLight
-          position={[5, 8, 5]}
-          angle={0.4}
-          penumbra={1}
-          intensity={2.5}
-          color="#38bdf8"
-          castShadow
-          shadow-mapSize={2048}
-          shadow-bias={-0.0001}
-        />
-        <directionalLight position={[-4, 5, -2]} intensity={1.2} color="#ffffff" />
+        {/* --- CARTIER EXTRACTED LIGHT RIG --- */}
 
+        {/* Ambient Fill Light */}
+        <ambientLight intensity={0.4} color="#fff4e6" />
+
+        {/* Warm Golden Key Spotlight (Top Front-Right) */}
+        {lightsConfig.keySpot && (
+          <spotLight
+            position={[5, 8, 4]}
+            target-position={[0, 0.8, 0]}
+            angle={0.4}
+            penumbra={0.8}
+            intensity={3.5}
+            color="#ffd700"
+            castShadow
+            shadow-mapSize={2048}
+            shadow-bias={-0.0001}
+          />
+        )}
+
+        {/* Warm Rim Light (Rear Back-Left catching gold bevels) */}
+        {lightsConfig.rimLight && (
+          <spotLight
+            position={[-5, 6, -3]}
+            target-position={[0, 0.75, 0]}
+            angle={0.5}
+            penumbra={0.9}
+            intensity={2.8}
+            color="#ffdf9e"
+            castShadow
+          />
+        )}
+
+        {/* Directional Fill Light */}
+        <directionalLight position={[-4, 5, 2]} intensity={0.8} color="#ffffff" />
+
+        {/* Studio PMREM Environment Map for Metallic Reflections */}
         <Environment preset="studio" background={false} />
 
-        {/* Chair group — gyro rotates this group */}
-        {/* <group ref={chairGroupRef} position={[0, 0, 0]}> */}
-          <ChairModel scrollProgress={scrollProgress} />
-        {/* </group> */}
+        {/* --- "THE MANUFACTURE" ENVIRONMENT BACKDROP --- */}
+        <ManufactureEnvironment
+          showPanels={lightsConfig.tealPanels}
+          showVolumetricBeams={lightsConfig.volumetricBeams ?? true}
+        />
 
-        {/* Gyro rotation driver (runs in render loop) */}
-        {/* <GyroChairRotation gyroRef={chairGroupRef} enabled={gyroEnabled} /> */}
+        {/* --- HERO 3D CHAIR MODEL --- */}
+        <ChairModel scrollProgress={scrollProgress} materialPreset={materialPreset} />
 
+        {/* Ground Contact Shadows */}
         <ContactShadows
           position={[0, -0.001, 0]}
-          opacity={0.7}
+          opacity={0.8}
           scale={12}
-          blur={3}
+          blur={2.5}
           far={6}
           color="#000000"
         />
 
-        {/* <OrbitControls
-          ref={controlsRef}
-          makeDefault
-          target={[0, 0.75, 0]}
-          enablePan={false}
-          enableZoom={false}
-          minDistance={1.5}
-          maxDistance={10}
-          minPolarAngle={Math.PI / 8}
-          maxPolarAngle={Math.PI / 2 + 0.1}
-          autoRotate={false}
-          autoRotateSpeed={1.5}
-          dampingFactor={0.05}
-        /> */}
+        {/* --- CARTIER EXTRACTED POST-PROCESSING CHAIN --- */}
+        <EffectComposer disableNormalPass>
+          {postConfig.bloom && (
+            <Bloom
+              intensity={0.6}
+              luminanceThreshold={0.7}
+              luminanceSmoothing={0.3}
+              mipmapBlur
+            />
+          )}
+          {postConfig.vignette && (
+            <Vignette
+              eskil={false}
+              offset={0.3}
+              darkness={0.85}
+              blendFunction={BlendFunction.NORMAL}
+            />
+          )}
+          {postConfig.noise && (
+            <Noise
+              opacity={0.025}
+              blendFunction={BlendFunction.OVERLAY}
+            />
+          )}
+          <ChromaticAberration
+            offset={[0.0015, 0.0015]}
+            radialModulation={false}
+            modulationOffset={0}
+          />
+        </EffectComposer>
       </Canvas>
     </div>
   )

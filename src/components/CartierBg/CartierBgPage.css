@@ -1,0 +1,145 @@
+/* ─────────────────────────────────────────────────────────────────────────────
+   Cartier 3D Room Background Demo Page — Dark Mode & Cursor Parallax
+   ───────────────────────────────────────────────────────────────────────────── */
+
+.cartier-bg-page {
+  width: 100vw;
+  height: 100vh;
+  background: #110e0c;
+  color: #f4e9dc;
+  font-family: 'Neue Montreal', 'Inter', system-ui, -apple-system, sans-serif;
+  overflow: hidden;
+  position: fixed;
+  inset: 0;
+  user-select: none;
+}
+
+#cartier-bg-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100% !important;
+  height: 100% !important;
+  display: block;
+}
+
+/* ─── Top Header Navigation ────────────────────────────────────────────────── */
+.cartier-bg-nav {
+  position: absolute;
+  top: 1.5rem;
+  left: 1.5rem;
+  right: 1.5rem;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  pointer-events: none;
+}
+
+.cartier-bg-nav__back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.5rem 1rem;
+  background: rgba(26, 20, 16, 0.65);
+  border: 1px solid rgba(220, 185, 145, 0.2);
+  border-radius: 99px;
+  color: #f4e9dc;
+  font-size: 0.8rem;
+  font-weight: 500;
+  text-decoration: none;
+  pointer-events: auto;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  transition: all 0.25s ease;
+}
+
+.cartier-bg-nav__back:hover {
+  background: rgba(45, 34, 26, 0.85);
+  border-color: rgba(220, 185, 145, 0.45);
+  transform: translateX(-3px);
+}
+
+.cartier-bg-nav__center {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  background: rgba(26, 20, 16, 0.65);
+  border: 1px solid rgba(220, 185, 145, 0.2);
+  padding: 0.45rem 1.1rem;
+  border-radius: 99px;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+.cartier-bg-nav__dot {
+  width: 7px;
+  height: 7px;
+  background: #eab308;
+  border-radius: 50%;
+  box-shadow: 0 0 10px #eab308;
+  display: inline-block;
+}
+
+.cartier-bg-nav__title {
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #f4e9dc;
+}
+
+/* ─── Bottom HUD Overlay ──────────────────────────────────────────────────── */
+.cartier-bg-hud-bottom {
+  position: absolute;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  pointer-events: none;
+}
+
+.cartier-bg-hud-title {
+  font-size: 0.7rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: rgba(244, 233, 220, 0.5);
+  font-weight: 500;
+}
+
+/* ─── Loading Screen Overlay ──────────────────────────────────────────────── */
+.cartier-bg-loading {
+  position: absolute;
+  inset: 0;
+  z-index: 50;
+  background: #110e0c;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  transition: opacity 0.6s ease;
+}
+
+.cartier-bg-spinner {
+  width: 44px;
+  height: 44px;
+  border: 2px solid rgba(220, 185, 145, 0.15);
+  border-top-color: #dcb991;
+  border-radius: 50%;
+  animation: cartierSpin 0.9s linear infinite;
+}
+
+@keyframes cartierSpin {
+  to { transform: rotate(360deg); }
+}
+
+.cartier-bg-loading-text {
+  font-size: 0.75rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(220, 185, 145, 0.7);
+}

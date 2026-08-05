@@ -1,180 +1,120 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
-import {
-  RotateCcw,
-  Play,
-  Pause,
-  Sparkles,
-  Sun,
-  Layers,
-  Info,
-  Box,
-  Compass,
-  ArrowRight
-} from 'lucide-react'
+import { Sparkles, Sun, Palette, Eye, Sliders, Layers } from 'lucide-react'
 
 export function ControlsHUD({
-  autoRotate,
-  setAutoRotate,
-  envPreset,
-  setEnvPreset,
-  floatEnabled,
-  setFloatEnabled,
-  accentColor,
-  setAccentColor,
-  showAnnotations,
-  setShowAnnotations,
-  onResetCamera
+  materialPreset,
+  setMaterialPreset,
+  lightsConfig,
+  setLightsConfig,
+  postConfig,
+  setPostConfig
 }) {
-  const envOptions = [
-    { id: 'studio', label: 'Studio' },
-    { id: 'sunset', label: 'Sunset' },
-    { id: 'city', label: 'City' },
-    { id: 'night', label: 'Night' }
-  ]
-
-  const colorOptions = [
-    { hex: '#38bdf8', label: 'Cyan' },
-    { hex: '#a855f7', label: 'Purple' },
-    { hex: '#f59e0b', label: 'Amber' },
-    { hex: '#10b981', label: 'Emerald' },
-    { hex: '#f43f5e', label: 'Rose' }
-  ]
-
   return (
-    <div className="hud-overlay">
-      {/* Top Header Row */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', width: '100%' }}>
-        {/* Brand Badge */}
-        <div className="glass-panel hud-interactive header-brand" style={{ padding: '10px 16px' }}>
-          <div className="brand-icon-box">
-            <Box size={20} />
-          </div>
-          <div>
-            <div className="brand-title">CHAIR 3D STUDIO</div>
-            <div className="brand-tag">Drei & Three.js POC</div>
-          </div>
+    <div className="cartier-hud-panel">
+      <div className="cartier-hud-header">
+        <div className="cartier-hud-badge">CARTIER IMPRESSION</div>
+        <h3 className="cartier-hud-title">The Manufacture</h3>
+      </div>
+
+      {/* Material Preset Switcher */}
+      <div className="hud-section">
+        <div className="hud-section-label">
+          <Palette size={14} /> <span>PBR Material Finish</span>
         </div>
-
-        {/* Studio Page Link */}
-        <Link
-          to="/studio"
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '8px',
-            padding: '8px 16px',
-            background: 'rgba(200, 240, 96, 0.1)',
-            border: '1px solid rgba(200, 240, 96, 0.35)',
-            borderRadius: '100px',
-            color: '#c8f060',
-            textDecoration: 'none',
-            fontSize: '12px',
-            fontWeight: '700',
-            letterSpacing: '0.08em',
-            textTransform: 'uppercase',
-            cursor: 'pointer',
-            transition: 'background 0.25s ease',
-          }}
-        >
-          Studio Portfolio <ArrowRight size={14} />
-        </Link>
-
-        {/* Info Card */}
-        <div className="top-right-info hud-interactive">
-          <div className="glass-panel info-card">
-            <div className="info-title">Model Asset</div>
-            <div className="info-val" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#10b981', boxShadow: '0 0 8px #10b981' }}></span>
-              chair.glb
-            </div>
-          </div>
+        <div className="hud-button-group">
+          <button
+            className={`hud-btn ${materialPreset === 'gold' ? 'active' : ''}`}
+            onClick={() => setMaterialPreset('gold')}
+          >
+            Santos Gold
+          </button>
+          <button
+            className={`hud-btn ${materialPreset === 'platinum' ? 'active' : ''}`}
+            onClick={() => setMaterialPreset('platinum')}
+          >
+            Platinum
+          </button>
+          <button
+            className={`hud-btn ${materialPreset === 'original' ? 'active' : ''}`}
+            onClick={() => setMaterialPreset('original')}
+          >
+            Original
+          </button>
         </div>
       </div>
 
-      {/* Floating Guidance Badge */}
-      <div style={{ alignSelf: 'center', pointerEvents: 'auto' }}>
-        <div className="hint-badge">
-          <Compass size={14} color="#38bdf8" />
-          <span>Scroll to Rotate &bull; Drag to Orbit &bull; Pinch to Zoom</span>
+      {/* Cartier Light Rig Toggles */}
+      <div className="hud-section">
+        <div className="hud-section-label">
+          <Sun size={14} /> <span>Light Rig Elements</span>
         </div>
-      </div>
-
-      {/* Bottom Main Controls Toolbar */}
-      <div className="glass-panel toolbar-container hud-interactive">
-        {/* Auto Rotate Toggle */}
-        <button
-          className={`toolbar-btn ${autoRotate ? 'active' : ''}`}
-          onClick={() => setAutoRotate(!autoRotate)}
-          title="Toggle Auto Rotation"
-        >
-          {autoRotate ? <Pause size={16} /> : <Play size={16} />}
-          <span>{autoRotate ? 'Pause' : 'Rotate'}</span>
-        </button>
-
-        {/* Floating Effect Toggle */}
-        <button
-          className={`toolbar-btn ${floatEnabled ? 'active' : ''}`}
-          onClick={() => setFloatEnabled(!floatEnabled)}
-          title="Toggle Hover / Float Animation"
-        >
-          <Sparkles size={16} />
-          <span>Float</span>
-        </button>
-
-        {/* Annotations Toggle */}
-        <button
-          className={`toolbar-btn ${showAnnotations ? 'active' : ''}`}
-          onClick={() => setShowAnnotations(!showAnnotations)}
-          title="Toggle Hotspot Labels"
-        >
-          <Info size={16} />
-          <span>Labels</span>
-        </button>
-
-        <div style={{ width: 1, height: 24, background: 'rgba(255, 255, 255, 0.1)' }} />
-
-        {/* Environment Lighting Presets */}
-        <div className="presets-group">
-          <Sun size={14} style={{ color: 'var(--text-muted)', marginLeft: 6, marginRight: 2 }} />
-          {envOptions.map((opt) => (
-            <button
-              key={opt.id}
-              className={`preset-dot-btn ${envPreset === opt.id ? 'active' : ''}`}
-              onClick={() => setEnvPreset(opt.id)}
-            >
-              {opt.label}
-            </button>
-          ))}
-        </div>
-
-        <div style={{ width: 1, height: 24, background: 'rgba(255, 255, 255, 0.1)' }} />
-
-        {/* Spotlight Accent Color Picker */}
-        <div className="color-picker-group">
-          <Layers size={14} style={{ color: 'var(--text-muted)' }} />
-          {colorOptions.map((c) => (
-            <div
-              key={c.hex}
-              className={`color-swatch ${accentColor === c.hex ? 'active' : ''}`}
-              style={{ backgroundColor: c.hex }}
-              onClick={() => setAccentColor(c.hex)}
-              title={`Accent: ${c.label}`}
+        <div className="hud-toggle-grid">
+          <label className="hud-toggle-item">
+            <input
+              type="checkbox"
+              checked={lightsConfig.keySpot}
+              onChange={(e) => setLightsConfig({ ...lightsConfig, keySpot: e.target.checked })}
             />
-          ))}
+            <span>Warm Key Spotlight</span>
+          </label>
+          <label className="hud-toggle-item">
+            <input
+              type="checkbox"
+              checked={lightsConfig.tealPanels}
+              onChange={(e) => setLightsConfig({ ...lightsConfig, tealPanels: e.target.checked })}
+            />
+            <span>Teal Wall Panels</span>
+          </label>
+          <label className="hud-toggle-item">
+            <input
+              type="checkbox"
+              checked={lightsConfig.rimLight}
+              onChange={(e) => setLightsConfig({ ...lightsConfig, rimLight: e.target.checked })}
+            />
+            <span>Gold Rim Light</span>
+          </label>
+          <label className="hud-toggle-item">
+            <input
+              type="checkbox"
+              checked={lightsConfig.volumetricBeams ?? true}
+              onChange={(e) => setLightsConfig({ ...lightsConfig, volumetricBeams: e.target.checked })}
+            />
+            <span>Volumetric Light Beams</span>
+          </label>
         </div>
+      </div>
 
-        <div style={{ width: 1, height: 24, background: 'rgba(255, 255, 255, 0.1)' }} />
-
-        {/* Reset Camera View */}
-        <button
-          className="toolbar-btn"
-          onClick={onResetCamera}
-          title="Reset Camera Angle"
-        >
-          <RotateCcw size={16} />
-          <span>Reset</span>
-        </button>
+      {/* Post Processing Passes */}
+      <div className="hud-section">
+        <div className="hud-section-label">
+          <Sparkles size={14} /> <span>Cinematic Post Passes</span>
+        </div>
+        <div className="hud-toggle-grid">
+          <label className="hud-toggle-item">
+            <input
+              type="checkbox"
+              checked={postConfig.bloom}
+              onChange={(e) => setPostConfig({ ...postConfig, bloom: e.target.checked })}
+            />
+            <span>Bloom (0.6)</span>
+          </label>
+          <label className="hud-toggle-item">
+            <input
+              type="checkbox"
+              checked={postConfig.vignette}
+              onChange={(e) => setPostConfig({ ...postConfig, vignette: e.target.checked })}
+            />
+            <span>Vignette (2.0)</span>
+          </label>
+          <label className="hud-toggle-item">
+            <input
+              type="checkbox"
+              checked={postConfig.noise}
+              onChange={(e) => setPostConfig({ ...postConfig, noise: e.target.checked })}
+            />
+            <span>Film Grain (0.025)</span>
+          </label>
+        </div>
       </div>
     </div>
   )
