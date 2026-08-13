@@ -862,6 +862,7 @@ html, body, #root {
   align-items: center;
   text-align: center;
   gap: 8px;
+  margin-bottom: 40px;
   padding-bottom: 40px;
 }
 
@@ -882,6 +883,7 @@ html, body, #root {
   letter-spacing: -0.01em;
   line-height: 1.05;
   color: var(--text-primary);
+  margin-bottom: 40px;
 }
 
 .projects-title em {

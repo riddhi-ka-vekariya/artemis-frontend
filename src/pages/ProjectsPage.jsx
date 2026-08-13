@@ -6,23 +6,23 @@ import { vertexShader, fragmentShader } from '../components/UnseenCurlDemo/shade
 
 // ─── Constants ─────────────────────────────────────────────────────────────
 const MESH_SIZE_BASE = new THREE.Vector2(820, 430)
-const SEGMENT_COUNT  = 12
-const SCROLL_LERP    = 0.05
-const VELOCITY_LERP  = 0.075
+const SEGMENT_COUNT = 12
+const SCROLL_LERP = 0.05
+const VELOCITY_LERP = 0.075
 const VELOCITY_SCALE = 5e-4
-const CAMERA_Z       = 2000
-const FOG_NEAR       = 500
-const FOG_FAR        = 4500
+const CAMERA_Z = 2000
+const FOG_NEAR = 500
+const FOG_FAR = 4500
 
 const MULTIPLIERS = { default: 0.21, sm: 0.30, md: 0.28, lg: 0.35 }
-const DARK_BG     = '#141210'
+const DARK_BG = '#141210'
 
 const DEFAULTS = {
-  bendStart:  100,
-  bendEnd:    700,
-  zDepth:     1200,
-  noiseAmp:   50,
-  cardGap:    28,
+  bendStart: 100,
+  bendEnd: 700,
+  zDepth: 1200,
+  noiseAmp: 50,
+  cardGap: 28,
   innerScale: 1.0,
 }
 
@@ -30,57 +30,57 @@ const PROJECT_DATA = [
   {
     id: 1,
     title: 'Vault House',
-    desc:  'Residential · Lisbon, 2024',
-    img:   'https://images.unsplash.com/photo-1487958449943-2429e8be8625?w=1600&h=900&fit=crop&auto=format&q=85',
+    desc: 'Residential · Lisbon, 2024',
+    img: 'https://images.unsplash.com/photo-1487958449943-2429e8be8625?w=1600&h=900&fit=crop&auto=format&q=85',
     fullDesc: 'A monolith carved from local limestone. Vault House negotiates extreme topography with quiet architectural restraint, forming raw concrete lightwells and subterranean courtyards.'
   },
   {
     id: 2,
     title: 'Brutalist Pavilion',
-    desc:  'Cultural · Brussels, 2023',
-    img:   'https://images.unsplash.com/photo-1486325212027-8081e485255e?w=1600&h=900&fit=crop&auto=format&q=85',
+    desc: 'Cultural · Brussels, 2023',
+    img: 'https://images.unsplash.com/photo-1486325212027-8081e485255e?w=1600&h=900&fit=crop&auto=format&q=85',
     fullDesc: 'Designed as a temporary exhibition venue, the pavilion utilizes textured cast-in-place concrete walls to filter natural daylight into solemn, atmospheric gallery chambers.'
   },
   {
     id: 3,
     title: 'Helix Stair',
-    desc:  'Interior · Stockholm, 2024',
-    img:   'https://images.unsplash.com/photo-1464938050520-ef2270bb8ce8?w=1600&h=900&fit=crop&auto=format&q=85',
+    desc: 'Interior · Stockholm, 2024',
+    img: 'https://images.unsplash.com/photo-1464938050520-ef2270bb8ce8?w=1600&h=900&fit=crop&auto=format&q=85',
     fullDesc: 'A continuous spiral forged from raw black steel, serving as the vertical spine for a multi-level art foundation in central Stockholm.'
   },
   {
     id: 4,
     title: 'Coastal Residence',
-    desc:  'Residential · Lagos, 2023',
-    img:   'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1600&h=900&fit=crop&auto=format&q=85',
+    desc: 'Residential · Lagos, 2023',
+    img: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1600&h=900&fit=crop&auto=format&q=85',
     fullDesc: 'Perched along rugged Atlantic ocean bluffs, this cantilevered glass and timber home balances exposure to panoramic sea vistas with deep solar shading overhangs.'
   },
   {
     id: 5,
     title: 'Concrete Atrium',
-    desc:  'Office · Tokyo, 2022',
-    img:   'https://images.unsplash.com/photo-1531971589569-0d9370cbe1e5?w=1600&h=900&fit=crop&auto=format&q=85',
+    desc: 'Office · Tokyo, 2022',
+    img: 'https://images.unsplash.com/photo-1531971589569-0d9370cbe1e5?w=1600&h=900&fit=crop&auto=format&q=85',
     fullDesc: 'A seven-story central atrium enveloped in geometric acoustic concrete baffles, drawing soft diffuse overhead daylight deep into the interior office floors.'
   },
   {
     id: 6,
     title: 'Light Vault',
-    desc:  'Cultural · Oslo, 2024',
-    img:   'https://images.unsplash.com/photo-1524758631624-e2822e304c36?w=1600&h=900&fit=crop&auto=format&q=85',
+    desc: 'Cultural · Oslo, 2024',
+    img: 'https://images.unsplash.com/photo-1524758631624-e2822e304c36?w=1600&h=900&fit=crop&auto=format&q=85',
     fullDesc: 'An underground subterranean archive illuminated solely by vertical skylight tubes, combining timber ceiling ribbons with polished dark terrazzo flooring.'
   },
   {
     id: 7,
     title: 'Market Hall',
-    desc:  'Public · Rotterdam, 2023',
-    img:   'https://images.unsplash.com/photo-1503174971373-b1f69850bded?w=1600&h=900&fit=crop&auto=format&q=85',
+    desc: 'Public · Rotterdam, 2023',
+    img: 'https://images.unsplash.com/photo-1503174971373-b1f69850bded?w=1600&h=900&fit=crop&auto=format&q=85',
     fullDesc: 'A civic roof canopy constructed from prefabricated glulam arches, spanning 60 meters to shelter an open-air artisanal food market.'
   },
   {
     id: 8,
     title: 'Tower Studio',
-    desc:  'Residential · Vienna, 2024',
-    img:   'https://images.unsplash.com/photo-1449157291145-7efd050a4d0e?w=1600&h=900&fit=crop&auto=format&q=85',
+    desc: 'Residential · Vienna, 2024',
+    img: 'https://images.unsplash.com/photo-1449157291145-7efd050a4d0e?w=1600&h=900&fit=crop&auto=format&q=85',
     fullDesc: 'A vertical penthouse restoration featuring blackened brass joinery, full-height double-glazed apertures, and bespoke minimalist furniture pieces.'
   },
 ]
@@ -145,9 +145,9 @@ export default function ProjectsPage() {
 
     // ── Layout Calculation ───────────────────────────────────────────────────
     const MQ = {
-      sm:  window.matchMedia('(min-width: 768px)'),
-      md:  window.matchMedia('(min-width: 1024px)'),
-      lg:  window.matchMedia('(min-width: 1366px)'),
+      sm: window.matchMedia('(min-width: 768px)'),
+      md: window.matchMedia('(min-width: 1024px)'),
+      lg: window.matchMedia('(min-width: 1366px)'),
       xlg: window.matchMedia('(min-width: 1921px)'),
     }
 
@@ -156,13 +156,13 @@ export default function ProjectsPage() {
       const sceneScale = w / 2150
 
       let mult = MULTIPLIERS.default
-      if      (MQ.lg.matches) mult = MULTIPLIERS.lg
+      if (MQ.lg.matches) mult = MULTIPLIERS.lg
       else if (MQ.md.matches) mult = MULTIPLIERS.md
       else if (MQ.sm.matches) mult = MULTIPLIERS.sm
 
       let scaleAdj = 1
-      if      (MQ.xlg.matches) scaleAdj = sceneScale + 0.2
-      else if (MQ.lg.matches)  scaleAdj = sceneScale + 0.3
+      if (MQ.xlg.matches) scaleAdj = sceneScale + 0.2
+      else if (MQ.lg.matches) scaleAdj = sceneScale + 0.3
 
       mult *= scaleAdj
 
@@ -178,7 +178,7 @@ export default function ProjectsPage() {
       }
 
       const cols = MQ.md.matches ? 2 : 1
-      const gap  = 0
+      const gap = 0
       const rowH = meshSize.y
 
       return { meshSize, bendPoint, cols, gap, rowH, scaleAdj }
@@ -187,9 +187,9 @@ export default function ProjectsPage() {
     // ── Texture Builder ──────────────────────────────────────────────────────
     function makeCardTexture(data, w, h) {
       const cvs = document.createElement('canvas')
-      cvs.width  = Math.max(1, Math.round(w))
+      cvs.width = Math.max(1, Math.round(w))
       cvs.height = Math.max(1, Math.round(h))
-      const ctx  = cvs.getContext('2d')
+      const ctx = cvs.getContext('2d')
 
       ctx.fillStyle = '#1e1e24'
       ctx.fillRect(0, 0, cvs.width, cvs.height)
@@ -259,22 +259,22 @@ export default function ProjectsPage() {
         const mat = new THREE.ShaderMaterial({
           vertexShader, fragmentShader,
           uniforms: {
-            uTexture:       { value: tex },
-            u_fluidTex:     { value: null },
-            u_time:         { value: 0 },
-            u_random:       { value: Math.random() + 1 },
+            uTexture: { value: tex },
+            u_fluidTex: { value: null },
+            u_time: { value: 0 },
+            u_random: { value: Math.random() + 1 },
             u_heightOffset: { value: 1 },
-            u_bendPoint:    { value: bendPoint.clone() },
-            u_zDepth:       { value: state.params.zDepth },
-            u_noiseAmp:     { value: state.params.noiseAmp },
-            u_rippleAmp:    { value: 12.0 },
-            u_imageSize:    { value: meshSize.clone() },
-            u_meshSize:     { value: meshSize.clone() },
-            u_innerScale:   { value: state.params.innerScale },
-            u_opacity:      { value: 1.0 },
-            fogColor:       { value: fogCol.clone() },
-            fogNear:        { value: FOG_NEAR },
-            fogFar:         { value: FOG_FAR },
+            u_bendPoint: { value: bendPoint.clone() },
+            u_zDepth: { value: state.params.zDepth },
+            u_noiseAmp: { value: state.params.noiseAmp },
+            u_rippleAmp: { value: 12.0 },
+            u_imageSize: { value: meshSize.clone() },
+            u_meshSize: { value: meshSize.clone() },
+            u_innerScale: { value: state.params.innerScale },
+            u_opacity: { value: 1.0 },
+            fogColor: { value: fogCol.clone() },
+            fogNear: { value: FOG_NEAR },
+            fogFar: { value: FOG_FAR },
           },
           transparent: true, depthWrite: false, side: THREE.DoubleSide,
         })
@@ -311,8 +311,8 @@ export default function ProjectsPage() {
 
       state.projectsGroup.children.forEach((group, u) => {
         const mesh = group.children[0]
-        const col  = u % cols
-        const row  = Math.floor(u / cols)
+        const col = u % cols
+        const row = Math.floor(u / cols)
 
         let fx = col * (meshSize.x + gap)
         if (cols > 1) fx -= 0.5 * (meshSize.x + gap)
@@ -387,11 +387,11 @@ export default function ProjectsPage() {
     // Full-gold strip with SQUARE centered sprocket holes.
     // No dark inner zone — gold butts directly against the card edge.
     function makeFilmstripTexture(side, w, h) {
-      const res  = Math.min(window.devicePixelRatio, 2)
-      const cvs  = document.createElement('canvas')
-      cvs.width  = Math.round(w * res)
+      const res = Math.min(window.devicePixelRatio, 2)
+      const cvs = document.createElement('canvas')
+      cvs.width = Math.round(w * res)
       cvs.height = Math.round(h * res)
-      const ctx  = cvs.getContext('2d')
+      const ctx = cvs.getContext('2d')
       ctx.scale(res, res)
 
       // Full gold background
@@ -439,13 +439,13 @@ export default function ProjectsPage() {
       const STRIP_W = meshSize.x * 0.075
 
       // Outer X edges of the card columns
-      const leftFx   = cols > 1 ? -0.5 * (meshSize.x + gap) : 0
-      const rightFx  = cols > 1 ?  0.5 * (meshSize.x + gap) : 0
-      const leftEdge  = leftFx  - meshSize.x / 2
+      const leftFx = cols > 1 ? -0.5 * (meshSize.x + gap) : 0
+      const rightFx = cols > 1 ? 0.5 * (meshSize.x + gap) : 0
+      const leftEdge = leftFx - meshSize.x / 2
       const rightEdge = rightFx + meshSize.x / 2
 
       // Pre-build textures (reused across rows)
-      const texL = makeFilmstripTexture('left',  Math.round(STRIP_W * 4), Math.round(meshSize.y * 4))
+      const texL = makeFilmstripTexture('left', Math.round(STRIP_W * 4), Math.round(meshSize.y * 4))
       const texR = makeFilmstripTexture('right', Math.round(STRIP_W * 4), Math.round(meshSize.y * 4))
 
       const filmstripGroup = new THREE.Group()
@@ -457,48 +457,48 @@ export default function ProjectsPage() {
       for (let row = 0; row < rows; row++) {
         const fy = -(row * rowH + row * gap + yStartOffset)
 
-        ;['left', 'right'].forEach(side => {
-          const geo = new THREE.PlaneGeometry(1, 1, SEGMENT_COUNT, SEGMENT_COUNT)
-          const tex = side === 'left' ? texL : texR
+          ;['left', 'right'].forEach(side => {
+            const geo = new THREE.PlaneGeometry(1, 1, SEGMENT_COUNT, SEGMENT_COUNT)
+            const tex = side === 'left' ? texL : texR
 
-          const mat = new THREE.ShaderMaterial({
-            vertexShader, fragmentShader,
-            uniforms: {
-              uTexture:       { value: tex },
-              u_fluidTex:     { value: null },
-              u_time:         { value: 0 },
-              u_random:       { value: Math.random() + 1 },
-              u_heightOffset: { value: 1 },
-              u_bendPoint:    { value: bendPoint.clone() },
-              u_zDepth:       { value: state.params.zDepth },
-              u_noiseAmp:     { value: state.params.noiseAmp * 0.6 },
-              u_rippleAmp:    { value: 8.0 },
-              u_imageSize:    { value: stripSize.clone() },
-              u_meshSize:     { value: stripSize.clone() },
-              u_innerScale:   { value: state.params.innerScale },
-              u_opacity:      { value: 1.0 },
-              fogColor:       { value: fogCol.clone() },
-              fogNear:        { value: FOG_NEAR },
-              fogFar:         { value: FOG_FAR },
-            },
-            transparent: true, depthWrite: false, side: THREE.DoubleSide,
+            const mat = new THREE.ShaderMaterial({
+              vertexShader, fragmentShader,
+              uniforms: {
+                uTexture: { value: tex },
+                u_fluidTex: { value: null },
+                u_time: { value: 0 },
+                u_random: { value: Math.random() + 1 },
+                u_heightOffset: { value: 1 },
+                u_bendPoint: { value: bendPoint.clone() },
+                u_zDepth: { value: state.params.zDepth },
+                u_noiseAmp: { value: state.params.noiseAmp * 0.6 },
+                u_rippleAmp: { value: 8.0 },
+                u_imageSize: { value: stripSize.clone() },
+                u_meshSize: { value: stripSize.clone() },
+                u_innerScale: { value: state.params.innerScale },
+                u_opacity: { value: 1.0 },
+                fogColor: { value: fogCol.clone() },
+                fogNear: { value: FOG_NEAR },
+                fogFar: { value: FOG_FAR },
+              },
+              transparent: true, depthWrite: false, side: THREE.DoubleSide,
+            })
+
+            const mesh = new THREE.Mesh(geo, mat)
+            mesh.scale.set(STRIP_W, meshSize.y, 1)
+            mesh.frustumCulled = false
+            mesh.userData = { isFilmstrip: true }
+
+            // X centre of this strip
+            const fx = side === 'left'
+              ? leftEdge - STRIP_W / 2
+              : rightEdge + STRIP_W / 2
+
+            const group = new THREE.Group()
+            group.add(mesh)
+            group.position.set(fx, fy, 1000)
+            filmstripGroup.add(group)
           })
-
-          const mesh = new THREE.Mesh(geo, mat)
-          mesh.scale.set(STRIP_W, meshSize.y, 1)
-          mesh.frustumCulled = false
-          mesh.userData = { isFilmstrip: true }
-
-          // X centre of this strip
-          const fx = side === 'left'
-            ? leftEdge  - STRIP_W / 2
-            : rightEdge + STRIP_W / 2
-
-          const group = new THREE.Group()
-          group.add(mesh)
-          group.position.set(fx, fy, 1000)
-          filmstripGroup.add(group)
-        })
       }
     }
 
@@ -569,22 +569,22 @@ export default function ProjectsPage() {
 
     buildProjects()
 
-    window.addEventListener('wheel',       onWheel,          { passive: false })
-    window.addEventListener('touchstart',  onTouchStart,     { passive: true })
-    window.addEventListener('touchmove',   onTouchMove,      { passive: false })
-    window.addEventListener('resize',      onResize)
+    window.addEventListener('wheel', onWheel, { passive: false })
+    window.addEventListener('touchstart', onTouchStart, { passive: true })
+    window.addEventListener('touchmove', onTouchMove, { passive: false })
+    window.addEventListener('resize', onResize)
     canvas.addEventListener('pointerdown', handlePointerDown)
-    canvas.addEventListener('pointerup',   handlePointerUp)
+    canvas.addEventListener('pointerup', handlePointerUp)
 
     tick()
 
     return () => {
-      window.removeEventListener('wheel',       onWheel)
-      window.removeEventListener('touchstart',  onTouchStart)
-      window.removeEventListener('touchmove',   onTouchMove)
-      window.removeEventListener('resize',      onResize)
+      window.removeEventListener('wheel', onWheel)
+      window.removeEventListener('touchstart', onTouchStart)
+      window.removeEventListener('touchmove', onTouchMove)
+      window.removeEventListener('resize', onResize)
       canvas.removeEventListener('pointerdown', handlePointerDown)
-      canvas.removeEventListener('pointerup',   handlePointerUp)
+      canvas.removeEventListener('pointerup', handlePointerUp)
       cancelAnimationFrame(animId)
       renderer.dispose()
     }
