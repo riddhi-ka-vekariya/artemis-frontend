@@ -1,0 +1,96 @@
+=== FRAGMENT SHADER START ===
+ess;uniform float uOcclusion;uniform float uAlpha;uniform float uEnvRotationX;uniform float uEnvRotationY;uniform float uMirrored;uniform float uDark;uniform vec3 uColor;uniform vec3 uEmissiveColor;uniform vec3 uLightmapRgb;uniform sampler2D tBlueNoise;uniform sampler2D tBayerPattern;
+#ifdef IS_WATCH
+uniform lowp sampler3D tLut;uniform float uLutStrength;
+#endif
+#ifdef USE_FLUID_SIM
+uniform sampler2D tFluidSim;uniform sampler2D tFluidVelocity;uniform sampler2D tFluidColor;uniform float uFluidStrength;
+#endif
+uniform vec4 uBoundingRect;in mat3 vTBN;in vec4 vClip;in vec3 vWorldPos;in vec3 vViewPos;in vec3 vNormal;in vec3 vWorldNormal;in vec3 vTangentWorldPos;in vec3 vTangentCameraPos;in vec2 vUv;in vec2 vUv1;out vec4 FragColor[2];
+#include <common>
+#include <SRGBtoLinear>
+#include <LineartoSRGB>
+#include <evaluateSH>
+#include <getIBLSpecularLighting>
+#include <getNormal>
+#include <fresnelSchlick>
+#include <tonemap>
+#include <linearizeDepth>
+#include <trignoise>
+#define PLATEAU_HEIGHT 0.0
+mat3 rotateY(in float angle){return mat3(cos(angle),0.0,sin(angle),0.0,1.0,0.0,-sin(angle),0,cos(angle));}mat3 rotateX(in float angle){return mat3(1.0,0.0,0.0,0.0,cos(angle),-sin(angle),0.0,sin(angle),cos(angle));}vec2 applyRepeatOffset(vec2 uv,vec4 repeatOffset){return uv*repeatOffset.xy+repeatOffset.zw;}void main(void){if(vWorldPos.y>PLATEAU_HEIGHT&&uMirrored>0.5){discard;return;}vec2 uv=vUv;
+#ifdef USE_UV_1
+uv=vUv1;
+#endif
+vec2 ndc=vClip.xy/vClip.w;ndc=ndc*0.5+0.5;vec3 v=normalize(cameraPosition-vWorldPos);vec2 normalUv=applyRepeatOffset(uv,uNormalRepeatOffset);
+#if defined(USE_GEOMETRY_NORMAL)
+vec3 n=normalize(vWorldNormal);
+#elif defined(USE_GEOMETRY_TANGENT)
+vec3 n=getNormal(normalUv,vTBN);
+#else
+vec3 n=getNormal(normalUv);
+#endif
+vec3 r=reflect(-v,n);float NdV=max(0.0001,dot(n,v));float _uEnvRotationY=uEnvRotationY;float _uEnvRotationX=uEnvRotationX;vec3 rotatedN=n*rotateX(_uEnvRotationY);rotatedN*=rotateY(_uEnvRotationX);vec3 rotatedR=r*rotateX(_uEnvRotationY);rotatedR*=rotateY(_uEnvRotationX);float roughness=uRoughness;float metallness=uMetalness;
+#ifdef USE_MR_MAP
+vec2 mrUv=applyRepeatOffset(uv,uMRRepeatOffset);vec3 mr=LineartoSRGB(vec4(texture(tMR,mrUv).rgb,1.0)).rgb;
+#ifdef IS_ANDROID
+mr.g*=2.0;
+#endif
+#ifdef USE_METALNESS_MAP
+metallness=mr.b;
+#endif
+#ifdef USE_ROUGHNESS_MAP
+roughness=mr.g;
+#endif
+#endif
+vec2 albedoUv=applyRepeatOffset(uv,uAlbedoRepeatOffset);vec4 albedo=(texture(tAlbedo,albedoUv));
+#ifdef USE_ALPHA_DISCARD
+if(albedo.a<0.5)discard;
+#endif
+#ifdef USE_COLOR
+albedo.xyz=uColor;
+#endif
+#ifdef USE_GOLD_MASK
+float goldMask=1.0-texture(tGoldMask,uv*4.5+uTime*0.015).x;float deriv=fwidth(goldMask);float range=0.7;goldMask=smoothstep(range-deriv,range+deriv,goldMask);float VdN=1.0-NdV;goldMask*=VdN;roughness=mix(roughness,0.0,goldMask*5.0);metallness=mix(metallness,1.0,goldMask*2.0);albedo.xyz=mix(albedo.xyz,mix(vec3(0.976,0.867,0.596),vec3(1.0),0.2),goldMask);
+#endif
+vec2 emissiveUv=applyRepeatOffset(uv,uEmissiveRepeatOffset);vec4 emissive=texture(tEmissive,emissiveUv);
+#ifdef USE_FLUID_SIM
+floa
+=== FRAGMENT SHADER END ===
+
+=== SC06_ROOM SETUP ===
+:["sc04_stairs","opacity"]'},zVgyMQgnDy:{type:"BasicKeyframedTrack",__debugName:'objectsVisibility:["sc06_room","dark"]',keyframes:[{type:"bezier",connectedRight:!0,handles:[.5,1,.5,0],value:0,id:"PhGL6jovjj",position:0},{id:"ylkU3TNVKR",position:19.1,connectedRight:!0,type:"bezier",handles:[.5,1,.5,0],value:.01},{position:20.967,id:"8oDa0HhC6-",value:1,handles:[.5,1,.5,0],connectedRight:!0,type:"bezier"},{position:23.033,id:"eQY2uDHRlO",handles:[.5,1,.5,0],value:0,type:"bezier",connectedRight:!0}]},"4-Lp96vBqM":{keyframes:[{handles:[.5,1,.5,0],value:0,connectedRight:!0,type:"bezier",position:0,id:"slPrzDUWmy"},{position:13.933,id:"4MxNqzQcKL",value:1,handles:[.5,1,.5,0],connectedRight:!0,type:"bezier"},{type:"bezier",connectedRight:!0,value:1,handles:[.5,1,.5,0],id:"OSXPuS7nqV",position:17.1}],type:"BasicKeyframedTrack",__debugName:'objectsVisibility:["sc05_room","dark"]'},IgWlHKgsoI:{keyframes:[{connectedRight:!0,type:"bezier",handles:[.5,1,.5,0],value:1,id:"-YMGw4kB-0",position:0},{handles:[.5,1,.5,0],value:1,type:"bezier",connectedRight:!0,position:1.133,id:"IDwIMMwuXC"},{type:"bezier",connectedRight:!0,handles:[.5,1,.5,0],value:0,id:"hbn74C_-WG",position:1.7}],type:"BasicKeyframedTrack",__debugName:'objectsVisibility:["sc00_room","dark"]'},ZZPj3PNJpk:{__debugName:'objectsVisibility:["sc01_dunes","dark"]',type:"BasicKeyframedTrack",keyframes:[{handles:[.5,1,.5,0],value:0,type:"bezier",connectedRight:!0,position:0,id:"ANp3XAGzrA"},{handles:[.5,1,.5,0],value:0,type:"bezier",connectedRight:!0,position:2.567,id:"ILRbU7s9c7"},{type:"bezier",connectedRight:!0,value:1,handles:[.5,1,.5,0],id:"KixmopTM4O",position:3.333},{id:"gEDdKD4-Ok",position:4.333,connectedRight:!0,type:"bezier",handles:[.5,1,.5,0],value:1},{value:0,handles:[.5,1,.5,0],connectedRight:!0,type:"bezier",position:4.867,id:"CnUx96ARzL"}]},"bVrDxq7P-L":{keyframes:[{position:0,id:"TkqeKwfA0R",value:0,handles:[.5,1,.5,0],type:"hold",connectedRight:!0},{handles:[.5,1,.5,0],value:1,type:"hold",connectedRight:!0,position:13.933,id:"jrz3cCMyGn"}],__debugName:'objectsVisibility:["sc05_room","opacity"]',type:"BasicKeyframedTrack"},"Nd-ELcvvZp":{__debugName:'objectsVisibility:["room","dark"]',type:"BasicKeyframedTrack",keyframes:[{position:0,id:"yWu1F46TYK",handles:[.5,1,.5,0],value:1,type:"bezier",connectedRight:!0}]},AdahYJTwaN:{__debugName:'objectsVisibility:["sc06_images","opacity"]',type:"BasicKeyframedTrack",keyframes:[{value:0,handles:[.5,1,.5,0],type:"bezier",connectedRight:!0,position:19.633,id:"eLp1K-VS0A"},{handles:[.5,1,.5,0],value:1,connectedRight:!0,type:"bezier",position:20.4,id:"2VEnhIvKBM"},{id:"UUWteWmCC0",position:21.933,type:"bezier",connectedRight:!0,value:1,handles:[.5,1,.5,0]},{id:"tXdVOKTxzr",position:22.533,type:"bezier",connectedRight:!0,handles:[.5,1,.5,0],value:0}]},"9xFjkip0Qa":{type:"BasicKeyframedTrack",__debugName:'objectsVisibility:["sc01_cylinders","dark"]',keyframes:[{id:"QL0_kNWMqU",position:0,connectedRight:!0,type:"bezier",handles:[.5,1,.5,0],value:0},{position:.2,id:"X3ODZGm88H",value:0,handles:[.5,1,.5,0],connectedRight:!0,type:"bezier"},{handles:[.5,1,
+=== END ===
+
+=== SH CONSTANTS ===
+Off;freq/=fallOff;s+=noise;}return noise;}`,gCt=`#define GLSLIFY 1
+vec3 evaluateSH(vec3 normal,vec3 shConstants[9]){return shConstants[0]+shConstants[1]*normal.y+shConstants[2]*normal.z+shConstants[3]*normal.x+shConstants[4]*(normal.y*normal.x)+shConstants[5]*(normal.y*normal.z)+shConstants[6]*(3.0*normal.z*normal.z-1.0)+shConstants[7]*(normal.z*normal.x)+shConstants[8]*(normal.x*normal.x-normal.y*normal.y);}`,fCt=`#define GLSLIFY 1
+vec2 getBumpUV(in vec2 uv){vec2 uvBump=uv;if(uBumpFlip>0.0){uvBump.y=1.0-uvBump.y;}return uvBump;}vec2 parallaxMap(in vec2 uv,in vec3 v){vec2 uvBump=getBumpUV(uv);float minLayers=floor(uLayerRange.x);float maxLayers=floor(uLayerRange.y);float numLayers=mix(maxLayers,minLayers,max(0.0,dot(-v,vec3(0.0,0.0,1.0))));float layerDepth=1.0/numLayers;float currentLayerDepth=0.0;vec2 p=v.xy*uHeightStrength;vec2 deltaCoord=p/numLayers;vec2 currentPos=uv;float currentDepth=texture(tBump,uv).x;while(currentLayerDepth<currentDepth){currentPos-=deltaCoord;currentDepth=texture(tBump,currentPos).x;currentLayerDepth+=layerDepth;}return currentPos;}`,bCt=`#define GLSLIFY 1
+vec2 getBumpUV(in vec2 uv){vec2 uvBump=uv;if(uBumpFlip>0.0){uvBump.y=1.0-uvBump.y;}return uvBump;}vec2 parallaxMapSimple(in vec2 uv,in vec3 v){float depth=texture(tBump,getBumpUV(uv)).x;vec2 p=v.xy*(depth*uHeightStrength);return uv-p;}`,wCt=`#define GLSLIFY 1
+vec2 getBumpUV(in vec2 uv){vec2 uvBump=vec2(uv.x,uv.y);if(uBumpFlip>0.0){uvBump.y=1.0-uvBump.y;}return uvBump;}vec2 parallaxOcclusion(in vec2 uv,in vec3 v){vec2 uvBump=getBumpUV(uv);float minLayers=floor(uLayerRange.x);float maxLayers=floor(uLayerRange.y);float numLayers=mix(maxLayers,minLayers,max(0.0,dot(-v,vec3(0.0,0.0,1.0))));float layerDepth=1.0/numLayers;float currentLayerDepth=0.0;vec2 p=v.xy*uHeightStrength;vec2 deltaCoord=p/numLayers;vec2 currentPos=uvBump;float currentDepth=texture(tBump,uvBump).x;while(currentLayerDepth<currentDepth){currentPos-=deltaCoord;currentDepth=texture(tBump,currentPos).x;currentLayerDepth+=layerDepth;}vec2 prevCoord=currentPos+deltaCoord;float afterDepth=currentDepth-currentLayerDepth;float bef
+=== END ===
+
+=== SC06 CAM ===
+,{name:"SC02_lightmap"},{name:"SC03_lightmap"},{name:"SC04_lightmap"},{name:"SC05_lightmap"},{name:"SC06_lightmap"}],j0=[{envMap:"SC00_oct",shConstants:"SC00_sh",ligthmap:"SC00_lightmap",lightmapRgb:new at(1,0,0),ligthmapIndex:0,envRotationX:Math.PI*0},{envMap:"SC01_oct",shConstants:"SC01_sh",ligthmap:"SC01_lightmap",lightmapRgb:new at(1,0,0),ligthmapIndex:1,envRotationX:Math.PI*1},{envMap:"SC02_oct",shConstants:"SC02_sh",ligthmap:"SC02_lightmap",lightmapRgb:new at(1,0,0),ligthmapIndex:2,envRotationX:Math.PI*0},{envMap:"SC03_oct",shConstants:"SC03_sh",ligthmap:"SC03_lightmap",lightmapRgb:new at(1,0,0),ligthmapIndex:3,envRotationX:Math.PI*1},{envMap:"SC04_oct",shConstants:"SC04_sh",ligthmap:"SC04_lightmap",lightmapRgb:new at(1,0,0),ligthmapIndex:4,envRotationX:Math.PI*0},{envMap:"SC05_oct",shConstants:"SC05_sh",ligthmap:"SC05_lightmap",lightmapRgb:new at(1,0,0),ligthmapIndex:5,envRotationX:Math.PI*1},{envMap:"SC06_oct",shConstants:"SC06_sh",ligthmap:"SC06_lightmap",lightmapRgb:new at(1,0,0),ligthmapIndex:6,envRotationX:Math.PI*0},{envMap:"SC00_oct",shConstants:"SC00_sh",ligthmap:"SC00_lightmap",lightmapRgb:new at(1,0,0),ligthmapIndex:0,envRotationX:Math.PI*0}];function VY(r,e){const t=r?j0[e]:null,a=t&&Pr.get(t.ligthmap),i=t&&t.lightmapRgb||new at(1,0,0),s=t&&t.ligthmapIndex;return{lightmap:a,lightmapRgb:i,ligthmapIndex:s}}class yl extends ULt{constructor(t={}){var z;const{envSpecular:a,shConstants:i,material:s,object:o,envRotationX:l}=t||{},u=t.name||(s?"DefaultPbrMaterial---"+(s==null?void 0:s.name):"DefaultPbrMaterial"),h=Pr.get("white"),g=(o==null?void 0:o.userData.scene
+=== END ===
+
+--- lightmapRgb instance #0 ---
+(e){const{color:t=null,emissiveColor:a=null,albedo:i=null,emissive:s=null,emissiveIntensity:o=1,colorIntensity:l=1,lightmapIntensity:u=1,normal:h=null,mr:g=null,ao:p=null,alpha:b=null,lightmap:v=null,lightmapRgb:P=new at(1,0,0),envSpecular:S=null,roughness:E=1,metalness:_=0,occlusion:I=1,opacity:z=1,envRotationX:B=0,envRotationY:q=0,shConstants:ae=[],optimisedNormalMaps:$=!1,isTransparent:R=!1,useGeometryNormal:G=!0,useGeometryTangent:le=!0,useMetalnessMap:Q=!0,useRoughnessMap:ue=!0,useUv1:me=!1,useAoUv1:Me=!1,mirrored:Le=!1,skinning:de=!1,alphaDiscard:Ae=!1,lights:Ee=!1,spotlight:et=!0,glitte
+--- lightmapRgb instance #1 ---
+01_lightmap"},{name:"SC02_lightmap"},{name:"SC03_lightmap"},{name:"SC04_lightmap"},{name:"SC05_lightmap"},{name:"SC06_lightmap"}],j0=[{envMap:"SC00_oct",shConstants:"SC00_sh",ligthmap:"SC00_lightmap",lightmapRgb:new at(1,0,0),ligthmapIndex:0,envRotationX:Math.PI*0},{envMap:"SC01_oct",shConstants:"SC01_sh",ligthmap:"SC01_lightmap",lightmapRgb:new at(1,0,0),ligthmapIndex:1,envRotationX:Math.PI*1},{envMap:"SC02_oct",shConstants:"SC02_sh",ligthmap:"SC02_lightmap",lightmapRgb:new at(1,0,0),ligthmapIndex:2,envRotationX:Math.PI*0},{envMap:"SC03_oct",shConstants:"SC03_sh",ligthmap:"SC03_lightmap",ligh
+--- lightmapRgb instance #2 ---
+=[{envMap:"SC00_oct",shConstants:"SC00_sh",ligthmap:"SC00_lightmap",lightmapRgb:new at(1,0,0),ligthmapIndex:0,envRotationX:Math.PI*0},{envMap:"SC01_oct",shConstants:"SC01_sh",ligthmap:"SC01_lightmap",lightmapRgb:new at(1,0,0),ligthmapIndex:1,envRotationX:Math.PI*1},{envMap:"SC02_oct",shConstants:"SC02_sh",ligthmap:"SC02_lightmap",lightmapRgb:new at(1,0,0),ligthmapIndex:2,envRotationX:Math.PI*0},{envMap:"SC03_oct",shConstants:"SC03_sh",ligthmap:"SC03_lightmap",lightmapRgb:new at(1,0,0),ligthmapIndex:3,envRotationX:Math.PI*1},{envMap:"SC04_oct",shConstants:"SC04_sh",ligthmap:"SC04_lightmap",ligh
+--- lightmapRgb instance #3 ---
+},{envMap:"SC01_oct",shConstants:"SC01_sh",ligthmap:"SC01_lightmap",lightmapRgb:new at(1,0,0),ligthmapIndex:1,envRotationX:Math.PI*1},{envMap:"SC02_oct",shConstants:"SC02_sh",ligthmap:"SC02_lightmap",lightmapRgb:new at(1,0,0),ligthmapIndex:2,envRotationX:Math.PI*0},{envMap:"SC03_oct",shConstants:"SC03_sh",ligthmap:"SC03_lightmap",lightmapRgb:new at(1,0,0),ligthmapIndex:3,envRotationX:Math.PI*1},{envMap:"SC04_oct",shConstants:"SC04_sh",ligthmap:"SC04_lightmap",lightmapRgb:new at(1,0,0),ligthmapIndex:4,envRotationX:Math.PI*0},{envMap:"SC05_oct",shConstants:"SC05_sh",ligthmap:"SC05_lightmap",ligh
+--- lightmapRgb instance #4 ---
+},{envMap:"SC02_oct",shConstants:"SC02_sh",ligthmap:"SC02_lightmap",lightmapRgb:new at(1,0,0),ligthmapIndex:2,envRotationX:Math.PI*0},{envMap:"SC03_oct",shConstants:"SC03_sh",ligthmap:"SC03_lightmap",lightmapRgb:new at(1,0,0),ligthmapIndex:3,envRotationX:Math.PI*1},{envMap:"SC04_oct",shConstants:"SC04_sh",ligthmap:"SC04_lightmap",lightmapRgb:new at(1,0,0),ligthmapIndex:4,envRotationX:Math.PI*0},{envMap:"SC05_oct",shConstants:"SC05_sh",ligthmap:"SC05_lightmap",lightmapRgb:new at(1,0,0),ligthmapIndex:5,envRotationX:Math.PI*1},{envMap:"SC06_oct",shConstants:"SC06_sh",ligthmap:"SC06_lightmap",ligh
+--- lightmapRgb instance #5 ---
+},{envMap:"SC03_oct",shConstants:"SC03_sh",ligthmap:"SC03_lightmap",lightmapRgb:new at(1,0,0),ligthmapIndex:3,envRotationX:Math.PI*1},{envMap:"SC04_oct",shConstants:"SC04_sh",ligthmap:"SC04_lightmap",lightmapRgb:new at(1,0,0),ligthmapIndex:4,envRotationX:Math.PI*0},{envMap:"SC05_oct",shConstants:"SC05_sh",ligthmap:"SC05_lightmap",lightmapRgb:new at(1,0,0),ligthmapIndex:5,envRotationX:Math.PI*1},{envMap:"SC06_oct",shConstants:"SC06_sh",ligthmap:"SC06_lightmap",lightmapRgb:new at(1,0,0),ligthmapIndex:6,envRotationX:Math.PI*0},{envMap:"SC00_oct",shConstants:"SC00_sh",ligthmap:"SC00_lightmap",ligh
+--- lightmapRgb instance #6 ---
+},{envMap:"SC04_oct",shConstants:"SC04_sh",ligthmap:"SC04_lightmap",lightmapRgb:new at(1,0,0),ligthmapIndex:4,envRotationX:Math.PI*0},{envMap:"SC05_oct",shConstants:"SC05_sh",ligthmap:"SC05_lightmap",lightmapRgb:new at(1,0,0),ligthmapIndex:5,envRotationX:Math.PI*1},{envMap:"SC06_oct",shConstants:"SC06_sh",ligthmap:"SC06_lightmap",lightmapRgb:new at(1,0,0),ligthmapIndex:6,envRotationX:Math.PI*0},{envMap:"SC00_oct",shConstants:"SC00_sh",ligthmap:"SC00_lightmap",lightmapRgb:new at(1,0,0),ligthmapIndex:0,envRotationX:Math.PI*0}];function VY(r,e){const t=r?j0[e]:null,a=t&&Pr.get(t.ligthmap),i=t&&t.
+--- lightmapRgb instance #7 ---
+},{envMap:"SC05_oct",shConstants:"SC05_sh",ligthmap:"SC05_lightmap",lightmapRgb:new at(1,0,0),ligthmapIndex:5,envRotationX:Math.PI*1},{envMap:"SC06_oct",shConstants:"SC06_sh",ligthmap:"SC06_lightmap",lightmapRgb:new at(1,0,0),ligthmapIndex:6,envRotationX:Math.PI*0},{envMap:"SC00_oct",shConstants:"SC00_sh",ligthmap:"SC00_lightmap",lightmapRgb:new at(1,0,0),ligthmapIndex:0,envRotationX:Math.PI*0}];function VY(r,e){const t=r?j0[e]:null,a=t&&Pr.get(t.ligthmap),i=t&&t.lightmapRgb||new at(1,0,0),s=t&&t.ligthmapIndex;return{lightmap:a,lightmapRgb:i,ligthmapIndex:s}}class yl extends ULt{constructor(t=
+--- lightmapRgb instance #8 ---
+},{envMap:"SC06_oct",shConstants:"SC06_sh",ligthmap:"SC06_lightmap",lightmapRgb:new at(1,0,0),ligthmapIndex:6,envRotationX:Math.PI*0},{envMap:"SC00_oct",shConstants:"SC00_sh",ligthmap:"SC00_lightmap",lightmapRgb:new at(1,0,0),ligthmapIndex:0,envRotationX:Math.PI*0}];function VY(r,e){const t=r?j0[e]:null,a=t&&Pr.get(t.ligthmap),i=t&&t.lightmapRgb||new at(1,0,0),s=t&&t.ligthmapIndex;return{lightmap:a,lightmapRgb:i,ligthmapIndex:s}}class yl extends ULt{constructor(t={}){var z;const{envSpecular:a,shConstants:i,material:s,object:o,envRotationX:l}=t||{},u=t.name||(s?"DefaultPbrMaterial---"+(s==null?
+--- lightmapRgb instance #9 ---
+nvMap:"SC00_oct",shConstants:"SC00_sh",ligthmap:"SC00_lightmap",lightmapRgb:new at(1,0,0),ligthmapIndex:0,envRotationX:Math.PI*0}];function VY(r,e){const t=r?j0[e]:null,a=t&&Pr.get(t.ligthmap),i=t&&t.lightmapRgb||new at(1,0,0),s=t&&t.ligthmapIndex;return{lightmap:a,lightmapRgb:i,ligthmapIndex:s}}class yl extends ULt{constructor(t={}){var z;const{envSpecular:a,shConstants:i,material:s,object:o,envRotationX:l}=t||{},u=t.name||(s?"DefaultPbrMaterial---"+(s==null?void 0:s.name):"DefaultPbrMaterial"),h=Pr.get("white"),g=(o==null?void 0:o.userData.sceneIndex)||0,p=j0[g],b=a||Rs.getEnvMap(p.envMap),v
