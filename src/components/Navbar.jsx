@@ -14,14 +14,18 @@ export default function Navbar() {
 
   return (
     <nav className="navbar" aria-label="Main navigation">
-      {/* Wordmark / logo */}
+      {/* Logo */}
       <button
         id="nav-wordmark"
         className="navbar-wordmark"
         onClick={() => navigate('/home')}
-        aria-label="Go to home"
+        aria-label="Artemis Studios - Home"
       >
-        Arte<em>mis</em>
+        <img
+          src={`${import.meta.env.BASE_URL}artemis-logo.png`}
+          alt="Artemis Studios"
+          className="navbar-logo-img"
+        />
       </button>
 
       {/* Nav links */}

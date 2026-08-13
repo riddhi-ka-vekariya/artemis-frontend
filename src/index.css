@@ -146,22 +146,27 @@ html, body, #root {
 }
 
 .navbar-wordmark {
-  font-family: var(--font-display);
-  font-size: 20px;
-  font-weight: 500;
-  letter-spacing: -0.01em;
-  color: var(--text-primary);
-  text-decoration: none;
+  background: none;
+  border: none;
+  padding: 0;
+  display: flex;
+  align-items: center;
   cursor: pointer;
-  transition: color 0.2s ease;
   user-select: none;
 }
-.navbar-wordmark em {
-  font-style: italic;
-  color: var(--color-gold);
+
+.navbar-logo-img {
+  height: 40px;
+  width: auto;
+  object-fit: contain;
+  display: block;
+  filter: brightness(0.98) contrast(1.05);
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), filter 0.25s ease;
 }
-.navbar-wordmark:hover {
-  color: var(--color-paper);
+
+.navbar-wordmark:hover .navbar-logo-img {
+  transform: scale(1.03);
+  filter: brightness(1.1) contrast(1.1);
 }
 
 .navbar-links {
@@ -324,6 +329,25 @@ html, body, #root {
 .home-headline em {
   font-style: italic;
   color: var(--color-gold);
+  display: block;
+}
+
+.home-hero-divider {
+  width: 140px;
+  height: 1px;
+  background: rgba(194, 194, 194, 0.25);
+  margin: 12px 0 8px;
+}
+
+.home-hero-subtagline {
+  font-family: var(--font-mono);
+  font-size: clamp(12px, 1.1vw, 15px);
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-paper);
+  line-height: 1.7;
+  opacity: 0.9;
 }
 
 /* ── Right filmstrip column ── */
@@ -704,14 +728,14 @@ html, body, #root {
 .project-modal-backdrop {
   position: fixed;
   inset: 0;
-  z-index: 500;
+  z-index: 2000;
   background: rgba(14, 14, 13, 0.88);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 40px 24px;
+  padding: 88px 24px 32px;
   animation: pageFadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
@@ -719,7 +743,7 @@ html, body, #root {
   position: relative;
   width: 100%;
   max-width: 920px;
-  max-height: 90vh;
+  max-height: calc(100vh - 120px);
   background: #141414;
   border: 1px solid rgba(240, 196, 45, 0.22);
   border-radius: 4px;
@@ -863,4 +887,423 @@ html, body, #root {
 .projects-title em {
   font-style: italic;
   color: var(--color-gold);
+}
+
+/* ─── Filmstrip Border Strips (Projects Page) ───────────────────── */
+/*
+ * Gold filmstrip strip with square sprocket holes.
+ * Left strip:  perfs on LEFT  (outer) edge, dark film frame on RIGHT (inner)
+ * Right strip: dark film frame on LEFT (inner) edge, perfs on RIGHT (outer)
+ * Width = 60px, positioned by JS (updateStripPositions) at card edges.
+ * Scroll sync: --film-scroll drives background-position-y (set by tick loop).
+ */
+.film-border-strip {
+  --film-scroll: 0px;
+
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 60px;   /* overridden per-strip by JS */
+  z-index: 10;
+  pointer-events: none;
+
+  /* SVG tile: 60px × 36px  — set per variant below */
+  background-size: 60px 36px;
+  background-repeat: repeat-y;
+  background-position: 0 var(--film-scroll);
+
+  /* Fade at top/bottom to blend with scene fog */
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    transparent 0%,
+    black 5%,
+    black 95%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    transparent 0%,
+    black 5%,
+    black 95%,
+    transparent 100%
+  );
+}
+
+/*
+ * LEFT strip tile (60×36):
+ *   ████ gold perf zone (20px wide, left)
+ *   ░░░░ dark film frame (40px, right)
+ *   □    square hole at x=4, y=11, 12×14px
+ */
+.film-border-strip--left {
+  left: 0; /* JS sets exact pixel position */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='36'%3E%3Crect width='60' height='36' fill='%23C9A227'/%3E%3Crect x='20' y='0' width='40' height='36' fill='%230E0E0D'/%3E%3Crect x='4' y='11' width='12' height='14' rx='2' fill='%230E0E0D'/%3E%3C/svg%3E");
+}
+
+/*
+ * RIGHT strip tile (60×36):
+ *   ░░░░ dark film frame (40px, left)
+ *   ████ gold perf zone (20px wide, right)
+ *   □    square hole at x=44, y=11, 12×14px
+ */
+.film-border-strip--right {
+  left: 0; /* JS sets exact pixel position */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='36'%3E%3Crect width='60' height='36' fill='%23C9A227'/%3E%3Crect x='0' y='0' width='40' height='36' fill='%230E0E0D'/%3E%3Crect x='44' y='11' width='12' height='14' rx='2' fill='%230E0E0D'/%3E%3C/svg%3E");
+}
+
+/* ─── Home Page Architectural Principles Section ─────────────────── */
+.home-principles-section {
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 120px 48px 160px;
+  position: relative;
+  z-index: 5;
+}
+
+.home-principles-header {
+  margin-bottom: 80px;
+  text-align: center;
+}
+
+.home-principles-header .home-eyebrow {
+  color: var(--color-gold);
+  display: block;
+  margin-bottom: 12px;
+}
+
+.home-principles-title {
+  font-family: var(--font-display);
+  font-size: clamp(32px, 4vw, 48px);
+  font-weight: 400;
+  color: var(--text-primary);
+  line-height: 1.15;
+}
+
+.home-principles-title em {
+  font-style: italic;
+  color: var(--color-gold);
+}
+
+.home-principles-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+.principle-card {
+  display: flex;
+  align-items: center;
+  gap: 60px;
+  background: rgba(18, 18, 18, 0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(240, 196, 45, 0.12);
+  border-radius: 4px;
+  padding: 56px 64px;
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.principle-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 3px;
+  height: 0%;
+  background: var(--color-gold);
+  transition: height 0.35s ease;
+}
+
+.principle-card:hover {
+  border-color: rgba(240, 196, 45, 0.35);
+  transform: translateY(-4px);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.7);
+  background: rgba(22, 22, 20, 0.85);
+}
+
+.principle-card:hover::before {
+  height: 100%;
+}
+
+.principle-card--reverse {
+  flex-direction: row-reverse;
+}
+
+.principle-card-num-wrap {
+  flex: 0 0 140px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.principle-card-num {
+  font-family: var(--font-display);
+  font-size: 64px;
+  font-weight: 300;
+  line-height: 1;
+  color: rgba(240, 196, 45, 0.35);
+  transition: color 0.3s ease;
+}
+
+.principle-card:hover .principle-card-num {
+  color: var(--color-gold);
+}
+
+.principle-card-line {
+  width: 40px;
+  height: 1px;
+  background: rgba(240, 196, 45, 0.25);
+  margin-top: 16px;
+}
+
+.principle-card-content {
+  flex: 1;
+}
+
+.principle-card-tag {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--color-gold);
+  margin-bottom: 12px;
+  display: block;
+}
+
+.principle-card-heading {
+  font-family: var(--font-display);
+  font-size: clamp(24px, 2.5vw, 32px);
+  font-weight: 500;
+  color: var(--text-primary);
+  margin-bottom: 14px;
+  line-height: 1.25;
+}
+
+.principle-card-summary {
+  font-family: var(--font-body);
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--color-paper);
+  margin-bottom: 12px;
+  line-height: 1.5;
+}
+
+.principle-card-desc {
+  font-family: var(--font-body);
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--text-secondary);
+  max-width: 680px;
+}
+
+@media (max-width: 900px) {
+  .home-principles-section {
+    padding: 80px 24px 100px;
+  }
+  .principle-card,
+  .principle-card--reverse {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 24px;
+    padding: 40px 32px;
+  }
+  .principle-card-num-wrap {
+    flex-direction: row;
+    gap: 16px;
+  }
+  .principle-card-line {
+    width: 1px;
+    height: 30px;
+    margin-top: 0;
+  }
+}
+
+/* ─── Home Page View Projects CTA Button ────────────────────────── */
+.home-view-projects-wrap {
+  margin-top: 72px;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+}
+
+.btn-view-projects {
+  display: inline-flex;
+  align-items: center;
+  gap: 16px;
+  padding: 18px 40px;
+  background: rgba(14, 14, 13, 0.8);
+  border: 1px solid var(--color-gold);
+  border-radius: 2px;
+  color: var(--text-primary);
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+.btn-view-projects .btn-arrow {
+  color: var(--color-gold);
+  font-size: 20px;
+  transition: transform 0.3s ease;
+}
+
+.btn-view-projects:hover {
+  background: var(--color-gold);
+  color: var(--color-ink-deep);
+  box-shadow: 0 12px 36px rgba(240, 196, 45, 0.3);
+  transform: translateY(-2px);
+}
+
+.btn-view-projects:hover .btn-arrow {
+  color: var(--color-ink-deep);
+  transform: translateX(6px);
+}
+
+/* ─── Global Footer ──────────────────────────────────────────────── */
+.footer-container {
+  width: 100%;
+  background-color: var(--color-ink-deep);
+  border-top: 1px solid var(--border-gold-dim);
+  padding: 80px 48px 40px;
+  position: relative;
+  z-index: 10;
+  margin-top: auto;
+}
+
+.footer-inner {
+  max-width: 1280px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 2fr 1fr 1.5fr;
+  gap: 64px;
+  padding-bottom: 60px;
+  border-bottom: 1px solid rgba(194, 194, 194, 0.08);
+}
+
+.footer-col-brand {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.footer-logo-wrap {
+  cursor: pointer;
+  display: inline-block;
+}
+
+.footer-logo-img {
+  height: 38px;
+  width: auto;
+  object-fit: contain;
+  display: block;
+  filter: brightness(0.95);
+  transition: transform 0.25s ease;
+}
+
+.footer-logo-wrap:hover .footer-logo-img {
+  transform: scale(1.02);
+  filter: brightness(1.05);
+}
+
+.footer-tagline {
+  font-family: var(--font-body);
+  font-size: 14px;
+  line-height: 1.65;
+  color: var(--text-secondary);
+  max-width: 360px;
+}
+
+.footer-col-title {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-gold);
+  margin-bottom: 24px;
+}
+
+.footer-links-list,
+.footer-contact-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.footer-links-list button {
+  background: none;
+  border: none;
+  padding: 0;
+  font-family: var(--font-body);
+  font-size: 15px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.footer-links-list button:hover {
+  color: var(--color-gold);
+}
+
+.footer-contact-list li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+}
+
+.contact-label {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--text-muted);
+  min-width: 76px;
+}
+
+.contact-value {
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.contact-value:hover {
+  color: var(--color-gold);
+}
+
+.contact-link-social {
+  color: var(--color-paper);
+}
+
+.footer-bottom {
+  max-width: 1280px;
+  margin: 32px auto 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--text-muted);
+  flex-wrap: wrap;
+}
+
+.footer-gold-dot {
+  color: var(--color-gold);
+}
+
+@media (max-width: 900px) {
+  .footer-container {
+    padding: 60px 24px 32px;
+  }
+  .footer-inner {
+    grid-template-columns: 1fr;
+    gap: 40px;
+    padding-bottom: 40px;
+  }
 }

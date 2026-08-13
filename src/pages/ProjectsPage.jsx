@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import * as THREE from 'three'
 import Navbar from '../components/Navbar'
+import Footer from '../components/Footer'
 import { vertexShader, fragmentShader } from '../components/UnseenCurlDemo/shaders.js'
 
 // ─── Constants ─────────────────────────────────────────────────────────────
@@ -94,6 +95,7 @@ export default function ProjectsPage() {
     scene: null,
     camera: null,
     projectsGroup: null,
+    filmstripGroup: null,
     clock: null,
     scrollPos: 0,
     smoothScrollPos: 0,
@@ -176,8 +178,8 @@ export default function ProjectsPage() {
       }
 
       const cols = MQ.md.matches ? 2 : 1
-      const gap  = (MQ.md.matches ? 20 : 10) * scaleAdj
-      const rowH = meshSize.y + p.cardGap
+      const gap  = 0
+      const rowH = meshSize.y
 
       return { meshSize, bendPoint, cols, gap, rowH, scaleAdj }
     }
@@ -289,12 +291,19 @@ export default function ProjectsPage() {
       })
 
       positionProjects()
+      buildFilmstripBorders()
     }
 
     function positionProjects() {
       if (!state.projectsGroup) return
 
       const { meshSize, bendPoint, cols, gap, rowH, scaleAdj } = getLayoutParams()
+
+      // Cache layout for strip positioning
+      state.meshSize = meshSize
+      state.cols = cols
+      state.gap = gap
+
       const winH = window.innerHeight
       const yStartOffset = MQ.md.matches ? 80 : 30
 
@@ -330,15 +339,38 @@ export default function ProjectsPage() {
 
     // ── Input Listeners & Click Detection ────────────────────────────────────
     function onWheel(e) {
-      state.scrollPos = THREE.MathUtils.clamp(state.scrollPos + e.deltaY, 0, state.projectsHeight)
+      const isGalleryAtEnd = state.scrollPos >= state.projectsHeight - 2
+      const isGalleryAtStart = state.scrollPos <= 2
+      const isPageAtTop = window.scrollY <= 2
+
+      // Lock page scroll at top while user is scrolling through gallery cards
+      if (isPageAtTop && e.deltaY > 0 && !isGalleryAtEnd) {
+        if (e.cancelable) e.preventDefault()
+        state.scrollPos = THREE.MathUtils.clamp(state.scrollPos + e.deltaY, 0, state.projectsHeight)
+      } else if (isPageAtTop && e.deltaY < 0 && !isGalleryAtStart) {
+        if (e.cancelable) e.preventDefault()
+        state.scrollPos = THREE.MathUtils.clamp(state.scrollPos + e.deltaY, 0, state.projectsHeight)
+      }
     }
 
     let touchY = 0
     function onTouchStart(e) { touchY = e.touches[0].clientY }
     function onTouchMove(e) {
-      const dy = touchY - e.touches[0].clientY
-      touchY = e.touches[0].clientY
-      state.scrollPos = THREE.MathUtils.clamp(state.scrollPos + dy * 1.2, 0, state.projectsHeight)
+      const currentY = e.touches[0].clientY
+      const dy = touchY - currentY
+      touchY = currentY
+
+      const isGalleryAtEnd = state.scrollPos >= state.projectsHeight - 2
+      const isGalleryAtStart = state.scrollPos <= 2
+      const isPageAtTop = window.scrollY <= 2
+
+      if (isPageAtTop && dy > 0 && !isGalleryAtEnd) {
+        if (e.cancelable) e.preventDefault()
+        state.scrollPos = THREE.MathUtils.clamp(state.scrollPos + dy * 1.2, 0, state.projectsHeight)
+      } else if (isPageAtTop && dy < 0 && !isGalleryAtStart) {
+        if (e.cancelable) e.preventDefault()
+        state.scrollPos = THREE.MathUtils.clamp(state.scrollPos + dy * 1.2, 0, state.projectsHeight)
+      }
     }
 
     function onResize() {
@@ -348,6 +380,126 @@ export default function ProjectsPage() {
       camera.aspect = w / winH
       camera.updateProjectionMatrix()
       positionProjects()
+      buildFilmstripBorders()
+    }
+
+    // ── Filmstrip Texture (Canvas2D) ─────────────────────────────────
+    // Full-gold strip with SQUARE centered sprocket holes.
+    // No dark inner zone — gold butts directly against the card edge.
+    function makeFilmstripTexture(side, w, h) {
+      const res  = Math.min(window.devicePixelRatio, 2)
+      const cvs  = document.createElement('canvas')
+      cvs.width  = Math.round(w * res)
+      cvs.height = Math.round(h * res)
+      const ctx  = cvs.getContext('2d')
+      ctx.scale(res, res)
+
+      // Full gold background
+      ctx.fillStyle = '#C9A227'
+      ctx.fillRect(0, 0, w, h)
+
+      // Square holes — width & height equal, centered in strip
+      const holeW = w * 0.52          // ~52% of strip width
+      const holeH = holeW             // SQUARE
+      const tileH = holeH * 1.9      // repeat period (hole + gap)
+      const holeX = (w - holeW) / 2  // centered horizontally
+
+      ctx.fillStyle = '#0D0D0D'
+      for (let y = (tileH - holeH) / 2; y < h + tileH; y += tileH) {
+        if (ctx.roundRect) {
+          ctx.beginPath()
+          ctx.roundRect(holeX, y, holeW, holeH, 2)
+          ctx.fill()
+        } else {
+          ctx.fillRect(holeX, y, holeW, holeH)
+        }
+      }
+
+      return new THREE.CanvasTexture(cvs)
+    }
+
+    // ── Build WebGL Filmstrip Borders ───────────────────────────────
+
+    // Creates one PlaneGeometry strip per card row per side, using the same
+    // curl shader as the gallery cards, so they flow identically.
+    function buildFilmstripBorders() {
+      // Tear down previous filmstrip group
+      if (state.filmstripGroup) {
+        scene.remove(state.filmstripGroup)
+        state.filmstripGroup.children.forEach(g =>
+          g.children.forEach(m => { m.geometry?.dispose(); m.material?.dispose() })
+        )
+      }
+
+      const { meshSize, bendPoint, cols, gap, rowH, scaleAdj } = getLayoutParams()
+      const yStartOffset = MQ.md.matches ? 80 : 30
+      const rows = Math.ceil(PROJECT_DATA.length / cols)
+
+      // Strip world-space width — proportional to card size (7.5% = half of original 15%)
+      const STRIP_W = meshSize.x * 0.075
+
+      // Outer X edges of the card columns
+      const leftFx   = cols > 1 ? -0.5 * (meshSize.x + gap) : 0
+      const rightFx  = cols > 1 ?  0.5 * (meshSize.x + gap) : 0
+      const leftEdge  = leftFx  - meshSize.x / 2
+      const rightEdge = rightFx + meshSize.x / 2
+
+      // Pre-build textures (reused across rows)
+      const texL = makeFilmstripTexture('left',  Math.round(STRIP_W * 4), Math.round(meshSize.y * 4))
+      const texR = makeFilmstripTexture('right', Math.round(STRIP_W * 4), Math.round(meshSize.y * 4))
+
+      const filmstripGroup = new THREE.Group()
+      scene.add(filmstripGroup)
+      state.filmstripGroup = filmstripGroup
+
+      const stripSize = new THREE.Vector2(STRIP_W, meshSize.y)
+
+      for (let row = 0; row < rows; row++) {
+        const fy = -(row * rowH + row * gap + yStartOffset)
+
+        ;['left', 'right'].forEach(side => {
+          const geo = new THREE.PlaneGeometry(1, 1, SEGMENT_COUNT, SEGMENT_COUNT)
+          const tex = side === 'left' ? texL : texR
+
+          const mat = new THREE.ShaderMaterial({
+            vertexShader, fragmentShader,
+            uniforms: {
+              uTexture:       { value: tex },
+              u_fluidTex:     { value: null },
+              u_time:         { value: 0 },
+              u_random:       { value: Math.random() + 1 },
+              u_heightOffset: { value: 1 },
+              u_bendPoint:    { value: bendPoint.clone() },
+              u_zDepth:       { value: state.params.zDepth },
+              u_noiseAmp:     { value: state.params.noiseAmp * 0.6 },
+              u_rippleAmp:    { value: 8.0 },
+              u_imageSize:    { value: stripSize.clone() },
+              u_meshSize:     { value: stripSize.clone() },
+              u_innerScale:   { value: state.params.innerScale },
+              u_opacity:      { value: 1.0 },
+              fogColor:       { value: fogCol.clone() },
+              fogNear:        { value: FOG_NEAR },
+              fogFar:         { value: FOG_FAR },
+            },
+            transparent: true, depthWrite: false, side: THREE.DoubleSide,
+          })
+
+          const mesh = new THREE.Mesh(geo, mat)
+          mesh.scale.set(STRIP_W, meshSize.y, 1)
+          mesh.frustumCulled = false
+          mesh.userData = { isFilmstrip: true }
+
+          // X centre of this strip
+          const fx = side === 'left'
+            ? leftEdge  - STRIP_W / 2
+            : rightEdge + STRIP_W / 2
+
+          const group = new THREE.Group()
+          group.add(mesh)
+          group.position.set(fx, fy, 1000)
+          filmstripGroup.add(group)
+        })
+      }
     }
 
     // Raycaster for card clicks
@@ -400,6 +552,14 @@ export default function ProjectsPage() {
         })
       }
 
+      // Filmstrip borders — same scroll position + time as cards
+      if (state.filmstripGroup) {
+        state.filmstripGroup.position.y = state.smoothScrollPos
+        state.filmstripGroup.children.forEach(g => {
+          g.children[0].material.uniforms.u_time.value = t
+        })
+      }
+
       if (state.projectsHeight > 0) {
         setScrollProgress((state.smoothScrollPos / state.projectsHeight) * 100)
       }
@@ -409,9 +569,9 @@ export default function ProjectsPage() {
 
     buildProjects()
 
-    window.addEventListener('wheel',       onWheel,          { passive: true })
+    window.addEventListener('wheel',       onWheel,          { passive: false })
     window.addEventListener('touchstart',  onTouchStart,     { passive: true })
-    window.addEventListener('touchmove',   onTouchMove,      { passive: true })
+    window.addEventListener('touchmove',   onTouchMove,      { passive: false })
     window.addEventListener('resize',      onResize)
     canvas.addEventListener('pointerdown', handlePointerDown)
     canvas.addEventListener('pointerup',   handlePointerUp)
@@ -434,7 +594,7 @@ export default function ProjectsPage() {
     <>
       <Navbar />
       <main className="page-wrapper page-enter" id="page-projects" style={{ paddingTop: 0 }}>
-        <div className="unseen-curl-page" style={{ height: '100vh', width: '100vw' }}>
+        <div className="unseen-curl-page" style={{ height: '100vh', width: '100vw', position: 'relative' }}>
           {/* Header Title Overlay */}
           <header className="projects-header-overlay">
             <span className="projects-eyebrow">02 — Selected Work</span>
@@ -490,6 +650,7 @@ export default function ProjectsPage() {
           </div>
         )}
       </main>
+      <Footer />
     </>
   )
 }
