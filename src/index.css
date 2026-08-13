@@ -7,8 +7,8 @@
 
 :root {
   /* Color Tokens */
-  --color-ink:        #1A1A1A;   /* Default background */
-  --color-ink-deep:   #0E0E0D;   /* True-black — hero edges, vignette, 3D bg */
+  --color-ink:        #141210;   /* Default background */
+  --color-ink-deep:   #141210;   /* Deep background */
   --color-paper:      #F2F2F2;   /* Small light surfaces only (cards, modals) */
   --color-silver:     #C2C2C2;   /* Secondary text, inactive states, hairlines */
   --color-gold:       #F0C42D;   /* THE accent — reads as light, not paint */
@@ -302,8 +302,8 @@ html, body, #root {
   /* Vignette: keep ink-deep bleed visible on left edge */
   background: linear-gradient(
     to right,
-    var(--color-ink) 0%,
-    var(--color-ink) 70%,
+    var(--color-ink-deep) 0%,
+    var(--color-ink-deep) 70%,
     transparent 100%
   );
 }
@@ -364,7 +364,7 @@ html, body, #root {
   inset: 0;
   left: 0;
   width: 80px;
-  background: linear-gradient(to right, var(--color-ink) 0%, transparent 100%);
+  background: linear-gradient(to right, var(--color-ink-deep) 0%, transparent 100%);
   z-index: 3;
   pointer-events: none;
 }
