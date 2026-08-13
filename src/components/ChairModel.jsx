@@ -106,7 +106,7 @@ function sampleDominantColor(scene) {
   }
 }
 
-export function ChairModel({ scrollProgress = 0, materialPreset = 'gold' }) {
+export function ChairModel({ scrollProgress = 0 }) {
   const { scene: raw1 } = useGLTF(GLB1)
   const { scene: raw2 } = useGLTF(GLB2)
 
@@ -116,42 +116,32 @@ export function ChairModel({ scrollProgress = 0, materialPreset = 'gold' }) {
   const ref1 = useRef()
   const ref2 = useRef()
 
-  // Apply selected Cartier PBR material preset to all meshes
+  // Sample chair 1's dominant color and apply it to all of chair 2's meshes
   useLayoutEffect(() => {
-    const applyPreset = (scene) => {
-      scene.traverse((child) => {
-        if (child.isMesh) {
-          if (materialPreset === 'gold') {
-            child.material = new THREE.MeshPhysicalMaterial({
-              color: new THREE.Color('#e5c158'),
-              metalness: 1.0,
-              roughness: 0.18,
-              clearcoat: 0.6,
-              clearcoatRoughness: 0.1,
-              envMapIntensity: 2.2,
-            })
-          } else if (materialPreset === 'platinum') {
-            child.material = new THREE.MeshPhysicalMaterial({
-              color: new THREE.Color('#d1d5db'),
-              metalness: 0.95,
-              roughness: 0.3,
-              clearcoat: 0.3,
-              clearcoatRoughness: 0.15,
-              envMapIntensity: 1.8,
-            })
-          } else {
-            // Original GLB materials with boosted Cartier specular reflections
-            child.material = child.material.clone()
-            child.material.envMapIntensity = 1.6
-          }
-          child.material.needsUpdate = true
-        }
-      })
-    }
+    const color = sampleDominantColor(c1.scene)
+    if (!color) return
 
-    applyPreset(c1.scene)
-    applyPreset(c2.scene)
-  }, [c1, c2, materialPreset])
+    // Also grab roughness + metalness from chair 1's primary material for a closer match
+    let roughness = 0.6
+    let metalness = 0.1
+    c1.scene.traverse((child) => {
+      if (child.isMesh && child.material) {
+        roughness = child.material.roughness ?? roughness
+        metalness = child.material.metalness ?? metalness
+      }
+    })
+
+    c2.scene.traverse((child) => {
+      if (child.isMesh) {
+        child.material = new THREE.MeshStandardMaterial({
+          color,
+          roughness,
+          metalness,
+          envMapIntensity: 1.2,
+        })
+      }
+    })
+  }, [c1, c2])
 
   useFrame(() => {
     if (!ref1.current || !ref2.current) return
