@@ -7,6 +7,7 @@ import HomePage             from './pages/HomePage.jsx'
 import ProjectsPage         from './pages/ProjectsPage.jsx'
 import DesignPhilosophyPage from './pages/DesignPhilosophyPage.jsx'
 import AboutPage            from './pages/AboutPage.jsx'
+import PlaygroundPage       from './pages/PlaygroundPage.jsx'
 import './index.css'
 
 // Auto-redirect direct path URLs to HashRouter format
@@ -32,6 +33,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
         <Route path="/projects"           element={<ProjectsPage />} />
         <Route path="/design-philosophy"  element={<DesignPhilosophyPage />} />
         <Route path="/about"              element={<AboutPage />} />
+        <Route path="/playground"         element={<PlaygroundPage />} />
 
         {/* Legacy 3D chair viewer */}
         <Route path="/chairs"  element={<App />} />

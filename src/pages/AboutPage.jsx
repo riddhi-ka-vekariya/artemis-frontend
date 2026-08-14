@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
 
@@ -17,6 +18,13 @@ export default function AboutPage() {
             Background, process, and the thinking that shapes every
             decision — coming soon.
           </p>
+          <button
+            className="btn-view-projects"
+            onClick={() => navigate('/projects')}
+            aria-label="View Projects"
+          >
+            View Selected Projects <span className="btn-arrow">→</span>
+          </button>
         </div>
       </main>
       <Footer />
