@@ -63,6 +63,9 @@ function preloadAllFonts() {
   })
 }
 
+// ── Counter for unique custom font names ─────────────────────────────
+let customFontCounter = 0
+
 export default function PlaygroundPage() {
   const [colors, setColors] = useState({
     gold: DEFAULTS.gold,
@@ -77,8 +80,24 @@ export default function PlaygroundPage() {
     mono: DEFAULTS.fontMono,
   })
 
+  // Track custom uploaded fonts per category so they appear in dropdowns
+  const [customFonts, setCustomFonts] = useState({
+    display: [],  // [{ label, value, objectUrl }]
+    body: [],
+    mono: [],
+  })
+
   // Preload fonts once
   React.useEffect(() => { preloadAllFonts() }, [])
+
+  // Cleanup object URLs on unmount
+  useEffect(() => {
+    return () => {
+      Object.values(customFonts).flat().forEach((f) => {
+        if (f.objectUrl) URL.revokeObjectURL(f.objectUrl)
+      })
+    }
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   const resetColors = useCallback(() => {
     setColors({ gold: DEFAULTS.gold, background: DEFAULTS.background, paper: DEFAULTS.paper, silver: DEFAULTS.silver })
@@ -92,6 +111,45 @@ export default function PlaygroundPage() {
 
   const updateColor = (key, value) => setColors((c) => ({ ...c, [key]: value }))
   const updateFont = (key, value) => setFonts((f) => ({ ...f, [key]: value }))
+
+  // ── Handle TTF/OTF/WOFF upload ────────────────────────────────────
+  const handleFontUpload = useCallback((file, fontKey) => {
+    if (!file) return
+
+    const fileName = file.name.replace(/\.[^.]+$/, '')  // strip extension
+    const familyName = `CustomFont_${++customFontCounter}_${fileName}`
+    const objectUrl = URL.createObjectURL(file)
+
+    // Inject @font-face
+    const style = document.createElement('style')
+    style.textContent = `
+      @font-face {
+        font-family: '${familyName}';
+        src: url('${objectUrl}') format('truetype');
+        font-weight: 100 900;
+        font-style: normal;
+      }
+    `
+    document.head.appendChild(style)
+
+    // Determine fallback stack based on category
+    const fallbacks = {
+      display: 'Georgia, serif',
+      body: '-apple-system, BlinkMacSystemFont, sans-serif',
+      mono: "'Courier New', monospace",
+    }
+    const fontValue = `'${familyName}', ${fallbacks[fontKey]}`
+
+    // Add to custom fonts list
+    const entry = { label: `↑ ${fileName}`, value: fontValue, objectUrl }
+    setCustomFonts((prev) => ({
+      ...prev,
+      [fontKey]: [...prev[fontKey], entry],
+    }))
+
+    // Immediately apply
+    updateFont(fontKey, fontValue)
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   // ── Color picker popover state ─────────────────────────────────────
   const [openPicker, setOpenPicker] = useState(null)   // which colorKey is open
@@ -624,23 +682,77 @@ export default function PlaygroundPage() {
     )
   }
 
-  // ── Font select helper ─────────────────────────────────────────────
-  const FontSelect = ({ label, fontKey, options }) => (
-    <div style={{ marginBottom: 8 }}>
-      <span style={s.fontLabel}>{label}</span>
-      <select
-        value={fonts[fontKey]}
-        onChange={(e) => updateFont(fontKey, e.target.value)}
-        style={s.fontSelect}
-      >
-        {options.map((f) => (
-          <option key={f.label} value={f.value}>
-            {f.label}{f.note ? ` ${f.note}` : ''}
-          </option>
-        ))}
-      </select>
-    </div>
-  )
+  // ── Font select helper (with upload button) ────────────────────────
+  const FontSelect = ({ label, fontKey, options }) => {
+    const fileInputRef = useRef(null)
+    const customs = customFonts[fontKey] || []
+
+    return (
+      <div style={{ marginBottom: 8 }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6 }}>
+          <span style={s.fontLabel}>{label}</span>
+          <button
+            type="button"
+            onClick={() => fileInputRef.current?.click()}
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: 5,
+              padding: '4px 10px',
+              background: 'transparent',
+              border: `1px solid ${colors.gold}33`,
+              borderRadius: 3,
+              color: colors.gold,
+              fontFamily: fonts.mono,
+              fontSize: 10,
+              fontWeight: 500,
+              letterSpacing: '0.08em',
+              textTransform: 'uppercase',
+              cursor: 'pointer',
+              transition: 'all 0.25s ease',
+              whiteSpace: 'nowrap',
+            }}
+            onMouseEnter={(e) => { e.target.style.borderColor = colors.gold; e.target.style.background = `${colors.gold}11` }}
+            onMouseLeave={(e) => { e.target.style.borderColor = `${colors.gold}33`; e.target.style.background = 'transparent' }}
+            title="Upload a .ttf, .otf, .woff, or .woff2 font file"
+          >
+            ↑ Upload
+          </button>
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept=".ttf,.otf,.woff,.woff2"
+            style={{ display: 'none' }}
+            onChange={(e) => {
+              const file = e.target.files?.[0]
+              if (file) handleFontUpload(file, fontKey)
+              e.target.value = ''  // allow re-uploading same file
+            }}
+          />
+        </div>
+        <select
+          value={fonts[fontKey]}
+          onChange={(e) => updateFont(fontKey, e.target.value)}
+          style={s.fontSelect}
+        >
+          {options.map((f) => (
+            <option key={f.label} value={f.value}>
+              {f.label}{f.note ? ` ${f.note}` : ''}
+            </option>
+          ))}
+          {customs.length > 0 && (
+            <optgroup label="── Uploaded ──">
+              {customs.map((f) => (
+                <option key={f.label} value={f.value}>
+                  {f.label}
+                </option>
+              ))}
+            </optgroup>
+          )}
+        </select>
+      </div>
+    )
+  }
 
   return (
     <div style={s.page}>
