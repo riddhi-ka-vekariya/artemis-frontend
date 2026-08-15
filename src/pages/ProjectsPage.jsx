@@ -178,7 +178,7 @@ export default function ProjectsPage() {
       }
 
       const cols = MQ.md.matches ? 2 : 1
-      const gap = 0
+      const gap = state.params.cardGap
       const rowH = meshSize.y
 
       return { meshSize, bendPoint, cols, gap, rowH, scaleAdj }
@@ -384,8 +384,7 @@ export default function ProjectsPage() {
     }
 
     // ── Filmstrip Texture (Canvas2D) ─────────────────────────────────
-    // Full-gold strip with SQUARE centered sprocket holes.
-    // No dark inner zone — gold butts directly against the card edge.
+    // Metallic silver strip with brushed-metal sheen and soft glow.
     function makeFilmstripTexture(side, w, h) {
       const res = Math.min(window.devicePixelRatio, 2)
       const cvs = document.createElement('canvas')
@@ -394,12 +393,54 @@ export default function ProjectsPage() {
       const ctx = cvs.getContext('2d')
       ctx.scale(res, res)
 
-      // Full gold background
-      ctx.fillStyle = '#C9A227'
+      // ── Layer 1: Brushed-metal vertical gradient ──
+      const metalGrad = ctx.createLinearGradient(0, 0, 0, h)
+      metalGrad.addColorStop(0,    '#8A8A8E')
+      metalGrad.addColorStop(0.15, '#D0D0D4')
+      metalGrad.addColorStop(0.35, '#A8A8AC')
+      metalGrad.addColorStop(0.5,  '#E8E8EC')
+      metalGrad.addColorStop(0.65, '#B0B0B4')
+      metalGrad.addColorStop(0.85, '#D8D8DC')
+      metalGrad.addColorStop(1,    '#9A9A9E')
+      ctx.fillStyle = metalGrad
       ctx.fillRect(0, 0, w, h)
 
-      // Square holes — width & height equal, centered in strip
-      const holeW = w * 0.52          // ~52% of strip width
+      // ── Layer 2: Subtle horizontal streaks (brushed-metal texture) ──
+      ctx.globalAlpha = 0.07
+      for (let sy = 0; sy < h; sy += 1.5) {
+        const brightness = 180 + Math.floor(Math.random() * 75)
+        ctx.fillStyle = `rgb(${brightness},${brightness},${brightness + 4})`
+        ctx.fillRect(0, sy, w, 0.8)
+      }
+      ctx.globalAlpha = 1.0
+
+      // ── Layer 3: Central specular highlight (horizontal shine band) ──
+      const shineGrad = ctx.createLinearGradient(0, 0, 0, h)
+      shineGrad.addColorStop(0,    'rgba(255,255,255,0)')
+      shineGrad.addColorStop(0.3,  'rgba(255,255,255,0.12)')
+      shineGrad.addColorStop(0.5,  'rgba(255,255,255,0.22)')
+      shineGrad.addColorStop(0.7,  'rgba(255,255,255,0.12)')
+      shineGrad.addColorStop(1,    'rgba(255,255,255,0)')
+      ctx.fillStyle = shineGrad
+      ctx.fillRect(0, 0, w, h)
+
+      // ── Layer 4: Soft edge glow (top & bottom luminous edges) ──
+      const glowH = h * 0.18
+      // Top edge glow
+      const glowT = ctx.createLinearGradient(0, 0, 0, glowH)
+      glowT.addColorStop(0, 'rgba(220,225,235,0.35)')
+      glowT.addColorStop(1, 'rgba(220,225,235,0)')
+      ctx.fillStyle = glowT
+      ctx.fillRect(0, 0, w, glowH)
+      // Bottom edge glow
+      const glowB = ctx.createLinearGradient(0, h, 0, h - glowH)
+      glowB.addColorStop(0, 'rgba(220,225,235,0.35)')
+      glowB.addColorStop(1, 'rgba(220,225,235,0)')
+      ctx.fillStyle = glowB
+      ctx.fillRect(0, h - glowH, w, glowH)
+
+      // ── Sprocket holes ──
+      const holeW = w * 0.52
       const holeH = holeW             // SQUARE
       const tileH = holeH * 1.9      // repeat period (hole + gap)
       const holeX = (w - holeW) / 2  // centered horizontally
