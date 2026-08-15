@@ -155,23 +155,23 @@ async function buildFilmTexture(renderer) {
     ctx.fillText(labels[i % labels.length], x0 + 12, H - holeRowH - 10)
     ctx.shadowBlur = 0
   }
-  // ── Metallic ultra-dark border bands (top & bottom) ──
+  // ── Metallic dark charcoal border bands (top & bottom) ──
   function paintSilverBand(y0, bH) {
-    // Layer 1: brushed-metal horizontal gradient in ultra-dark onyx black
+    // Layer 1: brushed-metal horizontal gradient in deep obsidian / onyx black-grey
     const metalGrad = ctx.createLinearGradient(0, y0, W, y0)
-    metalGrad.addColorStop(0, '#020204')
-    metalGrad.addColorStop(0.15, '#0c0c0f')
-    metalGrad.addColorStop(0.35, '#050507')
-    metalGrad.addColorStop(0.5, '#111115')
-    metalGrad.addColorStop(0.65, '#060608')
-    metalGrad.addColorStop(0.85, '#0d0d10')
-    metalGrad.addColorStop(1, '#030305')
+    metalGrad.addColorStop(0, '#060608')
+    metalGrad.addColorStop(0.15, '#121215')
+    metalGrad.addColorStop(0.35, '#09090C')
+    metalGrad.addColorStop(0.5, '#18181D')
+    metalGrad.addColorStop(0.65, '#0B0B0E')
+    metalGrad.addColorStop(0.85, '#131316')
+    metalGrad.addColorStop(1, '#070709')
     ctx.fillStyle = metalGrad
     ctx.fillRect(0, y0, W, bH)
     // Layer 2: vertical hairline streaks
-    ctx.globalAlpha = 0.02
+    ctx.globalAlpha = 0.03
     for (let sx = 0; sx < W; sx += 1.5) {
-      const b = 10 + Math.floor(Math.random() * 14)
+      const b = 18 + Math.floor(Math.random() * 15)
       ctx.fillStyle = `rgb(${b},${b},${b + 2})`
       ctx.fillRect(sx, y0, 0.8, bH)
     }
@@ -179,21 +179,21 @@ async function buildFilmTexture(renderer) {
     // Layer 3: central specular shine (horizontal)
     const shineGrad = ctx.createLinearGradient(0, y0, W, y0)
     shineGrad.addColorStop(0, 'rgba(255,255,255,0)')
-    shineGrad.addColorStop(0.3, 'rgba(255,255,255,0.010)')
-    shineGrad.addColorStop(0.5, 'rgba(255,255,255,0.020)')
-    shineGrad.addColorStop(0.7, 'rgba(255,255,255,0.010)')
+    shineGrad.addColorStop(0.3, 'rgba(255,255,255,0.015)')
+    shineGrad.addColorStop(0.5, 'rgba(255,255,255,0.035)')
+    shineGrad.addColorStop(0.7, 'rgba(255,255,255,0.015)')
     shineGrad.addColorStop(1, 'rgba(255,255,255,0)')
     ctx.fillStyle = shineGrad
     ctx.fillRect(0, y0, W, bH)
     // Layer 4: left & right edge glow
     const glowW = W * 0.04
     const glowL = ctx.createLinearGradient(0, y0, glowW, y0)
-    glowL.addColorStop(0, 'rgba(50,55,65,0.05)')
-    glowL.addColorStop(1, 'rgba(50,55,65,0)')
+    glowL.addColorStop(0, 'rgba(70,75,85,0.08)')
+    glowL.addColorStop(1, 'rgba(70,75,85,0)')
     ctx.fillStyle = glowL; ctx.fillRect(0, y0, glowW, bH)
     const glowR = ctx.createLinearGradient(W, y0, W - glowW, y0)
-    glowR.addColorStop(0, 'rgba(50,55,65,0.05)')
-    glowR.addColorStop(1, 'rgba(50,55,65,0)')
+    glowR.addColorStop(0, 'rgba(70,75,85,0.08)')
+    glowR.addColorStop(1, 'rgba(70,75,85,0)')
     ctx.fillStyle = glowR; ctx.fillRect(W - glowW, y0, glowW, bH)
   }
   paintSilverBand(0, holeRowH + 4)              // top border
@@ -366,9 +366,9 @@ export default function FilmstripViewer() {
         reflection.rotation.set(-angles[0], angles[1], angles[2])
       }
 
-      // Scroll film texture through the projector loop (fast motion)
+      // Scroll film texture through the projector loop (+20% speed)
       if (filmTexture) {
-        filmTexture.offset.x = t * 0.038
+        filmTexture.offset.x = t * 0.02
       }
 
       // Pulse rim light
