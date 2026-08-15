@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import * as THREE from 'three'
 
 // ── Filmstrip path points (Möbius loop centerline, 180 pts, closed) ──
@@ -214,6 +214,15 @@ const ROT_VAL = [1.39, 0.42, 0.00]
 // ── Component ─────────────────────────────────────────────────────────
 export default function FilmstripViewer() {
   const containerRef = useRef(null)
+  const mobileRotationRef = useRef([...ROT_VAL])
+  const [mobileAngles, setMobileAngles] = useState(() => ROT_VAL.map(angle => Math.round(THREE.MathUtils.radToDeg(angle))))
+
+  const handleMobileAngleChange = (index, degrees) => {
+    const nextAngles = [...mobileAngles]
+    nextAngles[index] = degrees
+    mobileRotationRef.current[index] = THREE.MathUtils.degToRad(degrees)
+    setMobileAngles(nextAngles)
+  }
 
   useEffect(() => {
     const container = containerRef.current
@@ -228,7 +237,8 @@ export default function FilmstripViewer() {
 
     const camera = new THREE.PerspectiveCamera(42, container.offsetWidth / container.offsetHeight, 0.1, 100)
     camera.position.set(...CAM_POS)
-    camera.filmOffset = -8
+    // Shift only the mobile framing left; the strip transform and angle remain unchanged.
+    camera.filmOffset = window.matchMedia('(max-width: 768px)').matches ? 2 : -8
     camera.updateProjectionMatrix()
 
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false })
@@ -241,17 +251,29 @@ export default function FilmstripViewer() {
     const ro = new ResizeObserver(() => {
       if (disposed) return
       camera.aspect = container.offsetWidth / container.offsetHeight
+      camera.filmOffset = window.matchMedia('(max-width: 768px)').matches ? 2 : -8
       camera.updateProjectionMatrix()
       renderer.setSize(container.offsetWidth, container.offsetHeight)
     })
     ro.observe(container)
 
     const clock = new THREE.Clock()
+    let mobius = null
+    let reflection = null
 
     function animate() {
       if (disposed) return
       rafId = requestAnimationFrame(animate)
       const t = clock.getElapsedTime()
+
+      // Desktop keeps its locked transform; mobile angles come from the controls.
+      if (mobius) {
+        const angles = window.matchMedia('(max-width: 768px)').matches
+          ? mobileRotationRef.current
+          : ROT_VAL
+        mobius.rotation.set(...angles)
+        reflection.rotation.set(-angles[0], angles[1], angles[2])
+      }
 
       // Scroll film texture through the projector loop
       if (filmTexture) {
@@ -275,13 +297,13 @@ export default function FilmstripViewer() {
       const mat = new THREE.MeshStandardMaterial({
         map: filmTexture, metalness: 0.3, roughness: 0.4, side: THREE.DoubleSide,
       })
-      const mobius = new THREE.Mesh(geo, mat)
+      mobius = new THREE.Mesh(geo, mat)
       mobius.scale.set(1.7, 1.7, 1.7)
       mobius.position.set(0, -0.7, -2)
       mobius.rotation.set(...ROT_VAL)
       scene.add(mobius)
 
-      const reflection = mobius.clone()
+      reflection = mobius.clone()
       reflection.material = mat.clone()
       reflection.material.transparent = true
       reflection.material.opacity = 0.16
@@ -325,6 +347,25 @@ export default function FilmstripViewer() {
       id="filmstrip-viewer"
       className="filmstrip-viewer"
       aria-label="Möbius filmstrip"
-    />
+    >
+      <div className="filmstrip-mobile-controls" aria-label="Mobile Möbius rotation controls">
+        <span className="filmstrip-mobile-controls-title">Strip rotation</span>
+        {['X', 'Y', 'Z'].map((axis, index) => (
+          <label className="filmstrip-mobile-control" key={axis}>
+            <span>{axis}</span>
+            <input
+              type="range"
+              min="-180"
+              max="180"
+              step="1"
+              value={mobileAngles[index]}
+              onChange={(event) => handleMobileAngleChange(index, Number(event.target.value))}
+              aria-label={`Rotate strip on ${axis} axis`}
+            />
+            <output>{mobileAngles[index]}°</output>
+          </label>
+        ))}
+      </div>
+    </div>
   )
 }
