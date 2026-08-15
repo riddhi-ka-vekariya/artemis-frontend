@@ -209,7 +209,11 @@ function buildStripFromPath(pathPts, width, vSeg, textureRepeats) {
 
 // Fixed position & angle locked values
 const CAM_POS = [1.10, 0.30, 6.00]
+const MOBILE_CAM_POS = [1.10, 0.30, 6.80]
+const MOBILE_FILM_OFFSET = 1
 const ROT_VAL = [1.39, 0.42, 0.00]
+const MOBILE_ROT_VAL = [-93, 115, 90].map(angle => THREE.MathUtils.degToRad(angle))
+const MOBILE_STRIP_SCALE = 1.45
 
 // ── Component ─────────────────────────────────────────────────────────
 export default function FilmstripViewer() {
@@ -227,8 +231,8 @@ export default function FilmstripViewer() {
     scene.fog = new THREE.Fog(0x040404, 14, 30)
 
     const camera = new THREE.PerspectiveCamera(42, container.offsetWidth / container.offsetHeight, 0.1, 100)
-    camera.position.set(...CAM_POS)
-    camera.filmOffset = -8
+    camera.position.set(...(window.matchMedia('(max-width: 768px)').matches ? MOBILE_CAM_POS : CAM_POS))
+    camera.filmOffset = window.matchMedia('(max-width: 768px)').matches ? MOBILE_FILM_OFFSET : -8
     camera.updateProjectionMatrix()
 
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false })
@@ -241,6 +245,8 @@ export default function FilmstripViewer() {
     const ro = new ResizeObserver(() => {
       if (disposed) return
       camera.aspect = container.offsetWidth / container.offsetHeight
+      camera.position.set(...(window.matchMedia('(max-width: 768px)').matches ? MOBILE_CAM_POS : CAM_POS))
+      camera.filmOffset = window.matchMedia('(max-width: 768px)').matches ? MOBILE_FILM_OFFSET : -8
       camera.updateProjectionMatrix()
       renderer.setSize(container.offsetWidth, container.offsetHeight)
     })
@@ -276,18 +282,20 @@ export default function FilmstripViewer() {
         map: filmTexture, metalness: 0.3, roughness: 0.4, side: THREE.DoubleSide,
       })
       const mobius = new THREE.Mesh(geo, mat)
-      mobius.scale.set(1.7, 1.7, 1.7)
+      const stripScale = window.matchMedia('(max-width: 768px)').matches ? MOBILE_STRIP_SCALE : 1.7
+      mobius.scale.set(stripScale, stripScale, stripScale)
       mobius.position.set(0, -0.7, -2)
-      mobius.rotation.set(...ROT_VAL)
+      mobius.rotation.set(...(window.matchMedia('(max-width: 768px)').matches ? MOBILE_ROT_VAL : ROT_VAL))
       scene.add(mobius)
 
       const reflection = mobius.clone()
       reflection.material = mat.clone()
       reflection.material.transparent = true
       reflection.material.opacity = 0.16
-      reflection.scale.set(1.7, -1.7, 1.7)
+      reflection.scale.set(stripScale, -stripScale, stripScale)
       reflection.position.y = -4.0
-      reflection.rotation.set(-ROT_VAL[0], ROT_VAL[1], ROT_VAL[2])
+      const activeAngles = window.matchMedia('(max-width: 768px)').matches ? MOBILE_ROT_VAL : ROT_VAL
+      reflection.rotation.set(-activeAngles[0], activeAngles[1], activeAngles[2])
       scene.add(reflection)
 
       scene.add(new THREE.AmbientLight(0xffffff, 1.2))

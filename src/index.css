@@ -2613,22 +2613,28 @@ body,
 @media (max-width: 768px) {
   .home-hero {
     height: calc(100vh - 64px);
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
+    display: block;
   }
 
   .home-hero-text {
-    position: relative;
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
     height: auto;
-    padding: 40px 24px;
-    background: linear-gradient(to top,
-        rgba(4, 4, 4, 0.98) 0%,
-        rgba(4, 4, 4, 0.85) 60%,
-        rgba(4, 4, 4, 0.0) 100%);
+    padding: 28px 24px 20px;
+    background: linear-gradient(to bottom,
+        rgba(4, 4, 4, 0.96) 0%,
+        rgba(4, 4, 4, 0.78) 62%,
+        rgba(4, 4, 4, 0) 100%);
     gap: 16px;
     z-index: 10;
+  }
+
+  .home-hero-visual {
+    position: absolute;
+    inset: 0;
+    width: 100%;
   }
 
   .home-headline {
