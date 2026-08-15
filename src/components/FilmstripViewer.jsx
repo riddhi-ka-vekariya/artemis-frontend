@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import * as THREE from 'three'
 
 // ── Filmstrip path points (Möbius loop centerline, 180 pts, closed) ──
@@ -218,6 +218,15 @@ const MOBILE_STRIP_SCALE = 1.45
 // ── Component ─────────────────────────────────────────────────────────
 export default function FilmstripViewer() {
   const containerRef = useRef(null)
+  const mobileRotationRef = useRef([...MOBILE_ROT_VAL])
+  const [mobileAngles, setMobileAngles] = useState([-93, 115, 90])
+
+  const handleMobileAngleChange = (index, degrees) => {
+    const nextAngles = [...mobileAngles]
+    nextAngles[index] = degrees
+    mobileRotationRef.current[index] = THREE.MathUtils.degToRad(degrees)
+    setMobileAngles(nextAngles)
+  }
 
   useEffect(() => {
     const container = containerRef.current
@@ -242,6 +251,48 @@ export default function FilmstripViewer() {
     renderer.toneMappingExposure = 1.6
     container.appendChild(renderer.domElement)
 
+    let isDragging = false
+    let dragStartX = 0
+    let dragStartY = 0
+    let dragStartAngles = null
+
+    const updateMobileAngles = (nextAngles) => {
+      mobileRotationRef.current = nextAngles.map(angle => THREE.MathUtils.degToRad(angle))
+      setMobileAngles(nextAngles)
+    }
+
+    const onPointerDown = (event) => {
+      if (!window.matchMedia('(max-width: 768px)').matches) return
+      isDragging = true
+      dragStartX = event.clientX
+      dragStartY = event.clientY
+      dragStartAngles = mobileRotationRef.current.map(angle => THREE.MathUtils.radToDeg(angle))
+      renderer.domElement.setPointerCapture(event.pointerId)
+    }
+
+    const onPointerMove = (event) => {
+      if (!isDragging || !dragStartAngles) return
+      const nextAngles = [
+        THREE.MathUtils.clamp(Math.round(dragStartAngles[0] - (event.clientY - dragStartY) * 0.45), -180, 180),
+        THREE.MathUtils.clamp(Math.round(dragStartAngles[1] + (event.clientX - dragStartX) * 0.45), -180, 180),
+        dragStartAngles[2],
+      ]
+      updateMobileAngles(nextAngles)
+    }
+
+    const onPointerUp = (event) => {
+      isDragging = false
+      dragStartAngles = null
+      if (renderer.domElement.hasPointerCapture(event.pointerId)) {
+        renderer.domElement.releasePointerCapture(event.pointerId)
+      }
+    }
+
+    renderer.domElement.addEventListener('pointerdown', onPointerDown)
+    renderer.domElement.addEventListener('pointermove', onPointerMove)
+    renderer.domElement.addEventListener('pointerup', onPointerUp)
+    renderer.domElement.addEventListener('pointercancel', onPointerUp)
+
     const ro = new ResizeObserver(() => {
       if (disposed) return
       camera.aspect = container.offsetWidth / container.offsetHeight
@@ -253,11 +304,22 @@ export default function FilmstripViewer() {
     ro.observe(container)
 
     const clock = new THREE.Clock()
+    let mobius = null
+    let reflection = null
 
     function animate() {
       if (disposed) return
       rafId = requestAnimationFrame(animate)
       const t = clock.getElapsedTime()
+
+      // Desktop keeps its locked transform; mobile angles come from the controls.
+      if (mobius) {
+        const angles = window.matchMedia('(max-width: 768px)').matches
+          ? mobileRotationRef.current
+          : ROT_VAL
+        mobius.rotation.set(...angles)
+        reflection.rotation.set(-angles[0], angles[1], angles[2])
+      }
 
       // Scroll film texture through the projector loop
       if (filmTexture) {
@@ -281,14 +343,14 @@ export default function FilmstripViewer() {
       const mat = new THREE.MeshStandardMaterial({
         map: filmTexture, metalness: 0.3, roughness: 0.4, side: THREE.DoubleSide,
       })
-      const mobius = new THREE.Mesh(geo, mat)
+      mobius = new THREE.Mesh(geo, mat)
       const stripScale = window.matchMedia('(max-width: 768px)').matches ? MOBILE_STRIP_SCALE : 1.7
       mobius.scale.set(stripScale, stripScale, stripScale)
       mobius.position.set(0, -0.7, -2)
       mobius.rotation.set(...(window.matchMedia('(max-width: 768px)').matches ? MOBILE_ROT_VAL : ROT_VAL))
       scene.add(mobius)
 
-      const reflection = mobius.clone()
+      reflection = mobius.clone()
       reflection.material = mat.clone()
       reflection.material.transparent = true
       reflection.material.opacity = 0.16
@@ -322,6 +384,10 @@ export default function FilmstripViewer() {
       disposed = true
       cancelAnimationFrame(rafId)
       ro.disconnect()
+      renderer.domElement.removeEventListener('pointerdown', onPointerDown)
+      renderer.domElement.removeEventListener('pointermove', onPointerMove)
+      renderer.domElement.removeEventListener('pointerup', onPointerUp)
+      renderer.domElement.removeEventListener('pointercancel', onPointerUp)
       renderer.dispose(); filmTexture?.dispose()
       if (container.contains(renderer.domElement)) container.removeChild(renderer.domElement)
     }
@@ -333,6 +399,25 @@ export default function FilmstripViewer() {
       id="filmstrip-viewer"
       className="filmstrip-viewer"
       aria-label="Möbius filmstrip"
-    />
+    >
+      <div className="filmstrip-mobile-controls" aria-label="Mobile Möbius rotation controls">
+        <span className="filmstrip-mobile-controls-title">Strip rotation</span>
+        {['X', 'Y', 'Z'].map((axis, index) => (
+          <label className="filmstrip-mobile-control" key={axis}>
+            <span>{axis}</span>
+            <input
+              type="range"
+              min="-180"
+              max="180"
+              step="1"
+              value={mobileAngles[index]}
+              onChange={(event) => handleMobileAngleChange(index, Number(event.target.value))}
+              aria-label={`Rotate strip on ${axis} axis`}
+            />
+            <output>{mobileAngles[index]}°</output>
+          </label>
+        ))}
+      </div>
+    </div>
   )
 }

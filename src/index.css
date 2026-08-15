@@ -744,6 +744,10 @@ body,
   position: relative;
 }
 
+.filmstrip-mobile-controls {
+  display: none;
+}
+
 /* ─── Glass Panel (legacy — for 3D viewer) ───────────────────────── */
 .glass-panel {
   background: var(--panel-bg);
@@ -2635,6 +2639,64 @@ body,
     position: absolute;
     inset: 0;
     width: 100%;
+  }
+
+  .filmstrip-viewer canvas {
+    cursor: grab;
+    touch-action: none;
+  }
+
+  .filmstrip-viewer canvas:active {
+    cursor: grabbing;
+  }
+
+  .home-hero-visual::before {
+    height: 80px;
+    min-height: 80px;
+  }
+
+  .filmstrip-mobile-controls {
+    position: absolute;
+    right: 12px;
+    bottom: 12px;
+    z-index: 6;
+    display: grid;
+    gap: 8px;
+    width: min(230px, calc(100% - 24px));
+    padding: 12px;
+    color: var(--color-paper);
+    background: rgba(4, 4, 4, 0.84);
+    border: 1px solid rgba(194, 194, 194, 0.2);
+    border-radius: 4px;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    font-family: var(--font-mono);
+  }
+
+  .filmstrip-mobile-controls-title {
+    color: var(--color-gold);
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .filmstrip-mobile-control {
+    display: grid;
+    grid-template-columns: 12px 1fr 38px;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+  }
+
+  .filmstrip-mobile-control input {
+    width: 100%;
+    accent-color: var(--color-gold);
+  }
+
+  .filmstrip-mobile-control output {
+    color: var(--color-silver);
+    font-variant-numeric: tabular-nums;
+    text-align: right;
   }
 
   .home-headline {
