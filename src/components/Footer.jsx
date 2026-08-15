@@ -11,7 +11,7 @@ export default function Footer() {
         <div className="footer-col footer-col-brand">
           <div className="footer-logo-wrap" onClick={() => navigate('/home')}>
             <img
-              src={`${import.meta.env.BASE_URL}artemis-logo.png`}
+              src={`${import.meta.env.BASE_URL}artemis-logo-f.png`}
               alt="Artemis Studios"
               className="footer-logo-img"
             />
