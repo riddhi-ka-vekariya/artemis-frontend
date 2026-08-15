@@ -75,11 +75,15 @@ export default function HomePage() {
           </header>
 
           <div className="home-principles-grid">
-            {PRINCIPLES.map((item) => (
+            {PRINCIPLES.map((item, idx) => (
               <div
-                key={item.title}
-                className="principle-card"
+                key={item.num}
+                className={`principle-card${idx % 2 !== 0 ? ' principle-card--reverse' : ''}`}
               >
+                <div className="principle-card-num-wrap">
+                  <span className="principle-card-num">{item.num}</span>
+                  <div className="principle-card-line" />
+                </div>
                 <div className="principle-card-content">
                   <span className="principle-card-tag">{item.tag}</span>
                   <h3 className="principle-card-heading">{item.title}</h3>
