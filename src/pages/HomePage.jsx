@@ -1,6 +1,7 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
 import Navbar from '../components/Navbar'
+import MoltenMetal from '../components/MoltenMetal'
 import FilmstripViewer from '../components/FilmstripViewer'
 import Footer from '../components/Footer'
 
@@ -47,7 +48,31 @@ export default function HomePage() {
         <section className="home-hero" aria-label="Hero">
           {/* ── Full-width canvas background ── */}
           <div className="home-hero-visual">
-            <FilmstripViewer />
+            <div className="home-molten-background">
+              <MoltenMetal
+                color1="#040404"
+                color2="#d19400"
+                color3="#FFFFFF"
+                speed={0.35}
+                scale={4}
+                detail={3}
+                glow={1.6}
+                coreSize={0.1}
+                swirl={1}
+                fold={-0.2}
+                blackPoint={0.05}
+                brightness={1.5}
+                colorMode="ember"
+                grain
+                grainIntensity={0.05}
+                mouseInteraction
+                mouseStrength={0.3}
+                opacity={1}
+              />
+            </div>
+            <div className="home-filmstrip-overlay">
+              <FilmstripViewer />
+            </div>
           </div>
 
           {/* ── Text overlay on top ── */}

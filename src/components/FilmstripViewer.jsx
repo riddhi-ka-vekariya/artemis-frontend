@@ -273,7 +273,6 @@ export default function FilmstripViewer() {
     let filmTexture = null
 
     const scene = new THREE.Scene()
-    scene.background = new THREE.Color(0x040404)
     scene.fog = new THREE.Fog(0x040404, 14, 30)
 
     const camera = new THREE.PerspectiveCamera(42, container.offsetWidth / container.offsetHeight, 0.1, 100)
@@ -281,7 +280,8 @@ export default function FilmstripViewer() {
     camera.filmOffset = window.matchMedia('(max-width: 768px)').matches ? MOBILE_FILM_OFFSET : -8
     camera.updateProjectionMatrix()
 
-    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false })
+    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true })
+    renderer.setClearColor(0x000000, 0)
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
     renderer.setSize(container.offsetWidth, container.offsetHeight)
     renderer.toneMapping = THREE.ACESFilmicToneMapping

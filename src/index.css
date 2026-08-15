@@ -711,6 +711,22 @@ body,
   z-index: 1;
 }
 
+.home-molten-background,
+.home-filmstrip-overlay {
+  position: absolute;
+  inset: 0;
+}
+
+.home-molten-background {
+  z-index: 1;
+  pointer-events: none;
+}
+
+.home-filmstrip-overlay {
+  z-index: 2;
+  pointer-events: none;
+}
+
 /* Bottom fade overlay: deeply dissolves canvas reflection into the page background */
 .home-hero-visual::before {
   content: '';
