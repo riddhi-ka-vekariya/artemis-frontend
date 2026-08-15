@@ -166,7 +166,7 @@ export default function ProjectsPage() {
 
       mult *= scaleAdj
 
-      const meshSize = MESH_SIZE_BASE.clone().multiplyScalar(mult)
+      const baseMeshSize = MESH_SIZE_BASE.clone().multiplyScalar(mult)
       const p = state.params
       const bendPoint = new THREE.Vector2()
       if (MQ.lg.matches || MQ.md.matches) {
@@ -178,58 +178,66 @@ export default function ProjectsPage() {
       }
 
       const cols = MQ.md.matches ? 2 : 1
-      const gap = state.params.cardGap
+      const colGap = state.params.cardGap
+      const rowGapAmount = state.params.cardGap // former gap between rows
+      const padRatio = rowGapAmount / (baseMeshSize.y + rowGapAmount)
+      
+      // Total mesh height includes the former gap amount
+      const meshSize = new THREE.Vector2(baseMeshSize.x, baseMeshSize.y + rowGapAmount)
       const rowH = meshSize.y
 
-      return { meshSize, bendPoint, cols, gap, rowH, scaleAdj }
+      return { meshSize, baseMeshSize, bendPoint, cols, colGap, rowGapAmount, padRatio, rowH, scaleAdj }
     }
 
     // ── Texture Builder ──────────────────────────────────────────────────────
-    function makeCardTexture(data, w, h) {
+    function makeCardTexture(data, w, h, padRatio) {
       const cvs = document.createElement('canvas')
       cvs.width = Math.max(1, Math.round(w))
       cvs.height = Math.max(1, Math.round(h))
       const ctx = cvs.getContext('2d')
 
-      ctx.fillStyle = '#1e1e24'
-      ctx.fillRect(0, 0, cvs.width, cvs.height)
+      // Transparent base canvas for bottom padding
+      ctx.clearRect(0, 0, cvs.width, cvs.height)
 
       const tex = new THREE.CanvasTexture(cvs)
+      const imgH = cvs.height * (1 - padRatio)
 
       const img = new Image()
       img.crossOrigin = 'anonymous'
       img.onload = () => {
         const ir = img.width / img.height
-        const cr = cvs.width / cvs.height
+        const cr = cvs.width / imgH
         let sx, sy, sw, sh
         if (ir > cr) {
           sh = img.height; sw = sh * cr; sx = (img.width - sw) / 2; sy = 0;
         } else {
           sw = img.width; sh = sw / cr; sx = 0; sy = (img.height - sh) / 2;
         }
-        ctx.drawImage(img, sx, sy, sw, sh, 0, 0, cvs.width, cvs.height)
 
-        // Gradient Scrim
-        const scrim = ctx.createLinearGradient(0, cvs.height * 0.35, 0, cvs.height)
+        // Draw image in upper region
+        ctx.drawImage(img, sx, sy, sw, sh, 0, 0, cvs.width, imgH)
+
+        // Gradient Scrim inside image region
+        const scrim = ctx.createLinearGradient(0, imgH * 0.35, 0, imgH)
         scrim.addColorStop(0, 'rgba(0,0,0,0)')
         scrim.addColorStop(1, 'rgba(0,0,0,0.85)')
         ctx.fillStyle = scrim
-        ctx.fillRect(0, 0, cvs.width, cvs.height)
+        ctx.fillRect(0, 0, cvs.width, imgH)
 
         // Typography — Black & Gold style
-        const titlePx = Math.round(Math.max(cvs.height * 0.082, 16))
+        const titlePx = Math.round(Math.max(imgH * 0.082, 16))
         ctx.fillStyle = 'rgba(242,242,242,0.96)'
         ctx.font = `700 ${titlePx}px "The Seasons Bold", "The Seasons", Georgia, serif`
-        ctx.fillText(data.title, 28, cvs.height * 0.74)
+        ctx.fillText(data.title, 28, imgH * 0.74)
 
-        const descPx = Math.round(Math.max(cvs.height * 0.057, 11))
+        const descPx = Math.round(Math.max(imgH * 0.057, 11))
         ctx.fillStyle = 'rgba(194,194,194,0.65)'
         ctx.font = `600 ${descPx}px "Behind The Nineties Sans SemiBold", "Behind The Nineties Sans", "IBM Plex Mono", monospace`
-        ctx.fillText(data.desc.toUpperCase(), 28, cvs.height * 0.74 + titlePx * 1.45)
+        ctx.fillText(data.desc.toUpperCase(), 28, imgH * 0.74 + titlePx * 1.45)
 
-        // Gold Bottom Rule
+        // Gold Bottom Rule at the bottom of the image
         ctx.fillStyle = 'rgba(193,148,0,0.4)'
-        ctx.fillRect(0, cvs.height - 2, cvs.width, 2)
+        ctx.fillRect(0, imgH - 2, cvs.width, 2)
 
         tex.needsUpdate = true
       }
@@ -250,11 +258,11 @@ export default function ProjectsPage() {
       scene.add(projectsGroup)
       state.projectsGroup = projectsGroup
 
-      const { meshSize, bendPoint } = getLayoutParams()
+      const { meshSize, padRatio, bendPoint } = getLayoutParams()
 
       PROJECT_DATA.forEach((data, i) => {
         const geo = new THREE.PlaneGeometry(1, 1, SEGMENT_COUNT, SEGMENT_COUNT)
-        const tex = makeCardTexture(data, meshSize.x, meshSize.y)
+        const tex = makeCardTexture(data, meshSize.x, meshSize.y, padRatio)
 
         const mat = new THREE.ShaderMaterial({
           vertexShader, fragmentShader,
@@ -297,12 +305,12 @@ export default function ProjectsPage() {
     function positionProjects() {
       if (!state.projectsGroup) return
 
-      const { meshSize, bendPoint, cols, gap, rowH, scaleAdj } = getLayoutParams()
+      const { meshSize, bendPoint, cols, colGap, rowH, scaleAdj } = getLayoutParams()
 
       // Cache layout for strip positioning
       state.meshSize = meshSize
       state.cols = cols
-      state.gap = gap
+      state.colGap = colGap
 
       const winH = window.innerHeight
       const yStartOffset = MQ.md.matches ? 80 : 30
@@ -314,10 +322,10 @@ export default function ProjectsPage() {
         const col = u % cols
         const row = Math.floor(u / cols)
 
-        let fx = col * (meshSize.x + gap)
-        if (cols > 1) fx -= 0.5 * (meshSize.x + gap)
+        let fx = col * (meshSize.x + colGap)
+        if (cols > 1) fx -= 0.5 * (meshSize.x + colGap)
 
-        const fy = -(row * rowH + row * gap + yStartOffset)
+        const fy = -(row * rowH + yStartOffset)
 
         if (col === 0) state.projectsHeight += rowH
         group.position.set(fx, fy, 1000)
@@ -439,14 +447,17 @@ export default function ProjectsPage() {
       ctx.fillStyle = glowB
       ctx.fillRect(0, h - glowH, w, glowH)
 
-      // ── Sprocket holes ──
+      // ── Sprocket holes (evenly distributed to tile seamlessly across rows) ──
       const holeW = w * 0.52
       const holeH = holeW             // SQUARE
-      const tileH = holeH * 1.9      // repeat period (hole + gap)
+      const rawTileH = holeH * 1.9    // target repeat period
+      const holeCount = Math.max(1, Math.round(h / rawTileH))
+      const tileH = h / holeCount     // exact tile size so holes align across row boundaries
       const holeX = (w - holeW) / 2  // centered horizontally
 
-      ctx.fillStyle = '#0D0D0D'
-      for (let y = (tileH - holeH) / 2; y < h + tileH; y += tileH) {
+      ctx.fillStyle = '#040404'
+      for (let i = 0; i < holeCount; i++) {
+        const y = i * tileH + (tileH - holeH) / 2
         if (ctx.roundRect) {
           ctx.beginPath()
           ctx.roundRect(holeX, y, holeW, holeH, 2)
@@ -472,7 +483,7 @@ export default function ProjectsPage() {
         )
       }
 
-      const { meshSize, bendPoint, cols, gap, rowH, scaleAdj } = getLayoutParams()
+      const { meshSize, bendPoint, cols, colGap, rowH, scaleAdj } = getLayoutParams()
       const yStartOffset = MQ.md.matches ? 80 : 30
       const rows = Math.ceil(PROJECT_DATA.length / cols)
 
@@ -480,8 +491,8 @@ export default function ProjectsPage() {
       const STRIP_W = meshSize.x * 0.075
 
       // Outer X edges of the card columns
-      const leftFx = cols > 1 ? -0.5 * (meshSize.x + gap) : 0
-      const rightFx = cols > 1 ? 0.5 * (meshSize.x + gap) : 0
+      const leftFx = cols > 1 ? -0.5 * (meshSize.x + colGap) : 0
+      const rightFx = cols > 1 ? 0.5 * (meshSize.x + colGap) : 0
       const leftEdge = leftFx - meshSize.x / 2
       const rightEdge = rightFx + meshSize.x / 2
 
@@ -496,7 +507,7 @@ export default function ProjectsPage() {
       const stripSize = new THREE.Vector2(STRIP_W, meshSize.y)
 
       for (let row = 0; row < rows; row++) {
-        const fy = -(row * rowH + row * gap + yStartOffset)
+        const fy = -(row * rowH + yStartOffset)
 
           ;['left', 'right'].forEach(side => {
             const geo = new THREE.PlaneGeometry(1, 1, SEGMENT_COUNT, SEGMENT_COUNT)
