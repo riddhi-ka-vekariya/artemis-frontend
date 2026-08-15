@@ -120,7 +120,6 @@ async function buildFilmTexture(renderer) {
   c.width = W; c.height = H
   const ctx = c.getContext('2d')
   ctx.fillStyle = '#040404'; ctx.fillRect(0, 0, W, H)
-  const labels = ['STUDIO', 'LIGHT / SPACE', 'DETAIL', 'FORM', 'CINEMA', 'MATERIAL', 'FRAME', 'TEXTURE']
   let images = []
   try {
     const results = await Promise.allSettled(MOBIUS_PHOTOS.map(loadImage))
@@ -134,9 +133,9 @@ async function buildFilmTexture(renderer) {
       ctx.save()
       roundRect(ctx, px, py, pw, ph, 4)
       ctx.clip()
-      // Invert image vertically upside down
+      // Invert image vertically and horizontally
       ctx.translate(px + pw / 2, py + ph / 2)
-      ctx.scale(1, -1)
+      ctx.scale(-1, -1)
       ctx.translate(-(px + pw / 2), -(py + ph / 2))
       drawCover(ctx, images[i], px, py, pw, ph)
       ctx.fillStyle = 'rgba(4,4,4,0.22)'
@@ -147,13 +146,6 @@ async function buildFilmTexture(renderer) {
       grad.addColorStop(0, '#1c1917'); grad.addColorStop(1, '#040404')
       ctx.fillStyle = grad; ctx.fillRect(px, py, pw, ph)
     }
-    ctx.fillStyle = 'rgba(239,233,223,0.75)'
-    ctx.font = '500 12px "Behind The Nineties Sans SemiBold", "Behind The Nineties", monospace'
-    ctx.textAlign = 'left'
-    ctx.shadowColor = 'rgba(0,0,0,0.9)'
-    ctx.shadowBlur = 4
-    ctx.fillText(labels[i % labels.length], x0 + 12, H - holeRowH - 10)
-    ctx.shadowBlur = 0
   }
   // ── Metallic dark charcoal border bands (top & bottom) ──
   function paintSilverBand(y0, bH) {

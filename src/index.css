@@ -635,22 +635,9 @@ body,
   background-color: #040404;
 }
 
-/* Top fade overlay: deepens darkness under navbar and top of 3D scene */
+/* Top fade overlay: disabled on desktop, preserved for mobile view */
 .home-hero::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 25vh;
-  min-height: 160px;
-  background: linear-gradient(to bottom,
-      rgba(4, 4, 4, 0.98) 0%,
-      rgba(4, 4, 4, 0.82) 35%,
-      rgba(4, 4, 4, 0.40) 70%,
-      transparent 100%);
-  z-index: 6;
-  pointer-events: none;
+  display: none;
 }
 
 /* ── Left text overlay ── */
@@ -2523,6 +2510,24 @@ body,
   .home-hero {
     height: calc(100vh - 64px);
     display: block;
+  }
+
+  .home-hero::before {
+    content: '';
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 25vh;
+    min-height: 160px;
+    background: linear-gradient(to bottom,
+        rgba(4, 4, 4, 0.98) 0%,
+        rgba(4, 4, 4, 0.82) 35%,
+        rgba(4, 4, 4, 0.40) 70%,
+        transparent 100%);
+    z-index: 6;
+    pointer-events: none;
   }
 
   .home-hero-text {
