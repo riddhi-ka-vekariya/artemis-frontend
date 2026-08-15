@@ -6,7 +6,8 @@ import { vertexShader, fragmentShader } from '../components/UnseenCurlDemo/shade
 
 // ─── Constants ─────────────────────────────────────────────────────────────
 const MESH_SIZE_BASE = new THREE.Vector2(820, 430)
-const SEGMENT_COUNT = 12
+const SEGMENTS_X = 24
+const SEGMENTS_Y = 80
 const SCROLL_LERP = 0.05
 const VELOCITY_LERP = 0.075
 const VELOCITY_SCALE = 5e-4
@@ -178,7 +179,7 @@ export default function ProjectsPage() {
       }
 
       const cols = MQ.md.matches ? 2 : 1
-      const colGap = state.params.cardGap
+      const colGap = Math.round(state.params.cardGap * 0.5) // Reduced by half (14px)
       const rowGapAmount = state.params.cardGap // former gap between rows
       const padRatio = rowGapAmount / (baseMeshSize.y + rowGapAmount)
       
@@ -261,7 +262,7 @@ export default function ProjectsPage() {
       const { meshSize, padRatio, bendPoint } = getLayoutParams()
 
       PROJECT_DATA.forEach((data, i) => {
-        const geo = new THREE.PlaneGeometry(1, 1, SEGMENT_COUNT, SEGMENT_COUNT)
+        const geo = new THREE.PlaneGeometry(1, 1, SEGMENTS_X, SEGMENTS_Y)
         const tex = makeCardTexture(data, meshSize.x, meshSize.y, padRatio)
 
         const mat = new THREE.ShaderMaterial({
@@ -510,7 +511,7 @@ export default function ProjectsPage() {
         const fy = -(row * rowH + yStartOffset)
 
           ;['left', 'right'].forEach(side => {
-            const geo = new THREE.PlaneGeometry(1, 1, SEGMENT_COUNT, SEGMENT_COUNT)
+            const geo = new THREE.PlaneGeometry(1, 1, 8, SEGMENTS_Y)
             const tex = side === 'left' ? texL : texR
 
             const mat = new THREE.ShaderMaterial({
