@@ -54,9 +54,22 @@ const PATH_POINTS = [
 function loadImage(url) {
   return new Promise((resolve, reject) => {
     const img = new Image()
-    img.crossOrigin = 'anonymous'
+    if (url.startsWith('http')) {
+      img.crossOrigin = 'anonymous'
+    }
     img.onload = () => resolve(img)
-    img.onerror = reject
+    img.onerror = (err) => {
+      console.warn('Failed loading image, trying fallback:', url, err)
+      // If webp fails, try jpg fallback
+      if (url.endsWith('.webp')) {
+        const fallback = new Image()
+        fallback.onload = () => resolve(fallback)
+        fallback.onerror = reject
+        fallback.src = url.replace('.webp', '.jpg')
+      } else {
+        reject(err)
+      }
+    }
     img.src = url
   })
 }
@@ -79,24 +92,56 @@ function roundRect(ctx, x, y, w, h, r) {
   ctx.closePath()
 }
 
+// ── 16 photos for the Möbius strip in alphabetical order (a - p) ──
+const BASE = import.meta.env.BASE_URL || '/'
+const MOBIUS_PHOTOS = [
+  `${BASE}mobius-strip-photos/a.webp`,
+  `${BASE}mobius-strip-photos/b.webp`,
+  `${BASE}mobius-strip-photos/c.webp`,
+  `${BASE}mobius-strip-photos/d.webp`,
+  `${BASE}mobius-strip-photos/e.webp`,
+  `${BASE}mobius-strip-photos/f.webp`,
+  `${BASE}mobius-strip-photos/g.webp`,
+  `${BASE}mobius-strip-photos/h.webp`,
+  `${BASE}mobius-strip-photos/i.webp`,
+  `${BASE}mobius-strip-photos/j.webp`,
+  `${BASE}mobius-strip-photos/k.webp`,
+  `${BASE}mobius-strip-photos/l.webp`,
+  `${BASE}mobius-strip-photos/m.webp`,
+  `${BASE}mobius-strip-photos/n.webp`,
+  `${BASE}mobius-strip-photos/o.webp`,
+  `${BASE}mobius-strip-photos/p.webp`,
+]
+
 async function buildFilmTexture(renderer) {
-  const frameCount = 16, cell = 220, holeRowH = 34
+  const frameCount = MOBIUS_PHOTOS.length, cell = 220, holeRowH = 34
   const W = cell * frameCount, H = (cell - 12) + holeRowH * 2 + 8
   const c = document.createElement('canvas')
   c.width = W; c.height = H
   const ctx = c.getContext('2d')
   ctx.fillStyle = '#040404'; ctx.fillRect(0, 0, W, H)
   const labels = ['STUDIO', 'LIGHT / SPACE', 'DETAIL', 'FORM', 'CINEMA', 'MATERIAL', 'FRAME', 'TEXTURE']
-  const seeds = ['104', '1015', '1025', '1039', '1041', '1043', '1050', '1069', '1074', '1084', '1080', '1069', '1041', '1025', '1015', '104']
-  const urls = seeds.map((s, i) => `https://picsum.photos/seed/${s}-${i}/400/400`)
   let images = []
-  try { images = await Promise.all(urls.map(loadImage)) } catch { images = [] }
+  try {
+    const results = await Promise.allSettled(MOBIUS_PHOTOS.map(loadImage))
+    images = results.map(r => r.status === 'fulfilled' ? r.value : null)
+  } catch {
+    images = []
+  }
   for (let i = 0; i < frameCount; i++) {
     const x0 = i * cell, px = x0 + 6, py = holeRowH + 4, pw = cell - 12, ph = pw
     if (images[i]) {
-      ctx.save(); roundRect(ctx, px, py, pw, ph, 4); ctx.clip()
+      ctx.save()
+      roundRect(ctx, px, py, pw, ph, 4)
+      ctx.clip()
+      // Invert image vertically upside down
+      ctx.translate(px + pw / 2, py + ph / 2)
+      ctx.scale(1, -1)
+      ctx.translate(-(px + pw / 2), -(py + ph / 2))
       drawCover(ctx, images[i], px, py, pw, ph)
-      ctx.fillStyle = 'rgba(4,4,4,0.32)'; ctx.fillRect(px, py, pw, ph); ctx.restore()
+      ctx.fillStyle = 'rgba(4,4,4,0.22)'
+      ctx.fillRect(px, py, pw, ph)
+      ctx.restore()
     } else {
       const grad = ctx.createLinearGradient(x0, py, x0, py + ph)
       grad.addColorStop(0, '#1c1917'); grad.addColorStop(1, '#040404')
@@ -110,45 +155,45 @@ async function buildFilmTexture(renderer) {
     ctx.fillText(labels[i % labels.length], x0 + 12, H - holeRowH - 10)
     ctx.shadowBlur = 0
   }
-  // ── Metallic silver border bands (top & bottom) ──
+  // ── Metallic dark charcoal border bands (top & bottom) ──
   function paintSilverBand(y0, bH) {
-    // Layer 1: brushed-metal horizontal gradient (sweeps across strip length)
+    // Layer 1: brushed-metal horizontal gradient in deep charcoal / onyx grey
     const metalGrad = ctx.createLinearGradient(0, y0, W, y0)
-    metalGrad.addColorStop(0, '#5E5E62')
-    metalGrad.addColorStop(0.15, '#A0A0A4')
-    metalGrad.addColorStop(0.35, '#7A7A7E')
-    metalGrad.addColorStop(0.5, '#C2C2C6')
-    metalGrad.addColorStop(0.65, '#888890')
-    metalGrad.addColorStop(0.85, '#ABABAF')
-    metalGrad.addColorStop(1, '#6A6A6E')
+    metalGrad.addColorStop(0, '#0D0D10')
+    metalGrad.addColorStop(0.15, '#1A1A1E')
+    metalGrad.addColorStop(0.35, '#131316')
+    metalGrad.addColorStop(0.5, '#24242A')
+    metalGrad.addColorStop(0.65, '#161619')
+    metalGrad.addColorStop(0.85, '#1E1E23')
+    metalGrad.addColorStop(1, '#0F0F12')
     ctx.fillStyle = metalGrad
     ctx.fillRect(0, y0, W, bH)
     // Layer 2: vertical hairline streaks
-    ctx.globalAlpha = 0.07
+    ctx.globalAlpha = 0.04
     for (let sx = 0; sx < W; sx += 1.5) {
-      const b = 140 + Math.floor(Math.random() * 60)
-      ctx.fillStyle = `rgb(${b},${b},${b + 4})`
+      const b = 28 + Math.floor(Math.random() * 22)
+      ctx.fillStyle = `rgb(${b},${b},${b + 2})`
       ctx.fillRect(sx, y0, 0.8, bH)
     }
     ctx.globalAlpha = 1.0
     // Layer 3: central specular shine (horizontal)
     const shineGrad = ctx.createLinearGradient(0, y0, W, y0)
     shineGrad.addColorStop(0, 'rgba(255,255,255,0)')
-    shineGrad.addColorStop(0.3, 'rgba(255,255,255,0.10)')
-    shineGrad.addColorStop(0.5, 'rgba(255,255,255,0.18)')
-    shineGrad.addColorStop(0.7, 'rgba(255,255,255,0.10)')
+    shineGrad.addColorStop(0.3, 'rgba(255,255,255,0.02)')
+    shineGrad.addColorStop(0.5, 'rgba(255,255,255,0.05)')
+    shineGrad.addColorStop(0.7, 'rgba(255,255,255,0.02)')
     shineGrad.addColorStop(1, 'rgba(255,255,255,0)')
     ctx.fillStyle = shineGrad
     ctx.fillRect(0, y0, W, bH)
     // Layer 4: left & right edge glow
     const glowW = W * 0.04
     const glowL = ctx.createLinearGradient(0, y0, glowW, y0)
-    glowL.addColorStop(0, 'rgba(200,205,215,0.35)')
-    glowL.addColorStop(1, 'rgba(200,205,215,0)')
+    glowL.addColorStop(0, 'rgba(90,95,105,0.10)')
+    glowL.addColorStop(1, 'rgba(90,95,105,0)')
     ctx.fillStyle = glowL; ctx.fillRect(0, y0, glowW, bH)
     const glowR = ctx.createLinearGradient(W, y0, W - glowW, y0)
-    glowR.addColorStop(0, 'rgba(200,205,215,0.35)')
-    glowR.addColorStop(1, 'rgba(200,205,215,0)')
+    glowR.addColorStop(0, 'rgba(90,95,105,0.10)')
+    glowR.addColorStop(1, 'rgba(90,95,105,0)')
     ctx.fillStyle = glowR; ctx.fillRect(W - glowW, y0, glowW, bH)
   }
   paintSilverBand(0, holeRowH + 4)              // top border
@@ -321,9 +366,9 @@ export default function FilmstripViewer() {
         reflection.rotation.set(-angles[0], angles[1], angles[2])
       }
 
-      // Scroll film texture through the projector loop
+      // Scroll film texture through the projector loop (+20% speed)
       if (filmTexture) {
-        filmTexture.offset.x = t * 0.015
+        filmTexture.offset.x = t * 0.018
       }
 
       // Pulse rim light
@@ -388,35 +433,51 @@ export default function FilmstripViewer() {
       renderer.domElement.removeEventListener('pointermove', onPointerMove)
       renderer.domElement.removeEventListener('pointerup', onPointerUp)
       renderer.domElement.removeEventListener('pointercancel', onPointerUp)
-      renderer.dispose(); filmTexture?.dispose()
-      if (container.contains(renderer.domElement)) container.removeChild(renderer.domElement)
+      if (filmTexture) filmTexture.dispose()
+      renderer.dispose()
+      if (container.contains(renderer.domElement)) {
+        container.removeChild(renderer.domElement)
+      }
     }
   }, [])
 
   return (
-    <div
-      ref={containerRef}
-      id="filmstrip-viewer"
-      className="filmstrip-viewer"
-      aria-label="Möbius filmstrip"
-    >
-      <div className="filmstrip-mobile-controls" aria-label="Mobile Möbius rotation controls">
-        <span className="filmstrip-mobile-controls-title">Strip rotation</span>
-        {['X', 'Y', 'Z'].map((axis, index) => (
-          <label className="filmstrip-mobile-control" key={axis}>
-            <span>{axis}</span>
-            <input
-              type="range"
-              min="-180"
-              max="180"
-              step="1"
-              value={mobileAngles[index]}
-              onChange={(event) => handleMobileAngleChange(index, Number(event.target.value))}
-              aria-label={`Rotate strip on ${axis} axis`}
-            />
-            <output>{mobileAngles[index]}°</output>
-          </label>
-        ))}
+    <div className="filmstrip-viewer" ref={containerRef}>
+      <div className="filmstrip-mobile-controls">
+        <span className="filmstrip-mobile-controls-title">Mobile Angle</span>
+        <label className="filmstrip-mobile-control">
+          <span>X</span>
+          <input
+            type="range"
+            min="-180"
+            max="180"
+            value={mobileAngles[0]}
+            onChange={(e) => handleMobileAngleChange(0, Number(e.target.value))}
+          />
+          <output>{mobileAngles[0]}°</output>
+        </label>
+        <label className="filmstrip-mobile-control">
+          <span>Y</span>
+          <input
+            type="range"
+            min="-180"
+            max="180"
+            value={mobileAngles[1]}
+            onChange={(e) => handleMobileAngleChange(1, Number(e.target.value))}
+          />
+          <output>{mobileAngles[1]}°</output>
+        </label>
+        <label className="filmstrip-mobile-control">
+          <span>Z</span>
+          <input
+            type="range"
+            min="-180"
+            max="180"
+            value={mobileAngles[2]}
+            onChange={(e) => handleMobileAngleChange(2, Number(e.target.value))}
+          />
+          <output>{mobileAngles[2]}°</output>
+        </label>
       </div>
     </div>
   )

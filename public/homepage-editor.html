@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Artemis — Homepage Editor</title>
+  <style>
+    :root { --bg:#040404; --panel:#121212; --gold:#c19a27; --paper:#f2f2f2; --muted:#a9a9a9; }
+    * { box-sizing:border-box; }
+    html { scroll-behavior:smooth; }
+    body { margin:0; background:var(--bg); color:var(--paper); font-family:Georgia,serif; }
+    body.editing [contenteditable="true"] { outline:1px dashed rgba(193,154,39,.65); outline-offset:5px; }
+    [contenteditable="true"] { cursor:text; }
+    .toolbar { position:sticky; top:0; z-index:20; display:flex; flex-wrap:wrap; gap:10px; align-items:center; padding:12px 5vw; background:rgba(4,4,4,.94); border-bottom:1px solid rgba(193,154,39,.3); font:12px/1.2 Arial,sans-serif; }
+    .toolbar button { border:1px solid rgba(193,154,39,.7); background:transparent; color:var(--paper); padding:8px 12px; border-radius:2px; cursor:pointer; }
+    .toolbar button:hover, .toolbar button.active { background:var(--gold); color:#080808; }
+    .toolbar small { color:var(--muted); margin-left:auto; }
+    .nav { display:flex; justify-content:space-between; align-items:center; padding:24px 6vw; border-bottom:1px solid rgba(255,255,255,.08); font:12px Arial,sans-serif; letter-spacing:.12em; text-transform:uppercase; }
+    .nav img { width:auto; height:42px; object-fit:contain; }
+    .nav-links { display:flex; gap:28px; color:var(--muted); }
+    .hero { height:calc(100vh - 72px); min-height:560px; position:relative; overflow:hidden; display:flex; align-items:center; padding:0 10vw; background:radial-gradient(circle at 72% 48%, rgba(193,154,39,.12), transparent 32%), linear-gradient(110deg,#040404 0%,#080808 56%,#11100b 100%); }
+    .hero::after { content:''; position:absolute; inset:0; pointer-events:none; background:linear-gradient(to bottom,transparent 68%,rgba(4,4,4,.92) 100%); }
+    .hero-copy { position:relative; z-index:1; width:48%; max-width:680px; display:flex; flex-direction:column; gap:24px; }
+    .eyebrow { display:block; color:var(--gold); font:500 12px Arial,sans-serif; letter-spacing:.12em; text-transform:uppercase; opacity:.8; }
+    h1 { margin:0; font-size:clamp(44px,5.5vw,80px); font-weight:400; line-height:1; letter-spacing:-.01em; }
+    h1 em { display:block; }
+    em { color:var(--gold); font-weight:400; font-style:italic; }
+    .divider { width:140px; height:1px; margin:12px 0 8px; background:rgba(194,194,194,.25); }
+    .subtag { margin:0; color:var(--paper); font:500 clamp(12px,1.1vw,15px)/1.7 Arial,sans-serif; letter-spacing:.14em; text-transform:uppercase; opacity:.9; }
+    .principles { width:100%; max-width:1280px; margin:0 auto; padding:120px 48px 160px; }
+    .section-head { margin-bottom:80px; text-align:center; }
+    h2 { margin:0; font-size:clamp(32px,4vw,48px); font-weight:400; line-height:1.15; }
+    .grid { display:flex; flex-direction:column; gap:40px; }
+    .card { display:flex; align-items:center; gap:60px; min-height:0; padding:56px 64px; background:rgba(18,18,18,.75); backdrop-filter:blur(16px); border:1px solid rgba(193,148,0,.12); border-radius:4px; }
+    .card:nth-child(even) { flex-direction:row-reverse; }
+    .card-num-wrap { flex:0 0 140px; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+    .card-num { color:rgba(193,148,39,.35); font-size:64px; line-height:1; }
+    .card-line { width:40px; height:1px; margin-top:16px; background:rgba(193,148,39,.25); }
+    .card-content { flex:1; }
+    .card-tag { display:block; margin:0 0 12px; color:var(--gold); font:11px Arial,sans-serif; letter-spacing:.15em; text-transform:uppercase; }
+    h3 { margin:0 0 14px; font-size:clamp(24px,2.5vw,32px); font-weight:500; line-height:1.25; }
+    .summary { margin:0 0 12px; color:var(--paper); font:500 16px/1.5 Arial,sans-serif; }
+    .desc { margin:0; max-width:680px; color:var(--muted); font:14px/1.7 Arial,sans-serif; }
+    .cta { display:block; width:max-content; margin:72px auto 0; padding:18px 40px; border:1px solid var(--gold); border-radius:2px; background:rgba(14,14,13,.8); color:var(--paper); font:500 18px Georgia,serif; letter-spacing:.02em; }
+    footer { display:flex; justify-content:space-between; gap:30px; padding:30px 8vw; border-top:1px solid rgba(255,255,255,.1); color:var(--muted); font:12px Arial,sans-serif; }
+    @media (max-width:900px) { .principles { padding:80px 24px 100px; } .card, .card:nth-child(even) { flex-direction:column; align-items:flex-start; gap:24px; padding:40px 32px; } .card-num-wrap { flex-direction:row; gap:16px; } .card-line { width:1px; height:30px; margin-top:0; } }
+    @media (max-width:700px) { .toolbar small { width:100%; margin-left:0; } .nav-links { display:none; } .hero { min-height:calc(100vh - 120px); padding:0 8vw; } .hero-copy { width:100%; } footer { flex-direction:column; } }
+  </style>
+</head>
+<body>
+  <div class="toolbar" aria-label="Editor controls">
+    <button id="editToggle" class="active" type="button">Editing on</button>
+    <button id="save" type="button">Save in this browser</button>
+    <button id="reset" type="button">Reset text</button>
+    <button id="download" type="button">Download HTML</button>
+    <small id="status">Click any outlined text and type to replace it.</small>
+  </div>
+
+  <nav class="nav">
+    <img src="artemis-logo-f.png" alt="Artemis Studios" />
+    <div class="nav-links"><span>Home</span><span>Projects</span><span>About</span></div>
+  </nav>
+
+  <main>
+    <section class="hero">
+      <div class="hero-copy">
+        <span class="eyebrow" contenteditable="true">Welcome</span>
+        <h1 contenteditable="true">One Surface<br><em>Infinite possibilities</em></h1>
+        <div class="divider"></div>
+        <p class="subtag" contenteditable="true">WE DESIGN CINEMAS.<br>WE CRAFT EXPERIENCES.</p>
+      </div>
+    </section>
+
+    <section class="principles">
+      <header class="section-head">
+        <span class="eyebrow" contenteditable="true">Design Philosophy</span>
+        <h2 contenteditable="true">Architectural Engineering and <em>Spatial Strategy</em></h2>
+      </header>
+      <div class="grid">
+        <article class="card"><div class="card-num-wrap"><span class="card-num">01</span><div class="card-line"></div></div><div class="card-content"><span class="card-tag" contenteditable="true">Visibility &amp; Focus</span><h3 contenteditable="true">Sightlines First</h3><p class="summary" contenteditable="true">Every seat optimized for screen visibility.</p><p class="desc" contenteditable="true">Precision geometric sightline modeling guarantees unobstructed viewing angles across every tier.</p></div></article>
+        <article class="card"><div class="card-num-wrap"><span class="card-num">02</span><div class="card-line"></div></div><div class="card-content"><span class="card-tag" contenteditable="true">Acoustic Engineering</span><h3 contenteditable="true">Acoustically Driven Design</h3><p class="summary" contenteditable="true">Integrated architecture and sound planning.</p><p class="desc" contenteditable="true">Custom surface geometry and tuned sound traps are engineered alongside spatial audio systems.</p></div></article>
+        <article class="card"><div class="card-num-wrap"><span class="card-num">03</span><div class="card-line"></div></div><div class="card-content"><span class="card-tag" contenteditable="true">Spatial Circulation</span><h3 contenteditable="true">Crowd Flow Optimization</h3><p class="summary" contenteditable="true">Efficient entry, intermission, and exit circulation.</p><p class="desc" contenteditable="true">Clear movement paths streamline high-density foot traffic without bottleneck congestion.</p></div></article>
+        <article class="card"><div class="card-num-wrap"><span class="card-num">04</span><div class="card-line"></div></div><div class="card-content"><span class="card-tag" contenteditable="true">Commercial Strategy</span><h3 contenteditable="true">Revenue-Oriented Planning</h3><p class="summary" contenteditable="true">Maximizing concession and lobby opportunities.</p><p class="desc" contenteditable="true">VIP lounges, concession hubs, and merchandising galleries are integrated into the guest journey.</p></div></article>
+        <article class="card"><div class="card-num-wrap"><span class="card-num">05</span><div class="card-line"></div></div><div class="card-content"><span class="card-tag" contenteditable="true">Adaptable Architecture</span><h3 contenteditable="true">Future-Ready Infrastructure</h3><p class="summary" contenteditable="true">Flexible spatial framing and high-bandwidth technology integration.</p><p class="desc" contenteditable="true">Scalable pathways and modular configurations adapt to next-generation immersive media.</p></div></article>
+      </div>
+      <div class="cta" contenteditable="true">View Selected Projects →</div>
+    </section>
+  </main>
+
+  <footer><span contenteditable="true">© 2026 Artemis Studios. All rights reserved.</span><span contenteditable="true">Architectural Engineering &amp; Design</span></footer>
+
+  <script>
+    const key = 'artemis-homepage-editor-v1'
+    const editable = [...document.querySelectorAll('[contenteditable="true"]')]
+    const initial = editable.map((node) => node.innerHTML)
+    const status = document.getElementById('status')
+    const setStatus = (text) => { status.textContent = text }
+    const restore = (values) => values.forEach((html, i) => { if (editable[i]) editable[i].innerHTML = html })
+    try { const saved = JSON.parse(localStorage.getItem(key)); if (Array.isArray(saved)) { restore(saved); setStatus('Loaded your saved text.') } } catch (_) {}
+    document.getElementById('editToggle').onclick = (event) => {
+      const on = document.body.classList.toggle('editing')
+      editable.forEach((node) => { node.contentEditable = String(on) })
+      event.currentTarget.textContent = on ? 'Editing on' : 'Editing off'
+      event.currentTarget.classList.toggle('active', on)
+    }
+    document.getElementById('save').onclick = () => { localStorage.setItem(key, JSON.stringify(editable.map((node) => node.innerHTML))); setStatus('Saved in this browser.') }
+    document.getElementById('reset').onclick = () => { restore(initial); localStorage.removeItem(key); setStatus('Text reset to the original copy.') }
+    document.getElementById('download').onclick = () => {
+      const clone = document.documentElement.cloneNode(true)
+      clone.querySelector('#status').textContent = 'Click any outlined text and type to replace it.'
+      const html = '<!doctype html>\n' + clone.outerHTML
+      const link = document.createElement('a'); link.href = URL.createObjectURL(new Blob([html], { type: 'text/html' })); link.download = 'homepage-edited.html'; link.click(); URL.revokeObjectURL(link.href)
+      setStatus('Downloaded homepage-edited.html.')
+    }
+  </script>
+</body>
+</html>
