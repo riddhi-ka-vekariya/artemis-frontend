@@ -14,8 +14,8 @@ Fonts below favor a restrained, editorial tone with distinct typefaces suited to
 | `--color-ink-deep` | `#0E0E0D` *(derived)* | True-black areas — hero edges, vignette falloff, behind 3D scenes |
 | `--color-paper` | `#F2F2F2` | Reserved for small light surfaces only: a card, a stat block, a modal — never a full section |
 | `--color-silver` | `#C2C2C2` | Secondary/body text on dark backgrounds, inactive nav-dots, hairline borders at low opacity |
-| `--color-gold` | `#F0C42D` | The one accent — numerals, one italic word per headline, hairline dividers, active states, the drag-to-rotate ring. Read as *light catching an edge*, not paint |
-| `--color-gold-dim` | `#8A6E1B` *(derived)* | Gold at rest / low emphasis — inactive icon strokes, subtle borders |
+| `--color-gold` | `#C19400` | The one accent — numerals, one italic word per headline, hairline dividers, active states, the drag-to-rotate ring. Read as *light catching an edge*, not paint |
+| `--color-gold-dim` | `#7A5E00` *(derived)* | Gold at rest / low emphasis — inactive icon strokes, subtle borders |
 
 **Rule of one accent, restated for a dark-dominant page:** gold should look like it's being *lit*, not colored. Prefer 1px gold strokes, single glowing numerals, or one italic word over any gold fill larger than a button. If a screen has more than roughly three gold moments (one numeral, one divider, one CTA/link), pull one back.
 

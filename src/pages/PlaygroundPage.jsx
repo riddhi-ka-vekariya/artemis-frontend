@@ -10,18 +10,19 @@ import { HexColorPicker } from 'react-colorful'
 
 // ── Defaults (mirror current design system) ──────────────────────────
 const DEFAULTS = {
-  gold: '#F0C42D',
+  gold: '#C19400',
   background: '#141210',
   paper: '#F2F2F2',
   silver: '#C2C2C2',
-  fontDisplay: "'Newsreader', Georgia, serif",
-  fontBody: "'Inter', -apple-system, BlinkMacSystemFont, sans-serif",
-  fontMono: "'IBM Plex Mono', 'Courier New', monospace",
+  fontDisplay: "'The Seasons Bold', 'The Seasons', Georgia, serif",
+  fontBody: "'Tenor Sans', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif",
+  fontMono: "'Behind The Nineties Sans SemiBold', 'Behind The Nineties Sans', monospace",
 }
 
 // ── Font options ─────────────────────────────────────────────────────
 const DISPLAY_FONTS = [
-  { label: 'Newsreader (current)', value: "'Newsreader', Georgia, serif", google: 'Newsreader:ital,wght@0,400;0,500;1,400' },
+  { label: 'The Seasons Bold (current)', value: "'The Seasons Bold', 'The Seasons', Georgia, serif", google: null },
+  { label: 'Newsreader', value: "'Newsreader', Georgia, serif", google: 'Newsreader:ital,wght@0,400;0,500;1,400' },
   { label: 'Playfair Display', value: "'Playfair Display', Georgia, serif", google: 'Playfair+Display:ital,wght@0,400;0,500;1,400' },
   { label: 'Cormorant Garamond', value: "'Cormorant Garamond', Georgia, serif", google: 'Cormorant+Garamond:ital,wght@0,400;0,500;1,400' },
   { label: 'Source Serif 4', value: "'Source Serif 4', Georgia, serif", google: 'Source+Serif+4:ital,wght@0,400;0,500;1,400' },
@@ -29,7 +30,8 @@ const DISPLAY_FONTS = [
 ]
 
 const BODY_FONTS = [
-  { label: 'Inter (current)', value: "'Inter', sans-serif", google: 'Inter:wght@400;500' },
+  { label: 'Tenor Sans (current)', value: "'Tenor Sans', 'Inter', sans-serif", google: 'Tenor+Sans' },
+  { label: 'Inter', value: "'Inter', sans-serif", google: 'Inter:wght@400;500' },
   { label: 'Neue Montreal*', value: "'Inter', sans-serif", google: null, note: '(commercial — Inter shown as proxy)' },
   { label: 'General Sans*', value: "'Inter', sans-serif", google: null, note: '(commercial — Inter shown as proxy)' },
   { label: 'DM Sans', value: "'DM Sans', sans-serif", google: 'DM+Sans:wght@400;500' },
@@ -38,7 +40,8 @@ const BODY_FONTS = [
 ]
 
 const MONO_FONTS = [
-  { label: 'IBM Plex Mono (current)', value: "'IBM Plex Mono', monospace", google: 'IBM+Plex+Mono:wght@400;500' },
+  { label: 'Behind The Nineties (current)', value: "'Behind The Nineties Sans SemiBold', 'Behind The Nineties Sans', monospace", google: null },
+  { label: 'IBM Plex Mono', value: "'IBM Plex Mono', monospace", google: 'IBM+Plex+Mono:wght@400;500' },
   { label: 'JetBrains Mono', value: "'JetBrains Mono', monospace", google: 'JetBrains+Mono:wght@400;500' },
   { label: 'Fira Code', value: "'Fira Code', monospace", google: 'Fira+Code:wght@400;500' },
   { label: 'Space Mono', value: "'Space Mono', monospace", google: 'Space+Mono:wght@400' },

@@ -219,16 +219,16 @@ export default function ProjectsPage() {
         // Typography — Black & Gold style
         const titlePx = Math.round(Math.max(cvs.height * 0.082, 16))
         ctx.fillStyle = 'rgba(242,242,242,0.96)'
-        ctx.font = `500 ${titlePx}px "Newsreader", Georgia, serif`
+        ctx.font = `700 ${titlePx}px "The Seasons Bold", "The Seasons", Georgia, serif`
         ctx.fillText(data.title, 28, cvs.height * 0.74)
 
         const descPx = Math.round(Math.max(cvs.height * 0.057, 11))
         ctx.fillStyle = 'rgba(194,194,194,0.65)'
-        ctx.font = `500 ${descPx}px "IBM Plex Mono", monospace`
+        ctx.font = `600 ${descPx}px "Behind The Nineties Sans SemiBold", "Behind The Nineties Sans", "IBM Plex Mono", monospace`
         ctx.fillText(data.desc.toUpperCase(), 28, cvs.height * 0.74 + titlePx * 1.45)
 
         // Gold Bottom Rule
-        ctx.fillStyle = 'rgba(240,196,45,0.4)'
+        ctx.fillStyle = 'rgba(193,148,0,0.4)'
         ctx.fillRect(0, cvs.height - 2, cvs.width, 2)
 
         tex.needsUpdate = true

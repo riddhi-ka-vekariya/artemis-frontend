@@ -50,7 +50,12 @@ export default function HomePage() {
       <Navbar />
       <main className="page-wrapper page-enter" id="page-home">
         <section className="home-hero" aria-label="Hero">
-          {/* ── Left: editorial text ── */}
+          {/* ── Full-width canvas background ── */}
+          <div className="home-hero-visual">
+            <FilmstripViewer />
+          </div>
+
+          {/* ── Text overlay on top ── */}
           <div className="home-hero-text">
             <span className="home-eyebrow">01 — Welcome</span>
             <h1 className="home-headline">
@@ -63,11 +68,6 @@ export default function HomePage() {
               WE CRAFT EXPERIENCES.
             </p>
           </div>
-
-          {/* ── Right: Möbius filmstrip ── */}
-          <div className="home-hero-visual">
-            <FilmstripViewer />
-          </div>
         </section>
 
         {/* ── Architectural Principles / Framework Section ── */}
@@ -75,7 +75,7 @@ export default function HomePage() {
           <header className="home-principles-header">
             <span className="home-eyebrow">02 — Design Philosophy</span>
             <h2 className="home-principles-title">
-              Architectural Engineering &amp; <em>Spatial Strategy</em>
+              Architectural Engineering and <em>Spatial Strategy</em>
             </h2>
           </header>
 
