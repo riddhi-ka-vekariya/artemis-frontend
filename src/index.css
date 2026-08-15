@@ -635,6 +635,24 @@ body,
   background-color: #040404;
 }
 
+/* Top fade overlay: deepens darkness under navbar and top of 3D scene */
+.home-hero::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 25vh;
+  min-height: 160px;
+  background: linear-gradient(to bottom,
+      rgba(4, 4, 4, 0.98) 0%,
+      rgba(4, 4, 4, 0.82) 35%,
+      rgba(4, 4, 4, 0.40) 70%,
+      transparent 100%);
+  z-index: 6;
+  pointer-events: none;
+}
+
 /* ── Left text overlay ── */
 .home-hero-text {
   position: absolute;
@@ -706,19 +724,20 @@ body,
   z-index: 1;
 }
 
-/* Bottom fade overlay: smoothly dissolves canvas reflection into the page background */
+/* Bottom fade overlay: deeply dissolves canvas reflection into the page background */
 .home-hero-visual::before {
   content: '';
   position: absolute;
   bottom: 0;
   left: 0;
   right: 0;
-  height: 22vh;
-  min-height: 140px;
+  height: 28vh;
+  min-height: 180px;
   background: linear-gradient(to bottom,
       transparent 0%,
-      rgba(4, 4, 4, 0.4) 40%,
-      rgba(4, 4, 4, 0.9) 75%,
+      rgba(4, 4, 4, 0.50) 30%,
+      rgba(4, 4, 4, 0.85) 60%,
+      rgba(4, 4, 4, 0.98) 85%,
       var(--color-ink-deep) 100%);
   z-index: 5;
   pointer-events: none;
