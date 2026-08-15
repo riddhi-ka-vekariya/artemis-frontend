@@ -11,7 +11,7 @@ import { HexColorPicker } from 'react-colorful'
 // ── Defaults (mirror current design system) ──────────────────────────
 const DEFAULTS = {
   gold: '#C19400',
-  background: '#141210',
+  background: '#040404',
   paper: '#F2F2F2',
   silver: '#C2C2C2',
   fontDisplay: "'The Seasons Bold', 'The Seasons', Georgia, serif",
@@ -857,7 +857,7 @@ export default function PlaygroundPage() {
 
             {/* Hero */}
             <div>
-              <span style={s.sectionNumeral}>01 — Hero Display</span>
+              <span style={s.sectionNumeral}>Hero Display</span>
               <div style={s.goldLine} />
               <h2 style={s.heroHeading}>
                 Designing the <span style={s.heroAccent}>invisible</span>.
@@ -883,7 +883,7 @@ export default function PlaygroundPage() {
 
             {/* Stats */}
             <div>
-              <span style={s.sectionNumeral}>02 — Statistics Block</span>
+              <span style={s.sectionNumeral}>Statistics Block</span>
               <div style={s.goldLine} />
               <div style={s.statBlock}>
                 <div style={s.statItem}>
@@ -909,7 +909,7 @@ export default function PlaygroundPage() {
 
             {/* Section heading + body */}
             <div>
-              <span style={s.sectionNumeral}>03 — Section Content</span>
+              <span style={s.sectionNumeral}>Section Content</span>
               <div style={s.goldLine} />
               <h3 style={s.sectionHeading}>
                 Where craft meets <span style={s.heroAccent}>intention</span>
@@ -930,7 +930,7 @@ export default function PlaygroundPage() {
 
             {/* Cards */}
             <div>
-              <span style={s.sectionNumeral}>04 — Cards</span>
+              <span style={s.sectionNumeral}>Cards</span>
               <div style={s.goldLine} />
 
               {/* Dark cards */}
@@ -976,7 +976,7 @@ export default function PlaygroundPage() {
 
             {/* Buttons & Links */}
             <div>
-              <span style={s.sectionNumeral}>05 — Buttons & Links</span>
+              <span style={s.sectionNumeral}>Buttons & Links</span>
               <div style={s.goldLine} />
               <div style={{ display: 'flex', gap: 20, flexWrap: 'wrap', alignItems: 'center', marginBottom: 20 }}>
                 <button
@@ -1001,7 +1001,7 @@ export default function PlaygroundPage() {
 
             {/* Type specimen */}
             <div>
-              <span style={s.sectionNumeral}>06 — Type Specimen</span>
+              <span style={s.sectionNumeral}>Type Specimen</span>
               <div style={s.goldLine} />
               <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
                 <div>
@@ -1016,7 +1016,7 @@ export default function PlaygroundPage() {
                 <div>
                   <span style={s.monoCaption}>Body — {fonts.body.split("'")[1]}</span>
                   <p style={{ fontFamily: fonts.body, fontSize: 16, fontWeight: 400, color: colors.paper, margin: '8px 0 0', lineHeight: 1.65 }}>
-                    The quick brown fox jumps over the lazy dog. 0123456789 — designed for sustained reading at body sizes.
+                    The quick brown fox jumps over the lazy dog. Designed for sustained reading at body sizes.
                   </p>
                   <p style={{ fontFamily: fonts.body, fontSize: 16, fontWeight: 500, color: colors.silver, margin: '4px 0 0', lineHeight: 1.65 }}>
                     Medium weight — used for UI labels, subheadings, and emphasis.
@@ -1025,7 +1025,7 @@ export default function PlaygroundPage() {
                 <div>
                   <span style={s.monoCaption}>Mono — {fonts.mono.split("'")[1]}</span>
                   <p style={{ fontFamily: fonts.mono, fontSize: 13, fontWeight: 500, letterSpacing: '0.1em', textTransform: 'uppercase', color: colors.gold, margin: '8px 0 0' }}>
-                    01 — Section numeral · 02 — Navigation · 03 — Caption
+                    Section numeral · Navigation · Caption
                   </p>
                   <p style={{ fontFamily: fonts.mono, fontSize: 13, fontWeight: 400, color: colors.silver, margin: '4px 0 0', letterSpacing: '0.06em' }}>
                     {"{ code: 'block', status: 200, data: [1, 2, 3] }"}

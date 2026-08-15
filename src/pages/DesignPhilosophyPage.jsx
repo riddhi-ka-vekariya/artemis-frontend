@@ -8,7 +8,7 @@ export default function DesignPhilosophyPage() {
       <Navbar />
       <main className="page-wrapper page-enter" id="page-design-philosophy">
         <div className="empty-state">
-          <span className="empty-state-numeral">03 — Design Philosophy</span>
+          <span className="empty-state-numeral">Design Philosophy</span>
           <div className="gold-divider" />
           <h1 className="empty-state-heading">
             Design as <em>discipline</em>.

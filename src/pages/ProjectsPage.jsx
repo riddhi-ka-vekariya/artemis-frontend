@@ -16,12 +16,12 @@ const FOG_NEAR = 500
 const FOG_FAR = 4500
 
 const MULTIPLIERS = { default: 0.21, sm: 0.30, md: 0.28, lg: 0.35 }
-const DARK_BG = '#141210'
+const DARK_BG = '#040404'
 
 const DEFAULTS = {
   bendStart: 100,
   bendEnd: 700,
-  zDepth: 1200,
+  zDepth: 750,
   noiseAmp: 50,
   cardGap: 28,
   innerScale: 1.0,
@@ -90,6 +90,15 @@ export default function ProjectsPage() {
   const canvasRef = useRef(null)
   const [scrollProgress, setScrollProgress] = useState(0)
   const [selectedProject, setSelectedProject] = useState(null)
+  const [isHeaderHidden, setIsHeaderHidden] = useState(false)
+  const isHeaderHiddenRef = useRef(false)
+
+  const setHeaderHidden = (val) => {
+    if (isHeaderHiddenRef.current !== val) {
+      isHeaderHiddenRef.current = val
+      setIsHeaderHidden(val)
+    }
+  }
 
   const stateRef = useRef({
     renderer: null,
@@ -160,6 +169,14 @@ export default function ProjectsPage() {
       if (MQ.lg.matches) mult = MULTIPLIERS.lg
       else if (MQ.md.matches) mult = MULTIPLIERS.md
       else if (MQ.sm.matches) mult = MULTIPLIERS.sm
+      else {
+        // Mobile view (< 768px): add margin on left and right side of gallery list
+        // Total screen gallery width = (cardWidth + 2 * stripWidth) * 2 = cardWidth * (1 + 2 * 0.075) * 2 = 2.3 * cardWidth
+        const horizontalMargin = Math.max(24, Math.min(36, Math.round(w * 0.08)))
+        const targetGalleryWidthOnScreen = w - horizontalMargin * 2
+        const targetCardWidth3D = targetGalleryWidthOnScreen / 2.3
+        mult = targetCardWidth3D / MESH_SIZE_BASE.x
+      }
 
       let scaleAdj = 1
       if (MQ.xlg.matches) scaleAdj = sceneScale + 0.2
@@ -182,7 +199,7 @@ export default function ProjectsPage() {
       const colGap = Math.round(state.params.cardGap * 0.5) // Reduced by half (14px)
       const rowGapAmount = state.params.cardGap // former gap between rows
       const padRatio = rowGapAmount / (baseMeshSize.y + rowGapAmount)
-      
+
       // Total mesh height includes the former gap amount
       const meshSize = new THREE.Vector2(baseMeshSize.x, baseMeshSize.y + rowGapAmount)
       const rowH = meshSize.y
@@ -348,6 +365,10 @@ export default function ProjectsPage() {
 
     // ── Input Listeners & Click Detection ────────────────────────────────────
     function onWheel(e) {
+      if (e.deltaY > 0) {
+        setHeaderHidden(true)
+      }
+
       const isGalleryAtEnd = state.scrollPos >= state.projectsHeight - 2
       const isGalleryAtStart = state.scrollPos <= 2
       const isPageAtTop = window.scrollY <= 2
@@ -360,6 +381,10 @@ export default function ProjectsPage() {
         if (e.cancelable) e.preventDefault()
         state.scrollPos = THREE.MathUtils.clamp(state.scrollPos + e.deltaY, 0, state.projectsHeight)
       }
+
+      if (state.scrollPos <= 2 && window.scrollY <= 2) {
+        setHeaderHidden(false)
+      }
     }
 
     let touchY = 0
@@ -368,6 +393,10 @@ export default function ProjectsPage() {
       const currentY = e.touches[0].clientY
       const dy = touchY - currentY
       touchY = currentY
+
+      if (dy > 0) {
+        setHeaderHidden(true)
+      }
 
       const isGalleryAtEnd = state.scrollPos >= state.projectsHeight - 2
       const isGalleryAtStart = state.scrollPos <= 2
@@ -379,6 +408,19 @@ export default function ProjectsPage() {
       } else if (isPageAtTop && dy < 0 && !isGalleryAtStart) {
         if (e.cancelable) e.preventDefault()
         state.scrollPos = THREE.MathUtils.clamp(state.scrollPos + dy * 1.2, 0, state.projectsHeight)
+      }
+
+      if (state.scrollPos <= 2 && window.scrollY <= 2) {
+        setHeaderHidden(false)
+      }
+    }
+
+    function onScroll() {
+      const currentScrollY = window.scrollY
+      if (currentScrollY > 5) {
+        setHeaderHidden(true)
+      } else if (currentScrollY <= 2 && state.scrollPos <= 2) {
+        setHeaderHidden(false)
       }
     }
 
@@ -404,13 +446,13 @@ export default function ProjectsPage() {
 
       // ── Layer 1: Brushed-metal vertical gradient ──
       const metalGrad = ctx.createLinearGradient(0, 0, 0, h)
-      metalGrad.addColorStop(0,    '#8A8A8E')
+      metalGrad.addColorStop(0, '#8A8A8E')
       metalGrad.addColorStop(0.15, '#D0D0D4')
       metalGrad.addColorStop(0.35, '#A8A8AC')
-      metalGrad.addColorStop(0.5,  '#E8E8EC')
+      metalGrad.addColorStop(0.5, '#E8E8EC')
       metalGrad.addColorStop(0.65, '#B0B0B4')
       metalGrad.addColorStop(0.85, '#D8D8DC')
-      metalGrad.addColorStop(1,    '#9A9A9E')
+      metalGrad.addColorStop(1, '#9A9A9E')
       ctx.fillStyle = metalGrad
       ctx.fillRect(0, 0, w, h)
 
@@ -425,11 +467,11 @@ export default function ProjectsPage() {
 
       // ── Layer 3: Central specular highlight (horizontal shine band) ──
       const shineGrad = ctx.createLinearGradient(0, 0, 0, h)
-      shineGrad.addColorStop(0,    'rgba(255,255,255,0)')
-      shineGrad.addColorStop(0.3,  'rgba(255,255,255,0.12)')
-      shineGrad.addColorStop(0.5,  'rgba(255,255,255,0.22)')
-      shineGrad.addColorStop(0.7,  'rgba(255,255,255,0.12)')
-      shineGrad.addColorStop(1,    'rgba(255,255,255,0)')
+      shineGrad.addColorStop(0, 'rgba(255,255,255,0)')
+      shineGrad.addColorStop(0.3, 'rgba(255,255,255,0.12)')
+      shineGrad.addColorStop(0.5, 'rgba(255,255,255,0.22)')
+      shineGrad.addColorStop(0.7, 'rgba(255,255,255,0.12)')
+      shineGrad.addColorStop(1, 'rgba(255,255,255,0)')
       ctx.fillStyle = shineGrad
       ctx.fillRect(0, 0, w, h)
 
@@ -613,6 +655,12 @@ export default function ProjectsPage() {
         })
       }
 
+      if (state.smoothScrollPos <= 4 && window.scrollY <= 4) {
+        setHeaderHidden(false)
+      } else if (state.smoothScrollPos > 10 || window.scrollY > 10) {
+        setHeaderHidden(true)
+      }
+
       if (state.projectsHeight > 0) {
         setScrollProgress((state.smoothScrollPos / state.projectsHeight) * 100)
       }
@@ -625,6 +673,7 @@ export default function ProjectsPage() {
     window.addEventListener('wheel', onWheel, { passive: false })
     window.addEventListener('touchstart', onTouchStart, { passive: true })
     window.addEventListener('touchmove', onTouchMove, { passive: false })
+    window.addEventListener('scroll', onScroll, { passive: true })
     window.addEventListener('resize', onResize)
     canvas.addEventListener('pointerdown', handlePointerDown)
     canvas.addEventListener('pointerup', handlePointerUp)
@@ -635,6 +684,7 @@ export default function ProjectsPage() {
       window.removeEventListener('wheel', onWheel)
       window.removeEventListener('touchstart', onTouchStart)
       window.removeEventListener('touchmove', onTouchMove)
+      window.removeEventListener('scroll', onScroll)
       window.removeEventListener('resize', onResize)
       canvas.removeEventListener('pointerdown', handlePointerDown)
       canvas.removeEventListener('pointerup', handlePointerUp)
@@ -649,8 +699,8 @@ export default function ProjectsPage() {
       <main className="page-wrapper page-enter" id="page-projects" style={{ paddingTop: 0 }}>
         <div className="unseen-curl-page" style={{ height: '100vh', width: '100vw', position: 'relative' }}>
           {/* Header Title Overlay */}
-          <header className="projects-header-overlay">
-            <span className="projects-eyebrow">02 — Selected Work</span>
+          <header className={`projects-header-overlay${isHeaderHidden ? ' hidden' : ''}`}>
+            <span className="projects-eyebrow">Selected Work</span>
             <h1 className="projects-title">
               Our <em>Projects</em>
             </h1>
@@ -693,7 +743,7 @@ export default function ProjectsPage() {
               {/* Text Info */}
               <div className="project-modal-info">
                 <span className="project-modal-eyebrow">
-                  Project 0{selectedProject.id} — Selected View
+                  Selected View
                 </span>
                 <h2 className="project-modal-title">{selectedProject.title}</h2>
                 <p className="project-modal-desc">{selectedProject.desc}</p>

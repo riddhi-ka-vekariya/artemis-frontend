@@ -6,35 +6,30 @@ import Footer from '../components/Footer'
 
 const PRINCIPLES = [
   {
-    num: '01',
     tag: 'Visibility & Focus',
     title: 'Sightlines First',
     summary: 'Every seat optimized for screen visibility.',
     desc: 'Precision geometric sightline modeling guarantees unobstructed 100% viewing angles across every tier, eliminating dead zones and maximizing visual impact for every patron.',
   },
   {
-    num: '02',
     tag: 'Acoustic Engineering',
     title: 'Acoustically Driven Design',
     summary: 'Integrated architecture and sound planning.',
     desc: 'Custom surface geometry, tuned sound traps, and dampening materials engineered in tandem with spatial audio systems for pristine sonic resonance and zero sound bleed.',
   },
   {
-    num: '03',
     tag: 'Spatial Circulation',
     title: 'Crowd Flow Optimization',
     summary: 'Efficient entry, intermission, and exit circulation.',
     desc: 'Algorithmic pedestrian circulation design streamlining high-density foot traffic during arrivals, intermissions, and rapid emergency egress without bottleneck congestion.',
   },
   {
-    num: '04',
     tag: 'Commercial Strategy',
     title: 'Revenue-Oriented Planning',
     summary: 'Maximizing concession and lobby opportunities.',
     desc: 'Strategic integration of VIP lounges, concession hubs, and merchandising galleries directly into primary movement corridors to elevate guest engagement and yield.',
   },
   {
-    num: '05',
     tag: 'Adaptable Architecture',
     title: 'Future-Ready Infrastructure',
     summary: 'Flexible spatial framing and high-bandwidth tech integration.',
@@ -57,7 +52,7 @@ export default function HomePage() {
 
           {/* ── Text overlay on top ── */}
           <div className="home-hero-text">
-            <span className="home-eyebrow">01 — Welcome</span>
+            <span className="home-eyebrow">Welcome</span>
             <h1 className="home-headline">
               One Surface<br />
               <em>Infinite possibilities</em>
@@ -73,22 +68,18 @@ export default function HomePage() {
         {/* ── Architectural Principles / Framework Section ── */}
         <section className="home-principles-section" aria-label="Architectural Principles">
           <header className="home-principles-header">
-            <span className="home-eyebrow">02 — Design Philosophy</span>
+            <span className="home-eyebrow">Design Philosophy</span>
             <h2 className="home-principles-title">
               Architectural Engineering and <em>Spatial Strategy</em>
             </h2>
           </header>
 
           <div className="home-principles-grid">
-            {PRINCIPLES.map((item, idx) => (
+            {PRINCIPLES.map((item) => (
               <div
-                key={item.num}
-                className={`principle-card${idx % 2 !== 0 ? ' principle-card--reverse' : ''}`}
+                key={item.title}
+                className="principle-card"
               >
-                <div className="principle-card-num-wrap">
-                  <span className="principle-card-num">{item.num}</span>
-                  <div className="principle-card-line" />
-                </div>
                 <div className="principle-card-content">
                   <span className="principle-card-tag">{item.tag}</span>
                   <h3 className="principle-card-heading">{item.title}</h3>

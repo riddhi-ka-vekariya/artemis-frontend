@@ -13,7 +13,7 @@ export default function AboutPage() {
         {/* ── Editorial Header ── */}
         <header className="about-hero">
           <div className="about-hero-inner">
-            <span className="about-eyebrow">04 — Profile &amp; Philosophy</span>
+            <span className="about-eyebrow">Profile &amp; Philosophy</span>
             <h1 className="about-hero-title">
               Meet the <em>Designer</em>
             </h1>
@@ -27,52 +27,28 @@ export default function AboutPage() {
         {/* ── Monograph Chapters Container ── */}
         <div className="about-content-wrap">
 
-          {/* ── Chapter 01: Genesis ── */}
+          {/* ── Chapter: Genesis ── */}
           <section className="about-chapter about-chapter--grid">
             <div className="about-chapter-meta">
-              <span className="about-chapter-num">01</span>
               <span className="about-chapter-tag">Genesis &amp; Passion</span>
               <h2 className="about-chapter-heading">Meet the Designer ...</h2>
               <div className="about-meta-divider" />
+            </div>
+            <div className="about-chapter-body">
+              <p className="about-lead-text">
+                My journey into architecture began with a fascination for buildings and the way thoughtfully designed spaces influence how people feel and interact.
+              </p>
+              <p className="about-sub-text">
+                What started as an interest in design gradually became a passion for creating meaningful experience through architecture.
+              </p>
+            </div>
+          </section>
 
-              {/* Artist Portrait Placeholder
-              <div className="artist-portrait-wrap">
-                <div className="artist-portrait-frame">
-                  <div className="artist-portrait-placeholder">
-                    <div className="artist-portrait-icon">
-                      <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2">
-                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-                        <circle cx="12" cy="7" r="4" />
-                      </svg>
-                    </div>
-                    <span className="artist-portrait-label">Designer Portrait</span>
-                    <span className="artist-portrait-sublabel">Artemis Studios</span>
-                  </div>
-                  Subtle architectural corner accents
-                  <div className="portrait-bracket portrait-bracket--tl" />
-                  <div className="portrait-bracket portrait-bracket--tr" />
-                  <div className="portrait-bracket portrait-bracket--bl" />
-                  <div className="portrait-bracket portrait-bracket--br" />
-                </div>
-                <span className="artist-portrait-caption">Founder &amp; Principal Architect</span>
-              </div> */}
-      </div>
-      <div className="about-chapter-body">
-        <p className="about-lead-text">
-          My journey into architecture began with a fascination for buildings and the way thoughtfully designed spaces influence how people feel and interact.
-        </p>
-        <p className="about-sub-text">
-          What started as an interest in design gradually became a passion for creating meaningful experience through architecture.
-        </p>
-      </div>
-    </section >
+          <div className="about-section-divider" />
 
-      <div className="about-section-divider" />
-
-  {/* ── Chapter 02: Finding My Niche ── */ }
+          {/* ── Chapter: Finding My Niche ── */}
           <section className="about-chapter about-chapter--grid about-chapter--reverse">
             <div className="about-chapter-meta">
-              <span className="about-chapter-num">02</span>
               <span className="about-chapter-tag">Specialization</span>
               <h2 className="about-chapter-heading">Finding my Niche ...</h2>
               <div className="about-meta-divider" />
@@ -95,12 +71,11 @@ export default function AboutPage() {
 
           <div className="about-section-divider" />
 
-  {/* ── Chapter 03: The Name (Lunar Feature Card) ── */ }
+          {/* ── Chapter: The Name (Lunar Feature Card) ── */}
           <section className="about-lunar-card">
             <div className="about-lunar-glow" />
             <div className="about-lunar-inner">
               <div className="about-lunar-header">
-                <span className="about-chapter-num">03</span>
                 <span className="about-chapter-tag">The Identity &amp; Symbolism</span>
               </div>
               
@@ -125,14 +100,13 @@ export default function AboutPage() {
 
           <div className="about-section-divider" />
 
-  {/* ── Chapter 04: Looking Ahead ── */ }
-  <section className="about-chapter about-chapter--grid">
-    <div className="about-chapter-meta">
-      <span className="about-chapter-num">04</span>
-      <span className="about-chapter-tag">Vision &amp; Delivery</span>
-      <h2 className="about-chapter-heading">Looking Ahead ...</h2>
-      <div className="about-meta-divider" />
-    </div>
+          {/* ── Chapter: Looking Ahead ── */}
+          <section className="about-chapter about-chapter--grid">
+            <div className="about-chapter-meta">
+              <span className="about-chapter-tag">Vision &amp; Delivery</span>
+              <h2 className="about-chapter-heading">Looking Ahead ...</h2>
+              <div className="about-meta-divider" />
+            </div>
     <div className="about-chapter-body">
       <p className="about-body-text">
         I believe great cinema design isn't just about aesthetics; it's about understanding audience behavior, operational efficiency, and the business behind every project.

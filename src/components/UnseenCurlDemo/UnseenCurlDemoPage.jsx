@@ -16,7 +16,7 @@ const FOG_FAR        = 4500
 const MULTIPLIERS = { default: 0.21, sm: 0.30, md: 0.28, lg: 0.35 }
 
 // Dark mode by default
-const DARK_BG = '#121212'
+const DARK_BG = '#040404'
 
 // Default parameters (Dark mode default, Centered layout)
 const DEFAULTS = {

@@ -86,7 +86,7 @@ async function buildFilmTexture(renderer) {
   c.width = W; c.height = H
   const ctx = c.getContext('2d')
   ctx.fillStyle = '#040404'; ctx.fillRect(0, 0, W, H)
-  const labels = ['STUDIO 01', 'LIGHT / SPACE', 'DETAIL', 'FORM', 'CINEMA', 'MATERIAL', 'FRAME 05', 'TEXTURE']
+  const labels = ['STUDIO', 'LIGHT / SPACE', 'DETAIL', 'FORM', 'CINEMA', 'MATERIAL', 'FRAME', 'TEXTURE']
   const seeds = ['104', '1015', '1025', '1039', '1041', '1043', '1050', '1069', '1074', '1084', '1080', '1069', '1041', '1025', '1015', '104']
   const urls = seeds.map((s, i) => `https://picsum.photos/seed/${s}-${i}/400/400`)
   let images = []
