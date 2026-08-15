@@ -2644,6 +2644,15 @@ body,
     width: 100%;
   }
 
+  .filmstrip-viewer canvas {
+    cursor: grab;
+    touch-action: none;
+  }
+
+  .filmstrip-viewer canvas:active {
+    cursor: grabbing;
+  }
+
   .home-hero-visual::before {
     height: 80px;
     min-height: 80px;

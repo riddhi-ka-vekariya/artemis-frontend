@@ -248,6 +248,48 @@ export default function FilmstripViewer() {
     renderer.toneMappingExposure = 1.6
     container.appendChild(renderer.domElement)
 
+    let isDragging = false
+    let dragStartX = 0
+    let dragStartY = 0
+    let dragStartAngles = null
+
+    const updateMobileAngles = (nextAngles) => {
+      mobileRotationRef.current = nextAngles.map(angle => THREE.MathUtils.degToRad(angle))
+      setMobileAngles(nextAngles)
+    }
+
+    const onPointerDown = (event) => {
+      if (!window.matchMedia('(max-width: 768px)').matches) return
+      isDragging = true
+      dragStartX = event.clientX
+      dragStartY = event.clientY
+      dragStartAngles = mobileRotationRef.current.map(angle => THREE.MathUtils.radToDeg(angle))
+      renderer.domElement.setPointerCapture(event.pointerId)
+    }
+
+    const onPointerMove = (event) => {
+      if (!isDragging || !dragStartAngles) return
+      const nextAngles = [
+        THREE.MathUtils.clamp(Math.round(dragStartAngles[0] - (event.clientY - dragStartY) * 0.45), -180, 180),
+        THREE.MathUtils.clamp(Math.round(dragStartAngles[1] + (event.clientX - dragStartX) * 0.45), -180, 180),
+        dragStartAngles[2],
+      ]
+      updateMobileAngles(nextAngles)
+    }
+
+    const onPointerUp = (event) => {
+      isDragging = false
+      dragStartAngles = null
+      if (renderer.domElement.hasPointerCapture(event.pointerId)) {
+        renderer.domElement.releasePointerCapture(event.pointerId)
+      }
+    }
+
+    renderer.domElement.addEventListener('pointerdown', onPointerDown)
+    renderer.domElement.addEventListener('pointermove', onPointerMove)
+    renderer.domElement.addEventListener('pointerup', onPointerUp)
+    renderer.domElement.addEventListener('pointercancel', onPointerUp)
+
     const ro = new ResizeObserver(() => {
       if (disposed) return
       camera.aspect = container.offsetWidth / container.offsetHeight
@@ -336,6 +378,10 @@ export default function FilmstripViewer() {
       disposed = true
       cancelAnimationFrame(rafId)
       ro.disconnect()
+      renderer.domElement.removeEventListener('pointerdown', onPointerDown)
+      renderer.domElement.removeEventListener('pointermove', onPointerMove)
+      renderer.domElement.removeEventListener('pointerup', onPointerUp)
+      renderer.domElement.removeEventListener('pointercancel', onPointerUp)
       renderer.dispose(); filmTexture?.dispose()
       if (container.contains(renderer.domElement)) container.removeChild(renderer.domElement)
     }
