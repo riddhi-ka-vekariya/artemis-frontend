@@ -673,10 +673,10 @@ body,
 
 .home-headline {
   font-family: var(--font-display);
-  font-size: clamp(44px, 5.5vw, 80px);
+  font-size: clamp(34px, 3.8vw, 56px);
   font-weight: 400;
   letter-spacing: -0.01em;
-  line-height: 1.0;
+  line-height: 1.1;
   color: var(--text-primary);
 }
 
@@ -2612,7 +2612,7 @@ body,
   }
 
   .home-headline {
-    font-size: clamp(32px, 8vw, 44px);
+    font-size: clamp(26px, 6vw, 36px);
   }
 
   .home-hero-divider {
@@ -2773,7 +2773,7 @@ body,
   }
 
   .home-headline {
-    font-size: 28px;
+    font-size: 24px;
   }
 
   .about-hero-title {

@@ -147,56 +147,73 @@ async function buildFilmTexture(renderer) {
       ctx.fillStyle = grad; ctx.fillRect(px, py, pw, ph)
     }
   }
-  // ── Metallic dark charcoal border bands (top & bottom) ──
-  function paintSilverBand(y0, bH) {
-    // Layer 1: brushed-metal horizontal gradient in deep obsidian / onyx black-grey
+  // ── Deep obsidian-black border bands with faint subtle metallic nuance (top & bottom) ──
+  function paintGoldBand(y0, bH, isTop) {
+    // Layer 1: brushed-metal horizontal gradient in deep near-black obsidian
     const metalGrad = ctx.createLinearGradient(0, y0, W, y0)
-    metalGrad.addColorStop(0, '#060608')
-    metalGrad.addColorStop(0.15, '#121215')
-    metalGrad.addColorStop(0.35, '#09090C')
-    metalGrad.addColorStop(0.5, '#18181D')
-    metalGrad.addColorStop(0.65, '#0B0B0E')
-    metalGrad.addColorStop(0.85, '#131316')
-    metalGrad.addColorStop(1, '#070709')
+    metalGrad.addColorStop(0, '#050506')
+    metalGrad.addColorStop(0.15, '#0f0e0c')
+    metalGrad.addColorStop(0.35, '#070708')
+    metalGrad.addColorStop(0.5, '#14120e')
+    metalGrad.addColorStop(0.65, '#080809')
+    metalGrad.addColorStop(0.85, '#100f0d')
+    metalGrad.addColorStop(1, '#050506')
     ctx.fillStyle = metalGrad
     ctx.fillRect(0, y0, W, bH)
-    // Layer 2: vertical hairline streaks
-    ctx.globalAlpha = 0.03
+
+    // Layer 2: vertical hairline streaks with faint texture
+    ctx.globalAlpha = 0.02
     for (let sx = 0; sx < W; sx += 1.5) {
-      const b = 18 + Math.floor(Math.random() * 15)
-      ctx.fillStyle = `rgb(${b},${b},${b + 2})`
+      const b = 14 + Math.floor(Math.random() * 12)
+      ctx.fillStyle = `rgb(${b + 3},${b + 1},${b})`
       ctx.fillRect(sx, y0, 0.8, bH)
     }
     ctx.globalAlpha = 1.0
-    // Layer 3: central specular shine (horizontal)
+
+    // Layer 3: gentle specular sheen
     const shineGrad = ctx.createLinearGradient(0, y0, W, y0)
-    shineGrad.addColorStop(0, 'rgba(255,255,255,0)')
-    shineGrad.addColorStop(0.3, 'rgba(255,255,255,0.015)')
-    shineGrad.addColorStop(0.5, 'rgba(255,255,255,0.035)')
-    shineGrad.addColorStop(0.7, 'rgba(255,255,255,0.015)')
-    shineGrad.addColorStop(1, 'rgba(255,255,255,0)')
+    shineGrad.addColorStop(0, 'rgba(209, 148, 0, 0)')
+    shineGrad.addColorStop(0.3, 'rgba(215, 175, 85, 0.01)')
+    shineGrad.addColorStop(0.5, 'rgba(235, 195, 110, 0.025)')
+    shineGrad.addColorStop(0.7, 'rgba(215, 175, 85, 0.01)')
+    shineGrad.addColorStop(1, 'rgba(209, 148, 0, 0)')
     ctx.fillStyle = shineGrad
     ctx.fillRect(0, y0, W, bH)
-    // Layer 4: left & right edge glow
+
+    // Layer 4: subtle edge glow
     const glowW = W * 0.04
     const glowL = ctx.createLinearGradient(0, y0, glowW, y0)
-    glowL.addColorStop(0, 'rgba(70,75,85,0.08)')
-    glowL.addColorStop(1, 'rgba(70,75,85,0)')
+    glowL.addColorStop(0, 'rgba(209, 148, 0, 0.03)')
+    glowL.addColorStop(1, 'rgba(209, 148, 0, 0)')
     ctx.fillStyle = glowL; ctx.fillRect(0, y0, glowW, bH)
     const glowR = ctx.createLinearGradient(W, y0, W - glowW, y0)
-    glowR.addColorStop(0, 'rgba(70,75,85,0.08)')
-    glowR.addColorStop(1, 'rgba(70,75,85,0)')
+    glowR.addColorStop(0, 'rgba(209, 148, 0, 0.03)')
+    glowR.addColorStop(1, 'rgba(209, 148, 0, 0)')
     ctx.fillStyle = glowR; ctx.fillRect(W - glowW, y0, glowW, bH)
-  }
-  paintSilverBand(0, holeRowH + 4)              // top border
-  paintSilverBand(H - holeRowH - 4, holeRowH + 4) // bottom border
 
-  // ── Sprocket holes punched through the silver ──
+    // Layer 5: whisper-thin subtle gold hairline rim
+    ctx.fillStyle = 'rgba(209, 148, 0, 0.10)'
+    ctx.fillRect(0, y0, W, 1)
+    ctx.fillRect(0, y0 + bH - 1, W, 1)
+  }
+  paintGoldBand(0, holeRowH + 4, true)              // top border
+  paintGoldBand(H - holeRowH - 4, holeRowH + 4, false) // bottom border
+
+  // ── Sprocket holes punched through with very gentle rim ──
   ctx.fillStyle = '#040404'
   const holeW = 16, holeH = 20, gap = 14
   for (let x = 8; x < W; x += holeW + gap) {
-    roundRect(ctx, x, 8, holeW, holeH, 4); ctx.fill()
-    roundRect(ctx, x, H - 8 - holeH, holeW, holeH, 4); ctx.fill()
+    roundRect(ctx, x, 8, holeW, holeH, 4)
+    ctx.fill()
+    ctx.strokeStyle = 'rgba(209, 148, 0, 0.06)'
+    ctx.lineWidth = 1
+    ctx.stroke()
+
+    roundRect(ctx, x, H - 8 - holeH, holeW, holeH, 4)
+    ctx.fill()
+    ctx.strokeStyle = 'rgba(209, 148, 0, 0.06)'
+    ctx.lineWidth = 1
+    ctx.stroke()
   }
   const tex = new THREE.CanvasTexture(c)
   tex.wrapS = THREE.RepeatWrapping
@@ -403,7 +420,7 @@ export default function FilmstripViewer() {
       key.position.set(4, 6, 6); key.target.position.set(0, 0, 0)
       scene.add(key, key.target)
 
-      const rim = new THREE.PointLight(0xccddff, 2.5, 16)
+      const rim = new THREE.PointLight(0xf5eedb, 2.2, 16)
       rim.position.set(-3, 1, -3); rim._isRim = true; scene.add(rim)
 
       const fill = new THREE.PointLight(0xaabbcc, 1.4, 14)

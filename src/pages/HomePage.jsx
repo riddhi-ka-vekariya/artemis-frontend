@@ -79,13 +79,13 @@ export default function HomePage() {
           <div className="home-hero-text">
             <span className="home-eyebrow">Welcome</span>
             <h1 className="home-headline">
-              One Surface<br />
-              <em>Infinite possibilities</em>
+              Shaping the world<br />
+              <em>where stories begin</em>
             </h1>
             <div className="home-hero-divider" />
             <p className="home-hero-subtagline">
-              WE DESIGN CINEMAS.<br />
-              WE CRAFT EXPERIENCES.
+              WHERE SPACE BECOMES<br />
+              A PART OF THE STORY
             </p>
           </div>
         </section>
