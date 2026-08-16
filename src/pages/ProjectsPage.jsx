@@ -294,10 +294,10 @@ export default function ProjectsPage() {
         ctx.fillRect(0, 0, w, imgH)
 
         // Typography — title only
-        const titlePx = Math.round(Math.max(imgH * 0.062, 14))
+        const titlePx = Math.round(Math.max(imgH * 0.030, 8))
         ctx.fillStyle = 'rgba(242,242,242,0.96)'
         ctx.font = `700 ${titlePx}px "The Seasons Bold", "The Seasons", Georgia, serif`
-        ctx.fillText(data.title, 28, imgH * 0.84)
+        ctx.fillText(data.title, 18, imgH * 0.90)
 
         tex.needsUpdate = true
       }
