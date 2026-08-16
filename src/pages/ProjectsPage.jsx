@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import * as THREE from 'three'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
+import MoltenMetal from '../components/MoltenMetal'
 import { vertexShader, fragmentShader } from '../components/UnseenCurlDemo/shaders.js'
 
 // ─── Constants ─────────────────────────────────────────────────────────────
@@ -170,10 +171,11 @@ export default function ProjectsPage() {
     state.clock = new THREE.Clock()
 
     // ── Renderer ─────────────────────────────────────────────────────────────
-    const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: false })
+    const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true })
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
     renderer.setSize(window.innerWidth, window.innerHeight)
     renderer.outputColorSpace = THREE.SRGBColorSpace
+    renderer.setClearColor(0x000000, 0)  // fully transparent clear
     state.renderer = renderer
 
     // ── Camera ───────────────────────────────────────────────────────────────
@@ -183,11 +185,12 @@ export default function ProjectsPage() {
     camera.position.z = CAMERA_Z
     state.camera = camera
 
-    // ── Scene + Dark Mode Fog ────────────────────────────────────────────────
+    // ── Scene + Fog (no solid background — canvas is transparent) ────────────
     const scene = new THREE.Scene()
     const fogCol = new THREE.Color(DARK_BG)
     scene.fog = new THREE.Fog(fogCol, FOG_NEAR, FOG_FAR)
-    scene.background = fogCol
+    // No scene.background so the WebGL canvas stays transparent,
+    // letting the MoltenMetal layer show through on the sides.
     state.scene = scene
 
     // ── Layout Calculation ───────────────────────────────────────────────────
@@ -700,7 +703,33 @@ export default function ProjectsPage() {
     <>
       <Navbar />
       <main className="page-wrapper page-enter" id="page-projects" style={{ paddingTop: 0 }}>
-        <div className="unseen-curl-page" style={{ height: '100vh', width: '100vw', position: 'relative' }}>
+        <div className="unseen-curl-page" style={{ height: '100vh', width: '100vw', position: 'relative', background: '#040404' }}>
+          {/* ── MoltenMetal ambient background ── */}
+          <div className="projects-molten-bg">
+            <MoltenMetal
+              color1="#040404"
+              color2="#d19400"
+              color3="#FFFFFF"
+              speed={0.25}
+              scale={4}
+              detail={3}
+              glow={1.4}
+              coreSize={0.08}
+              swirl={0.8}
+              fold={-0.2}
+              blackPoint={0.06}
+              brightness={1.2}
+              colorMode="ember"
+              grain
+              grainIntensity={0.04}
+              mouseInteraction={false}
+              opacity={1}
+            />
+          </div>
+
+          {/* ── Side fade masks so molten only shows on sides ── */}
+          <div className="projects-molten-mask" />
+
           {/* Header Title Overlay */}
           <header className={`projects-header-overlay${isHeaderHidden ? ' hidden' : ''}`}>
             <span className="projects-eyebrow"></span>

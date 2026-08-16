@@ -796,13 +796,21 @@ body,
 }
 
 /* ─── UI Overlay HUD (3D viewer) ─────────────────────────────────── */
+canvas#unseen-gl-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100% !important;
+  height: 100% !important;
+  z-index: 2;
+}
+
 .hud-overlay {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  z-index: 10;
+  z-index: 3;
   pointer-events: none;
   display: flex;
   flex-direction: column;
@@ -1375,6 +1383,40 @@ body,
   color: var(--color-silver);
   margin-top: 8px;
   opacity: 0.85;
+}
+
+/* ─── Projects Page MoltenMetal Background ───────────────────────── */
+
+/* Full-screen canvas behind everything */
+.projects-molten-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.projects-molten-bg canvas {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+/*
+ * Radial mask: transparent on left + right edges → opaque toward center.
+ * The gallery sits in the center, molten bleeds through on both sides.
+ */
+.projects-molten-mask {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse 58% 100% at 50% 50%,
+    rgba(4, 4, 4, 0.97) 0%,
+    rgba(4, 4, 4, 0.92) 38%,
+    rgba(4, 4, 4, 0.60) 62%,
+    rgba(4, 4, 4, 0.10) 80%,
+    transparent 100%
+  );
 }
 
 /* ─── Projects Header Title Overlay ─────────────────────────────── */
