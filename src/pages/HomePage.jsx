@@ -10,31 +10,25 @@ const PRINCIPLES = [
     tag: 'Visibility & Focus',
     title: 'Sightlines First',
     summary: 'Every seat optimized for screen visibility.',
-    desc: 'Precision geometric sightline modeling guarantees unobstructed 100% viewing angles across every tier, eliminating dead zones and maximizing visual impact for every patron.',
+    desc: 'Precision geometric sightline modeling guarantees unobstructed viewing angles across every tier.',
   },
   {
     tag: 'Acoustic Engineering',
     title: 'Acoustically Driven Design',
     summary: 'Integrated architecture and sound planning.',
-    desc: 'Custom surface geometry, tuned sound traps, and dampening materials engineered in tandem with spatial audio systems for pristine sonic resonance and zero sound bleed.',
+    desc: 'Custom surface geometry, tuned sound traps, and dampening materials engineered in tandem with spatial audio systems.',
   },
   {
     tag: 'Spatial Circulation',
     title: 'Crowd Flow Optimization',
     summary: 'Efficient entry, intermission, and exit circulation.',
-    desc: 'Algorithmic pedestrian circulation design streamlining high-density foot traffic during arrivals, intermissions, and rapid emergency egress without bottleneck congestion.',
+    desc: 'Clear movement paths streamline high-density foot traffic without bottleneck congestion.',
   },
   {
     tag: 'Commercial Strategy',
     title: 'Revenue-Oriented Planning',
     summary: 'Maximizing concession and lobby opportunities.',
-    desc: 'Strategic integration of VIP lounges, concession hubs, and merchandising galleries directly into primary movement corridors to elevate guest engagement and yield.',
-  },
-  {
-    tag: 'Adaptable Architecture',
-    title: 'Future-Ready Infrastructure',
-    summary: 'Flexible spatial framing and high-bandwidth tech integration.',
-    desc: 'Scalable conduit pathways, modular seating configurations, and high-capacity electrical grids engineered to seamlessly adapt to next-generation immersive media and live formats.',
+    desc: 'VIP lounges, concession hubs, and merchandising galleries are integrated into the guest journey.',
   },
 ]
 
@@ -93,9 +87,9 @@ export default function HomePage() {
         {/* ── Architectural Principles / Framework Section ── */}
         <section className="home-principles-section" aria-label="Architectural Principles">
           <header className="home-principles-header">
-            <span className="home-eyebrow">Design Philosophy</span>
+            <span className="home-eyebrow"></span>
             <h2 className="home-principles-title">
-              Architectural Engineering and <em>Spatial Strategy</em>
+              Designing the experience <em>beyond the screen</em>
             </h2>
           </header>
 

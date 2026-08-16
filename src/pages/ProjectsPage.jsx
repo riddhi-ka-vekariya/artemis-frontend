@@ -144,8 +144,8 @@ export default function ProjectsPage() {
     projectsGroup: null,
     filmstripGroup: null,
     clock: null,
-    scrollPos: 0,
-    smoothScrollPos: 0,
+    scrollPos: 50,
+    smoothScrollPos: 20,
     scrollDelta: 0,
     smoothDelta: 0,
     velocity: 0,
@@ -250,7 +250,7 @@ export default function ProjectsPage() {
       // This is the root fix for blur — no color-space conversion needed/used.
       const QUALITY = 3
       const cvs = document.createElement('canvas')
-      cvs.width  = Math.max(1, Math.round(w * QUALITY))
+      cvs.width = Math.max(1, Math.round(w * QUALITY))
       cvs.height = Math.max(1, Math.round(h * QUALITY))
       const ctx = cvs.getContext('2d')
       ctx.scale(QUALITY, QUALITY)   // all draw calls remain in world-space coords
@@ -263,7 +263,7 @@ export default function ProjectsPage() {
       // ⚠️  Do NOT set tex.colorSpace — it applies gamma and darkens the images
       tex.generateMipmaps = true
       tex.minFilter = THREE.LinearMipmapLinearFilter
-      tex.magFilter  = THREE.LinearFilter
+      tex.magFilter = THREE.LinearFilter
       tex.anisotropy = renderer.capabilities.getMaxAnisotropy()
 
       const imgH = h * (1 - padRatio)   // world-space height (ctx is scaled)
@@ -413,10 +413,6 @@ export default function ProjectsPage() {
 
     // ── Input Listeners & Click Detection ────────────────────────────────────
     function onWheel(e) {
-      if (e.deltaY > 0) {
-        setHeaderHidden(true)
-      }
-
       const isGalleryAtEnd = state.scrollPos >= state.projectsHeight - 2
       const isGalleryAtStart = state.scrollPos <= 2
       const isPageAtTop = window.scrollY <= 2
@@ -425,11 +421,14 @@ export default function ProjectsPage() {
       if (isPageAtTop && e.deltaY > 0 && !isGalleryAtEnd) {
         if (e.cancelable) e.preventDefault()
         state.scrollPos = THREE.MathUtils.clamp(state.scrollPos + e.deltaY, 0, state.projectsHeight)
+        // User scrolled down manually — hide the title
+        setHeaderHidden(true)
       } else if (isPageAtTop && e.deltaY < 0 && !isGalleryAtStart) {
         if (e.cancelable) e.preventDefault()
         state.scrollPos = THREE.MathUtils.clamp(state.scrollPos + e.deltaY, 0, state.projectsHeight)
       }
 
+      // Show title only when user has scrolled all the way back to the gallery top
       if (state.scrollPos <= 2 && window.scrollY <= 2) {
         setHeaderHidden(false)
       }
@@ -442,10 +441,6 @@ export default function ProjectsPage() {
       const dy = touchY - currentY
       touchY = currentY
 
-      if (dy > 0) {
-        setHeaderHidden(true)
-      }
-
       const isGalleryAtEnd = state.scrollPos >= state.projectsHeight - 2
       const isGalleryAtStart = state.scrollPos <= 2
       const isPageAtTop = window.scrollY <= 2
@@ -453,11 +448,14 @@ export default function ProjectsPage() {
       if (isPageAtTop && dy > 0 && !isGalleryAtEnd) {
         if (e.cancelable) e.preventDefault()
         state.scrollPos = THREE.MathUtils.clamp(state.scrollPos + dy * 1.2, 0, state.projectsHeight)
+        // User swiped up manually — hide the title
+        setHeaderHidden(true)
       } else if (isPageAtTop && dy < 0 && !isGalleryAtStart) {
         if (e.cancelable) e.preventDefault()
         state.scrollPos = THREE.MathUtils.clamp(state.scrollPos + dy * 1.2, 0, state.projectsHeight)
       }
 
+      // Show title only when user has scrolled all the way back to the gallery top
       if (state.scrollPos <= 2 && window.scrollY <= 2) {
         setHeaderHidden(false)
       }
@@ -672,11 +670,8 @@ export default function ProjectsPage() {
         })
       }
 
-      if (state.smoothScrollPos <= 4 && window.scrollY <= 4) {
-        setHeaderHidden(false)
-      } else if (state.smoothScrollPos > 10 || window.scrollY > 10) {
-        setHeaderHidden(true)
-      }
+      // Header visibility is driven purely by user scroll events (onWheel / onTouchMove / onScroll)
+      // — no position-based logic here to avoid conflicts with pre-scroll offset.
 
       if (state.projectsHeight > 0) {
         setScrollProgress((state.smoothScrollPos / state.projectsHeight) * 100)
@@ -717,7 +712,7 @@ export default function ProjectsPage() {
         <div className="unseen-curl-page" style={{ height: '100vh', width: '100vw', position: 'relative' }}>
           {/* Header Title Overlay */}
           <header className={`projects-header-overlay${isHeaderHidden ? ' hidden' : ''}`}>
-            <span className="projects-eyebrow">Selected Work</span>
+            <span className="projects-eyebrow"></span>
             <h1 className="projects-title">
               Our <em>Projects</em>
             </h1>

@@ -2,15 +2,15 @@ import React, { useState, useEffect } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 
 const NAV_ITEMS = [
-  { label: 'Home',              path: '/home'   },
-  { label: 'Projects',          path: '/projects' },
+  { label: 'Home', path: '/home' },
+  { label: 'Projects', path: '/projects' },
   { label: 'Design Philosophy', path: '/design-philosophy' },
-  { label: 'About Me',          path: '/about'  },
+  { label: 'About Me', path: '/about' },
 ]
 
 export default function Navbar() {
-  const navigate  = useNavigate()
-  const location  = useLocation()
+  const navigate = useNavigate()
+  const location = useLocation()
   const [isMobileOpen, setIsMobileOpen] = useState(false)
 
   // Close mobile drawer when route changes
@@ -95,7 +95,7 @@ export default function Navbar() {
         <div className="mobile-nav-backdrop" onClick={() => setIsMobileOpen(false)} />
         <div className="mobile-nav-drawer">
           <div className="mobile-nav-header">
-            <span className="mobile-nav-eyebrow">Artemis Navigation</span>
+            <span className="mobile-nav-eyebrow"></span>
             <div className="mobile-nav-divider" />
           </div>
 
