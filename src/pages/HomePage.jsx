@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useRef, useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Navbar from '../components/Navbar'
 import MoltenMetal from '../components/MoltenMetal'
@@ -45,6 +45,48 @@ const PRINCIPLES = [
 
 export default function HomePage() {
   const navigate = useNavigate()
+  const [activeCardIndex, setActiveCardIndex] = useState(null)
+  const cardRefs = useRef([])
+
+  useEffect(() => {
+    const isMobileQuery = window.matchMedia('(max-width: 900px)')
+
+    const handleScroll = () => {
+      if (!isMobileQuery.matches) {
+        setActiveCardIndex(null)
+        return
+      }
+
+      const centerY = window.innerHeight * 0.5
+      let closestIdx = null
+      let minDistance = Infinity
+
+      cardRefs.current.forEach((el, idx) => {
+        if (!el) return
+        const rect = el.getBoundingClientRect()
+        if (rect.bottom < 0 || rect.top > window.innerHeight) return
+
+        const cardCenter = rect.top + rect.height / 2
+        const distance = Math.abs(cardCenter - centerY)
+
+        if (distance < 220 && distance < minDistance) {
+          minDistance = distance
+          closestIdx = idx
+        }
+      })
+
+      setActiveCardIndex(closestIdx)
+    }
+
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    window.addEventListener('resize', handleScroll, { passive: true })
+    handleScroll()
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll)
+      window.removeEventListener('resize', handleScroll)
+    }
+  }, [])
 
   return (
     <>
@@ -108,7 +150,10 @@ export default function HomePage() {
             {PRINCIPLES.map((item, idx) => (
               <div
                 key={item.num}
-                className={`principle-card${idx % 2 !== 0 ? ' principle-card--reverse' : ''}`}
+                ref={(el) => (cardRefs.current[idx] = el)}
+                className={`principle-card${idx % 2 !== 0 ? ' principle-card--reverse' : ''}${
+                  activeCardIndex === idx ? ' is-center-active' : ''
+                }`}
               >
                 <div className="principle-card-num-wrap">
                   {item.icon && (
@@ -116,9 +161,9 @@ export default function HomePage() {
                       <img src={item.icon} alt={item.title} className="principle-card-icon" />
                     </div>
                   )}
+                  <span className="principle-card-tag">{item.tag}</span>
                 </div>
                 <div className="principle-card-content">
-                  <span className="principle-card-tag">{item.tag}</span>
                   <h3 className="principle-card-heading">{item.title}</h3>
                   <p className="principle-card-summary">{item.summary}</p>
                   <p className="principle-card-desc">{item.desc}</p>
