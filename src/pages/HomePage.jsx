@@ -19,8 +19,8 @@ const PRINCIPLES = [
   },
   {
     num: '02',
-    tag: 'Acoustic Engineering',
-    title: 'Acoustically Driven Design',
+    tag: 'Acoustic Insulation',
+    title: 'Acoustics & Design',
     summary: 'Integrated design and sound planning.',
     desc: 'Every surface of auditorium is treated to ensure adequate absroptions and prevention of sound leaks.',
     icon: `${BASE}acoustic.png`,
@@ -36,8 +36,8 @@ const PRINCIPLES = [
   {
     num: '04',
     tag: 'Commercial Strategy',
-    title: 'Revenue-Oriented Planning',
-    summary: 'Maximizing seating cpapcity while balancing concessions and lobby.',
+    title: 'Revenue Oriented Planning',
+    summary: 'Maximizing seating capacity while balancing concessions and lobby.',
     desc: 'Lounges, concession hubs, and waiting areas are integrated into the guest journey.',
     icon: `${BASE}revenue.png`,
   },
@@ -126,8 +126,11 @@ export default function HomePage() {
           <div className="home-hero-text">
             <span className="home-eyebrow"></span>
             <h1 className="home-headline">
-              Shaping the World
-              <em>Where Stories Begin</em>
+              <span>Shaping the World</span>
+              <em>
+                Where Stories<br />
+                Begin
+              </em>
             </h1>
             <div className="home-hero-divider" />
             <p className="home-hero-subtagline">
@@ -142,7 +145,7 @@ export default function HomePage() {
           <header className="home-principles-header">
             <span className="home-eyebrow"></span>
             <h2 className="home-principles-title">
-              Designing the experience <em>beyond the screen</em>
+              Designing the Experience <em>beyond the Screen</em>
             </h2>
           </header>
 

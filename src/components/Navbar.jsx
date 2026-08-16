@@ -117,10 +117,6 @@ export default function Navbar() {
             })}
           </ul>
 
-          <div className="mobile-nav-footer">
-            <span className="mobile-nav-tagline">Architectural Engineering &amp; Spatial Strategy</span>
-            <span className="mobile-nav-gold-accent">❖</span>
-          </div>
         </div>
       </div>
     </>

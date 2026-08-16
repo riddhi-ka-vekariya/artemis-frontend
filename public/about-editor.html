@@ -1,74 +1,507 @@
 <!doctype html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Artemis — About Editor</title>
   <style>
-    :root { --bg:#040404; --ink:#0e0e0d; --gold:#c19a27; --paper:#f2f2f2; --muted:#aaa; --line:rgba(255,255,255,.12); }
-    * { box-sizing:border-box; } body { margin:0; background:var(--ink); color:var(--paper); font-family:Georgia,serif; }
-    body.editing [contenteditable="true"] { outline:1px dashed rgba(193,154,39,.65); outline-offset:5px; }
-    [contenteditable="true"] { cursor:text; }
-    .toolbar { position:sticky; top:0; z-index:20; display:flex; flex-wrap:wrap; gap:10px; align-items:center; padding:12px 5vw; background:rgba(4,4,4,.95); border-bottom:1px solid rgba(193,154,39,.3); font:12px Arial,sans-serif; }
-    .toolbar button { border:1px solid rgba(193,154,39,.7); background:transparent; color:var(--paper); padding:8px 12px; border-radius:2px; cursor:pointer; }
-    .toolbar button:hover,.toolbar button.active { background:var(--gold); color:#080808; } .toolbar small { margin-left:auto; color:var(--muted); }
-    nav { display:flex; justify-content:space-between; align-items:center; padding:24px 6vw; border-bottom:1px solid rgba(255,255,255,.08); font:12px Arial,sans-serif; letter-spacing:.12em; text-transform:uppercase; }
-    nav img { width:auto; height:42px; } .nav-links { display:flex; gap:28px; color:var(--muted); }
-    .about-page { min-height:100vh; padding-bottom:120px; background:var(--ink); }
-    .about-hero { padding:140px 6vw 70px; border-bottom:1px solid var(--line); background:radial-gradient(circle at 50% 0%,#1e1b17 0%,var(--ink) 75%); text-align:center; }
-    .about-hero-inner { max-width:860px; margin:auto; display:flex; flex-direction:column; align-items:center; gap:16px; }
-    .eyebrow,.chapter-tag { color:var(--gold); font:500 12px Arial,sans-serif; letter-spacing:.16em; text-transform:uppercase; opacity:.9; }
-    h1 { margin:0; font-size:clamp(48px,6.5vw,84px); font-weight:400; line-height:1.05; letter-spacing:-.015em; } em { color:var(--gold); font-style:italic; }
-    .gold-line { width:60px; height:2px; margin:12px 0 8px; background:var(--gold); opacity:.8; }
-    .hero-subtitle { max-width:600px; margin:0; color:var(--muted); font:clamp(16px,1.4vw,19px)/1.6 Arial,sans-serif; }
-    .content { max-width:1140px; margin:auto; padding:90px 6vw 0; display:flex; flex-direction:column; gap:80px; }
-    .divider { width:100%; height:1px; background:linear-gradient(90deg,transparent,var(--line) 20%,rgba(193,148,0,.15) 50%,var(--line) 80%,transparent); }
-    .chapter { display:grid; grid-template-columns:360px 1fr; gap:60px; align-items:start; } .chapter.reverse { grid-template-columns:1fr 360px; }
-    .chapter.reverse .meta { order:2; } .chapter.reverse .body { order:1; }
-    .meta { display:flex; flex-direction:column; gap:12px; position:sticky; top:120px; }
-    .chapter-tag { color:#999; font-size:11px; letter-spacing:.18em; } h2 { margin:4px 0 0; font-size:clamp(28px,2.6vw,36px); font-weight:400; line-height:1.2; }
-    .meta-divider { width:40px; height:1px; margin-top:8px; background:rgba(194,194,194,.2); }
-    .body { display:flex; flex-direction:column; gap:24px; } p { margin:0; }
-    .lead { font-size:clamp(22px,2vw,26px); line-height:1.5; letter-spacing:-.01em; } .body-text { color:var(--muted); font:17px/1.8 Arial,sans-serif; }
-    .quote-callout { margin-top:12px; padding:22px 28px; background:rgba(193,148,0,.03); border-left:3px solid var(--gold); display:flex; align-items:center; gap:16px; border-radius:0 4px 4px 0; }
-    .quote-callout .indicator { color:var(--gold); font-size:22px; } .quote-callout p { font-size:18px; line-height:1.5; }
-    .lunar { position:relative; padding:60px 8%; overflow:hidden; border:1px solid rgba(193,148,0,.2); border-radius:4px; background:linear-gradient(145deg,rgba(28,25,22,.8),rgba(14,13,12,.95)); box-shadow:0 20px 50px rgba(0,0,0,.5); }
-    .lunar::after { content:''; position:absolute; top:-80px; right:-80px; width:320px; height:320px; border-radius:50%; background:radial-gradient(circle,rgba(193,148,0,.08),transparent 70%); }
-    .lunar-inner { position:relative; z-index:1; display:flex; flex-direction:column; gap:28px; } .lunar-title { margin:0; color:var(--gold); font-size:clamp(38px,4.5vw,56px); font-weight:400; line-height:1; }
-    .lunar-quote-wrap { padding-left:24px; border-left:2px solid var(--gold); margin:8px 0; } blockquote { margin:0; font-size:clamp(20px,2.2vw,27px); line-height:1.55; }
-    .lunar-description { display:flex; flex-direction:column; gap:12px; color:var(--muted); font:16px/1.75 Arial,sans-serif; } strong { color:var(--gold); }
-    .mission { margin-top:10px; padding:32px; background:rgba(20,18,16,.7); border:1px solid var(--line); border-top:2px solid var(--gold); border-radius:4px; display:flex; flex-direction:column; gap:12px; }
-    .mission-badge { color:var(--gold); font:11px Arial,sans-serif; letter-spacing:.12em; text-transform:uppercase; } .mission-statement { font-size:21px; line-height:1.5; }
-    .closing { color:var(--paper); font:14px Arial,sans-serif; letter-spacing:.04em; } .action { width:max-content; margin-top:24px; padding:18px 40px; border:1px solid var(--gold); color:var(--paper); font-size:18px; }
-    footer { display:flex; justify-content:space-between; gap:30px; padding:30px 8vw; border-top:1px solid rgba(255,255,255,.1); color:var(--muted); font:12px Arial,sans-serif; }
-    @media(max-width:900px) { .content { padding:70px 24px 0; gap:60px; } .chapter,.chapter.reverse { grid-template-columns:1fr; gap:28px; } .chapter.reverse .meta,.chapter.reverse .body { order:initial; } .meta { position:static; } }
-    @media(max-width:700px) { .toolbar small { width:100%; margin-left:0; } .nav-links { display:none; } .about-hero { padding:90px 8vw 55px; } footer { flex-direction:column; } }
+    :root {
+      --bg: #040404;
+      --ink: #0e0e0d;
+      --gold: #c19a27;
+      --paper: #f2f2f2;
+      --muted: #aaa;
+      --line: rgba(255, 255, 255, .12);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--ink);
+      color: var(--paper);
+      font-family: Georgia, serif;
+    }
+
+    body.editing [contenteditable="true"] {
+      outline: 1px dashed rgba(193, 154, 39, .65);
+      outline-offset: 5px;
+    }
+
+    [contenteditable="true"] {
+      cursor: text;
+    }
+
+    .toolbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      padding: 12px 5vw;
+      background: rgba(4, 4, 4, .95);
+      border-bottom: 1px solid rgba(193, 154, 39, .3);
+      font: 12px Arial, sans-serif;
+    }
+
+    .toolbar button {
+      border: 1px solid rgba(193, 154, 39, .7);
+      background: transparent;
+      color: var(--paper);
+      padding: 8px 12px;
+      border-radius: 2px;
+      cursor: pointer;
+    }
+
+    .toolbar button:hover,
+    .toolbar button.active {
+      background: var(--gold);
+      color: #080808;
+    }
+
+    .toolbar small {
+      margin-left: auto;
+      color: var(--muted);
+    }
+
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 24px 6vw;
+      border-bottom: 1px solid rgba(255, 255, 255, .08);
+      font: 12px Arial, sans-serif;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+
+    nav img {
+      width: auto;
+      height: 42px;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 28px;
+      color: var(--muted);
+    }
+
+    .about-page {
+      min-height: 100vh;
+      padding-bottom: 120px;
+      background: var(--ink);
+    }
+
+    .about-hero {
+      padding: 140px 6vw 70px;
+      border-bottom: 1px solid var(--line);
+      background: radial-gradient(circle at 50% 0%, #1e1b17 0%, var(--ink) 75%);
+      text-align: center;
+    }
+
+    .about-hero-inner {
+      max-width: 860px;
+      margin: auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .eyebrow,
+    .chapter-tag {
+      color: var(--gold);
+      font: 500 12px Arial, sans-serif;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+      opacity: .9;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(48px, 6.5vw, 84px);
+      font-weight: 400;
+      line-height: 1.05;
+      letter-spacing: -.015em;
+    }
+
+    em {
+      color: var(--gold);
+      font-style: italic;
+    }
+
+    .gold-line {
+      width: 60px;
+      height: 2px;
+      margin: 12px 0 8px;
+      background: var(--gold);
+      opacity: .8;
+    }
+
+    .hero-subtitle {
+      max-width: 600px;
+      margin: 0;
+      color: var(--muted);
+      font: clamp(16px, 1.4vw, 19px)/1.6 Arial, sans-serif;
+    }
+
+    .content {
+      max-width: 1140px;
+      margin: auto;
+      padding: 90px 6vw 0;
+      display: flex;
+      flex-direction: column;
+      gap: 80px;
+    }
+
+    .divider {
+      width: 100%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--line) 20%, rgba(193, 148, 0, .15) 50%, var(--line) 80%, transparent);
+    }
+
+    .chapter {
+      display: grid;
+      grid-template-columns: 360px 1fr;
+      gap: 60px;
+      align-items: start;
+    }
+
+    .chapter.reverse {
+      grid-template-columns: 1fr 360px;
+    }
+
+    .chapter.reverse .meta {
+      order: 2;
+    }
+
+    .chapter.reverse .body {
+      order: 1;
+    }
+
+    .meta {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      position: sticky;
+      top: 120px;
+    }
+
+    .chapter-tag {
+      color: #999;
+      font-size: 11px;
+      letter-spacing: .18em;
+    }
+
+    h2 {
+      margin: 4px 0 0;
+      font-size: clamp(28px, 2.6vw, 36px);
+      font-weight: 400;
+      line-height: 1.2;
+    }
+
+    .meta-divider {
+      width: 40px;
+      height: 1px;
+      margin-top: 8px;
+      background: rgba(194, 194, 194, .2);
+    }
+
+    .body {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    p {
+      margin: 0;
+    }
+
+    .lead {
+      font-size: clamp(22px, 2vw, 26px);
+      line-height: 1.5;
+      letter-spacing: -.01em;
+    }
+
+    .body-text {
+      color: var(--muted);
+      font: 17px/1.8 Arial, sans-serif;
+    }
+
+    .quote-callout {
+      margin-top: 12px;
+      padding: 22px 28px;
+      background: rgba(193, 148, 0, .03);
+      border-left: 3px solid var(--gold);
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      border-radius: 0 4px 4px 0;
+    }
+
+    .quote-callout .indicator {
+      color: var(--gold);
+      font-size: 22px;
+    }
+
+    .quote-callout p {
+      font-size: 18px;
+      line-height: 1.5;
+    }
+
+    .lunar {
+      position: relative;
+      padding: 60px 8%;
+      overflow: hidden;
+      border: 1px solid rgba(193, 148, 0, .2);
+      border-radius: 4px;
+      background: linear-gradient(145deg, rgba(28, 25, 22, .8), rgba(14, 13, 12, .95));
+      box-shadow: 0 20px 50px rgba(0, 0, 0, .5);
+    }
+
+    .lunar::after {
+      content: '';
+      position: absolute;
+      top: -80px;
+      right: -80px;
+      width: 320px;
+      height: 320px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(193, 148, 0, .08), transparent 70%);
+    }
+
+    .lunar-inner {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+    }
+
+    .lunar-title {
+      margin: 0;
+      color: var(--gold);
+      font-size: clamp(38px, 4.5vw, 56px);
+      font-weight: 400;
+      line-height: 1;
+    }
+
+    .lunar-quote-wrap {
+      padding-left: 24px;
+      border-left: 2px solid var(--gold);
+      margin: 8px 0;
+    }
+
+    blockquote {
+      margin: 0;
+      font-size: clamp(20px, 2.2vw, 27px);
+      line-height: 1.55;
+    }
+
+    .lunar-description {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      color: var(--muted);
+      font: 16px/1.75 Arial, sans-serif;
+    }
+
+    strong {
+      color: var(--gold);
+    }
+
+    .mission {
+      margin-top: 10px;
+      padding: 32px;
+      background: rgba(20, 18, 16, .7);
+      border: 1px solid var(--line);
+      border-top: 2px solid var(--gold);
+      border-radius: 4px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .mission-badge {
+      color: var(--gold);
+      font: 11px Arial, sans-serif;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+
+    .mission-statement {
+      font-size: 21px;
+      line-height: 1.5;
+    }
+
+    .closing {
+      color: var(--paper);
+      font: 14px Arial, sans-serif;
+      letter-spacing: .04em;
+    }
+
+    .action {
+      width: max-content;
+      margin-top: 24px;
+      padding: 18px 40px;
+      border: 1px solid var(--gold);
+      color: var(--paper);
+      font-size: 18px;
+    }
+
+    footer {
+      display: flex;
+      justify-content: space-between;
+      gap: 30px;
+      padding: 30px 8vw;
+      border-top: 1px solid rgba(255, 255, 255, .1);
+      color: var(--muted);
+      font: 12px Arial, sans-serif;
+    }
+
+    @media(max-width:900px) {
+      .content {
+        padding: 70px 24px 0;
+        gap: 60px;
+      }
+
+      .chapter,
+      .chapter.reverse {
+        grid-template-columns: 1fr;
+        gap: 28px;
+      }
+
+      .chapter.reverse .meta,
+      .chapter.reverse .body {
+        order: initial;
+      }
+
+      .meta {
+        position: static;
+      }
+    }
+
+    @media(max-width:700px) {
+      .toolbar small {
+        width: 100%;
+        margin-left: 0;
+      }
+
+      .nav-links {
+        display: none;
+      }
+
+      .about-hero {
+        padding: 90px 8vw 55px;
+      }
+
+      footer {
+        flex-direction: column;
+      }
+    }
   </style>
 </head>
+
 <body>
-  <div class="toolbar"><button id="editToggle" class="active" type="button">Editing on</button><button id="save" type="button">Save in this browser</button><button id="reset" type="button">Reset text</button><button id="download" type="button">Download HTML</button><small id="status">Click any outlined text and type to replace it.</small></div>
-  <nav><img src="artemis-logo-f.png" alt="Artemis Studios"><div class="nav-links"><span>Home</span><span>Projects</span><span>About</span></div></nav>
+  <div class="toolbar"><button id="editToggle" class="active" type="button">Editing on</button><button id="save"
+      type="button">Save in this browser</button><button id="reset" type="button">Reset text</button><button
+      id="download" type="button">Download HTML</button><small id="status">Click any outlined text and type to replace
+      it.</small></div>
+  <nav><img src="artemis-logo-f.png" alt="Artemis Studios">
+    <div class="nav-links"><span>Home</span><span>Projects</span><span>About</span></div>
+  </nav>
   <main class="about-page">
-    <header class="about-hero"><div class="about-hero-inner"><span class="eyebrow" contenteditable="true">Profile &amp; Philosophy</span><h1 contenteditable="true">Meet the <em>Designer</em></h1><div class="gold-line"></div><p class="hero-subtitle" contenteditable="true">The journey, vision, and architectural pursuit behind Artemis Studios.</p></div></header>
+    <header class="about-hero">
+      <div class="about-hero-inner"><span class="eyebrow" contenteditable="true">Profile &amp; Philosophy</span>
+        <h1 contenteditable="true">Meet the <em>Designer</em></h1>
+        <div class="gold-line"></div>
+        <p class="hero-subtitle" contenteditable="true">The journey, vision, and architectural pursuit behind Artemis
+          Studios.</p>
+      </div>
+    </header>
     <div class="content">
-      <section class="chapter"><div class="meta"><span class="chapter-tag" contenteditable="true">Genesis &amp; Passion</span><h2 contenteditable="true">Meet the Designer ...</h2><div class="meta-divider"></div></div><div class="body"><p class="lead" contenteditable="true">My journey into architecture began with a fascination for buildings and the way thoughtfully designed spaces influence how people feel and interact.</p><p class="body-text" contenteditable="true">What started as an interest in design gradually became a passion for creating meaningful experience through architecture.</p></div></section>
+      <section class="chapter">
+        <div class="meta"><span class="chapter-tag" contenteditable="true">Genesis &amp; Passion</span>
+          <h2 contenteditable="true">Meet the Designer ...</h2>
+          <div class="meta-divider"></div>
+        </div>
+        <div class="body">
+          <p class="lead" contenteditable="true">My journey into architecture began with a fascination for buildings and
+            the way thoughtfully designed spaces influence how people feel and interact.</p>
+          <p class="body-text" contenteditable="true">What started as an interest in design gradually became a passion
+            for creating meaningful experience through architecture.</p>
+        </div>
+      </section>
       <div class="divider"></div>
-      <section class="chapter reverse"><div class="meta"><span class="chapter-tag" contenteditable="true">Specialization</span><h2 contenteditable="true">Finding my Niche ...</h2><div class="meta-divider"></div></div><div class="body"><p class="body-text" contenteditable="true">Before starting my firm, I've worked on residential and commercial projects that gave me practical experience in planning, design development, consultant coordination, and technical drawings.</p><p class="body-text" contenteditable="true">My first cinema project changed the way I looked at architecture. I discovered a field where design, technology, storytelling, and human experience comes together.</p><div class="quote-callout"><span class="indicator">❖</span><p contenteditable="true">This realization led me to establish <strong>Artemis Studios</strong>.</p></div></div></section>
+      <section class="chapter reverse">
+        <div class="meta"><span class="chapter-tag" contenteditable="true">Specialization</span>
+          <h2 contenteditable="true">Finding my Niche ...</h2>
+          <div class="meta-divider"></div>
+        </div>
+        <div class="body">
+          <p class="body-text" contenteditable="true">Before starting my firm, I've worked on residential and commercial
+            projects that gave me practical experience in planning, design development, consultant coordination, and
+            technical drawings.</p>
+          <p class="body-text" contenteditable="true">My first cinema project changed the way I looked at architecture.
+            I discovered a field where design, technology, storytelling, and human experience comes together.</p>
+          <div class="quote-callout"><span class="indicator">❖</span>
+            <p contenteditable="true">This realization led me to establish <strong>Artemis Studios</strong>.</p>
+          </div>
+        </div>
+      </section>
       <div class="divider"></div>
-      <section class="lunar"><div class="lunar-inner"><span class="chapter-tag" contenteditable="true">The Identity &amp; Symbolism</span><h2 class="lunar-title" contenteditable="true">Artemis</h2><div class="lunar-quote-wrap"><blockquote contenteditable="true">"For me, the moon symbolizes a light that shines through darkness, similarly a cinema transforms a dark auditorium into an immersive world through light."</blockquote></div><div class="lunar-description"><p contenteditable="true">The name <strong>Artemis</strong> is inspired by the Greek goddess associated with the moon.</p><p contenteditable="true">This idea became the inspiration behind the identity and ethos of the studio.</p></div></div></section>
+      <section class="lunar">
+        <div class="lunar-inner"><span class="chapter-tag" contenteditable="true">The Identity &amp; Symbolism</span>
+          <h2 class="lunar-title" contenteditable="true">Artemis</h2>
+          <div class="lunar-quote-wrap">
+            <blockquote contenteditable="true">"For me, the moon symbolizes a light that shines through darkness,
+              similarly a cinema transforms a dark auditorium into an immersive world through light."</blockquote>
+          </div>
+          <div class="lunar-description">
+            <p contenteditable="true">The name <strong>Artemis</strong> is inspired by the Greek goddess associated with
+              the moon.</p>
+            <p contenteditable="true">This idea became the inspiration behind the identity and ethos of the studio.</p>
+          </div>
+        </div>
+      </section>
       <div class="divider"></div>
-      <section class="chapter"><div class="meta"><span class="chapter-tag" contenteditable="true">Vision &amp; Delivery</span><h2 contenteditable="true">Looking Ahead ...</h2><div class="meta-divider"></div></div><div class="body"><p class="body-text" contenteditable="true">I believe great cinema design isn't just about aesthetics; it's about understanding audience behavior, operational efficiency, and the business behind every project.</p><p class="body-text" contenteditable="true">Each project has reinforced my belief that credibility is built through expertise, attention to detail, and consistently delivering value.</p><div class="mission"><span class="mission-badge" contenteditable="true">Today, my focus remains the same:</span><p class="mission-statement" contenteditable="true">To design cinemas that are thoughtful, functional, and memorable spaces where great design brings together the audience's experience and the exhibitor's vision.</p></div><p class="closing" contenteditable="true">Follow along as we share our work, ideas and journey in Cinema Design.</p><div class="action" contenteditable="true">View Selected Projects →</div></div></section>
+      <section class="chapter">
+        <div class="meta"><span class="chapter-tag" contenteditable="true">Vision &amp; Delivery</span>
+          <h2 contenteditable="true">Looking Ahead ...</h2>
+          <div class="meta-divider"></div>
+        </div>
+        <div class="body">
+          <p class="body-text" contenteditable="true">I believe great cinema design isn't just about aesthetics; it's
+            about understanding audience behavior, operational efficiency, and the business behind every project.</p>
+          <p class="body-text" contenteditable="true">Each project has reinforced my belief that credibility is built
+            through expertise, attention to detail, and consistently delivering value.</p>
+          <div class="mission"><span class="mission-badge" contenteditable="true">Today, my focus remains the
+              same:</span>
+            <p class="mission-statement" contenteditable="true">To design cinemas that are thoughtful, functional, and
+              memorable spaces where great design brings together the audience's experience and the exhibitor's vision.
+            </p>
+          </div>
+          <p class="closing" contenteditable="true">Follow along as we share our work, ideas and journey in Cinema
+            Design.</p>
+          <div class="action" contenteditable="true">View Selected Projects →</div>
+        </div>
+      </section>
     </div>
   </main>
-  <footer><span contenteditable="true">© 2026 Artemis Studios. All rights reserved.</span><span contenteditable="true">Architectural Engineering &amp; Design</span></footer>
   <script>
-    const key='artemis-about-editor-v1', editable=[...document.querySelectorAll('[contenteditable="true"]')], initial=editable.map(n=>n.innerHTML), status=document.getElementById('status');
-    const setStatus=t=>status.textContent=t, restore=values=>values.forEach((html,i)=>{if(editable[i])editable[i].innerHTML=html});
-    try{const saved=JSON.parse(localStorage.getItem(key));if(Array.isArray(saved)){restore(saved);setStatus('Loaded your saved text.')}}catch(_){ }
-    document.getElementById('editToggle').onclick=e=>{const on=document.body.classList.toggle('editing');editable.forEach(n=>n.contentEditable=String(on));e.currentTarget.textContent=on?'Editing on':'Editing off';e.currentTarget.classList.toggle('active',on)};
-    document.getElementById('save').onclick=()=>{localStorage.setItem(key,JSON.stringify(editable.map(n=>n.innerHTML)));setStatus('Saved in this browser.')};
-    document.getElementById('reset').onclick=()=>{restore(initial);localStorage.removeItem(key);setStatus('Text reset to the original copy.')};
-    document.getElementById('download').onclick=()=>{const clone=document.documentElement.cloneNode(true);clone.querySelector('#status').textContent='Click any outlined text and type to replace it.';const link=document.createElement('a');link.href=URL.createObjectURL(new Blob(['<!doctype html>\n'+clone.outerHTML],{type:'text/html'}));link.download='about-edited.html';link.click();URL.revokeObjectURL(link.href);setStatus('Downloaded about-edited.html.')};
+    const key = 'artemis-about-editor-v1', editable = [...document.querySelectorAll('[contenteditable="true"]')], initial = editable.map(n => n.innerHTML), status = document.getElementById('status');
+    const setStatus = t => status.textContent = t, restore = values => values.forEach((html, i) => { if (editable[i]) editable[i].innerHTML = html });
+    try { const saved = JSON.parse(localStorage.getItem(key)); if (Array.isArray(saved)) { restore(saved); setStatus('Loaded your saved text.') } } catch (_) { }
+    document.getElementById('editToggle').onclick = e => { const on = document.body.classList.toggle('editing'); editable.forEach(n => n.contentEditable = String(on)); e.currentTarget.textContent = on ? 'Editing on' : 'Editing off'; e.currentTarget.classList.toggle('active', on) };
+    document.getElementById('save').onclick = () => { localStorage.setItem(key, JSON.stringify(editable.map(n => n.innerHTML))); setStatus('Saved in this browser.') };
+    document.getElementById('reset').onclick = () => { restore(initial); localStorage.removeItem(key); setStatus('Text reset to the original copy.') };
+    document.getElementById('download').onclick = () => { const clone = document.documentElement.cloneNode(true); clone.querySelector('#status').textContent = 'Click any outlined text and type to replace it.'; const link = document.createElement('a'); link.href = URL.createObjectURL(new Blob(['<!doctype html>\n' + clone.outerHTML], { type: 'text/html' })); link.download = 'about-edited.html'; link.click(); URL.revokeObjectURL(link.href); setStatus('Downloaded about-edited.html.') };
   </script>
 </body>
+
 </html>

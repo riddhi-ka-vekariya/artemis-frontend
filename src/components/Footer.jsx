@@ -17,7 +17,7 @@ export default function Footer() {
             />
           </div>
           <p className="footer-tagline">
-            Crafting cinema-grade architectural experiences &amp; spatial strategy with relentless precision.
+            Crafting architectural experiences &amp; spatial strategy with relentless precision.
           </p>
         </div>
 
@@ -72,11 +72,7 @@ export default function Footer() {
       </div>
 
       {/* Bottom Legal / Copyright Bar */}
-      <div className="footer-bottom">
-        <p>© {new Date().getFullYear()} Artemis Studios. All rights reserved.</p>
-        <span className="footer-gold-dot">•</span>
-        <p className="footer-subtext">Architectural Engineering &amp; Design</p>
-      </div>
+
     </footer>
   )
 }

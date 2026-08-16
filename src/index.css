@@ -672,8 +672,11 @@ body,
 }
 
 .home-headline {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
   font-family: var(--font-display);
-  font-size: clamp(47px, 4.4vw, 60px);
+  font-size: clamp(42px, 3.9vw, 54px);
   font-weight: 400;
   letter-spacing: -0.01em;
   line-height: 1.08;
@@ -684,7 +687,6 @@ body,
   font-style: italic;
   color: var(--color-gold);
   display: block;
-  margin-top: 8px;
 }
 
 .home-hero-divider {
@@ -2427,7 +2429,7 @@ body,
 }
 
 .footer-tagline {
-  font-family: var(--font-body);
+  font-family: 'Tenor Sans', var(--font-body);
   font-size: 15px;
   color: var(--text-secondary);
   line-height: 1.6;
@@ -2470,8 +2472,9 @@ body,
   background: none;
   border: none;
   padding: 0;
-  font-family: var(--font-mono);
-  font-size: 13px;
+  font-family: 'Tenor Sans', var(--font-body);
+  font-size: 14px;
+  letter-spacing: 0.02em;
   color: var(--text-secondary);
   cursor: pointer;
   transition: all 0.2s ease;
@@ -2490,23 +2493,23 @@ body,
   justify-content: flex-start;
   text-align: left;
   gap: 8px;
-  font-size: 13px;
+  font-size: 14px;
   width: 100%;
 }
 
 .contact-label {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  font-family: 'Tenor Sans', var(--font-body);
+  font-size: 13px;
+  letter-spacing: 0.03em;
   color: rgba(194, 194, 194, 0.45);
   text-align: left;
   white-space: nowrap;
 }
 
 .contact-value {
-  font-family: var(--font-mono);
-  font-size: 13px;
+  font-family: 'Tenor Sans', var(--font-body);
+  font-size: 14px;
+  letter-spacing: 0.02em;
   color: var(--text-primary);
   text-decoration: none;
   text-align: left;
@@ -2527,8 +2530,9 @@ body,
   justify-content: space-between;
   max-width: 1200px;
   margin: 0 auto;
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: 'Tenor Sans', var(--font-body);
+  font-size: 13px;
+  letter-spacing: 0.02em;
   color: rgba(194, 194, 194, 0.45);
 }
 
@@ -2686,7 +2690,8 @@ body,
   }
 
   .home-headline {
-    font-size: clamp(30px, 6.8vw, 42px);
+    gap: 10px;
+    font-size: clamp(27px, 6.2vw, 38px);
   }
 
   .home-hero-divider {
@@ -2850,7 +2855,7 @@ body,
   }
 
   .home-headline {
-    font-size: clamp(28px, 7.5vw, 34px);
+    font-size: clamp(25px, 6.8vw, 31px);
   }
 
   .about-hero-title {
