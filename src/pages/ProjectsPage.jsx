@@ -472,7 +472,7 @@ export default function ProjectsPage() {
     }
 
     // ── Filmstrip Texture (Canvas2D) ─────────────────────────────────
-    // Metallic silver strip with brushed-metal sheen and soft glow.
+    // Darker flat filmstrip with warm golden tint
     function makeFilmstripTexture(side, w, h) {
       const res = Math.min(window.devicePixelRatio, 2)
       const cvs = document.createElement('canvas')
@@ -481,51 +481,14 @@ export default function ProjectsPage() {
       const ctx = cvs.getContext('2d')
       ctx.scale(res, res)
 
-      // ── Layer 1: Brushed-metal vertical gradient ──
-      const metalGrad = ctx.createLinearGradient(0, 0, 0, h)
-      metalGrad.addColorStop(0, '#8A8A8E')
-      metalGrad.addColorStop(0.15, '#D0D0D4')
-      metalGrad.addColorStop(0.35, '#A8A8AC')
-      metalGrad.addColorStop(0.5, '#E8E8EC')
-      metalGrad.addColorStop(0.65, '#B0B0B4')
-      metalGrad.addColorStop(0.85, '#D8D8DC')
-      metalGrad.addColorStop(1, '#9A9A9E')
-      ctx.fillStyle = metalGrad
+      // Solid flat background (warm obsidian gold tint)
+      ctx.fillStyle = '#161410'
       ctx.fillRect(0, 0, w, h)
 
-      // ── Layer 2: Subtle horizontal streaks (brushed-metal texture) ──
-      ctx.globalAlpha = 0.07
-      for (let sy = 0; sy < h; sy += 1.5) {
-        const brightness = 180 + Math.floor(Math.random() * 75)
-        ctx.fillStyle = `rgb(${brightness},${brightness},${brightness + 4})`
-        ctx.fillRect(0, sy, w, 0.8)
-      }
-      ctx.globalAlpha = 1.0
-
-      // ── Layer 3: Central specular highlight (horizontal shine band) ──
-      const shineGrad = ctx.createLinearGradient(0, 0, 0, h)
-      shineGrad.addColorStop(0, 'rgba(255,255,255,0)')
-      shineGrad.addColorStop(0.3, 'rgba(255,255,255,0.12)')
-      shineGrad.addColorStop(0.5, 'rgba(255,255,255,0.22)')
-      shineGrad.addColorStop(0.7, 'rgba(255,255,255,0.12)')
-      shineGrad.addColorStop(1, 'rgba(255,255,255,0)')
-      ctx.fillStyle = shineGrad
-      ctx.fillRect(0, 0, w, h)
-
-      // ── Layer 4: Soft edge glow (top & bottom luminous edges) ──
-      const glowH = h * 0.18
-      // Top edge glow
-      const glowT = ctx.createLinearGradient(0, 0, 0, glowH)
-      glowT.addColorStop(0, 'rgba(220,225,235,0.35)')
-      glowT.addColorStop(1, 'rgba(220,225,235,0)')
-      ctx.fillStyle = glowT
-      ctx.fillRect(0, 0, w, glowH)
-      // Bottom edge glow
-      const glowB = ctx.createLinearGradient(0, h, 0, h - glowH)
-      glowB.addColorStop(0, 'rgba(220,225,235,0.35)')
-      glowB.addColorStop(1, 'rgba(220,225,235,0)')
-      ctx.fillStyle = glowB
-      ctx.fillRect(0, h - glowH, w, glowH)
+      // Side edge border lines in gold
+      ctx.fillStyle = 'rgba(209, 148, 0, 0.28)'
+      ctx.fillRect(0, 0, 1, h)
+      ctx.fillRect(w - 1, 0, 1, h)
 
       // ── Sprocket holes (evenly distributed to tile seamlessly across rows) ──
       const holeW = w * 0.52
@@ -542,8 +505,14 @@ export default function ProjectsPage() {
           ctx.beginPath()
           ctx.roundRect(holeX, y, holeW, holeH, 2)
           ctx.fill()
+          ctx.strokeStyle = 'rgba(209, 148, 0, 0.22)'
+          ctx.lineWidth = 1
+          ctx.stroke()
         } else {
           ctx.fillRect(holeX, y, holeW, holeH)
+          ctx.strokeStyle = 'rgba(209, 148, 0, 0.22)'
+          ctx.lineWidth = 1
+          ctx.strokeRect(holeX, y, holeW, holeH)
         }
       }
 
