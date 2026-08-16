@@ -246,22 +246,33 @@ export default function ProjectsPage() {
 
     // ── Texture Builder ──────────────────────────────────────────────────────
     function makeCardTexture(data, w, h, padRatio) {
+      // ── Supersampling: draw at 3× world-space size so WebGL never upscales ──
+      // This is the root fix for blur — no color-space conversion needed/used.
+      const QUALITY = 3
       const cvs = document.createElement('canvas')
-      cvs.width = Math.max(1, Math.round(w))
-      cvs.height = Math.max(1, Math.round(h))
+      cvs.width  = Math.max(1, Math.round(w * QUALITY))
+      cvs.height = Math.max(1, Math.round(h * QUALITY))
       const ctx = cvs.getContext('2d')
+      ctx.scale(QUALITY, QUALITY)   // all draw calls remain in world-space coords
 
       // Transparent base canvas for bottom padding
-      ctx.clearRect(0, 0, cvs.width, cvs.height)
+      ctx.clearRect(0, 0, w, h)
 
       const tex = new THREE.CanvasTexture(cvs)
-      const imgH = cvs.height * (1 - padRatio)
+      // Anisotropic filtering + mipmaps keep textures sharp at oblique angles
+      // ⚠️  Do NOT set tex.colorSpace — it applies gamma and darkens the images
+      tex.generateMipmaps = true
+      tex.minFilter = THREE.LinearMipmapLinearFilter
+      tex.magFilter  = THREE.LinearFilter
+      tex.anisotropy = renderer.capabilities.getMaxAnisotropy()
+
+      const imgH = h * (1 - padRatio)   // world-space height (ctx is scaled)
 
       const img = new Image()
       img.crossOrigin = 'anonymous'
       img.onload = () => {
         const ir = img.width / img.height
-        const cr = cvs.width / imgH
+        const cr = w / imgH
         let sx, sy, sw, sh
         if (ir > cr) {
           sh = img.height; sw = sh * cr; sx = (img.width - sw) / 2; sy = 0;
@@ -270,14 +281,14 @@ export default function ProjectsPage() {
         }
 
         // Draw image in upper region
-        ctx.drawImage(img, sx, sy, sw, sh, 0, 0, cvs.width, imgH)
+        ctx.drawImage(img, sx, sy, sw, sh, 0, 0, w, imgH)
 
         // Gradient Scrim inside image region
         const scrim = ctx.createLinearGradient(0, imgH * 0.35, 0, imgH)
         scrim.addColorStop(0, 'rgba(0,0,0,0)')
         scrim.addColorStop(1, 'rgba(0,0,0,0.85)')
         ctx.fillStyle = scrim
-        ctx.fillRect(0, 0, cvs.width, imgH)
+        ctx.fillRect(0, 0, w, imgH)
 
         // Typography — Black & Gold style
         const titlePx = Math.round(Math.max(imgH * 0.082, 16))
@@ -292,7 +303,7 @@ export default function ProjectsPage() {
 
         // Gold Bottom Rule at the bottom of the image
         ctx.fillStyle = 'rgba(193,148,0,0.4)'
-        ctx.fillRect(0, imgH - 2, cvs.width, 2)
+        ctx.fillRect(0, imgH - 2, w, 2)
 
         tex.needsUpdate = true
       }
