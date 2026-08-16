@@ -1264,7 +1264,7 @@ canvas#unseen-gl-canvas {
 .project-modal-backdrop {
   position: fixed;
   inset: 0;
-  z-index: 2000;
+  z-index: 9999;
   background: rgba(14, 14, 13, 0.92);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);

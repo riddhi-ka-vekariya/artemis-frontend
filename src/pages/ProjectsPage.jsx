@@ -757,47 +757,48 @@ export default function ProjectsPage() {
 
           <canvas ref={canvasRef} id="unseen-gl-canvas" style={{ cursor: 'pointer' }} />
         </div>
+      </main>
 
-        {/* ── Enlarged Flat Image Modal ── */}
-        {selectedProject && (
+      {/* ── Enlarged Flat Image Modal (rendered outside main to overlay navbar) ── */}
+      {selectedProject && (
+        <div
+          className="project-modal-backdrop"
+          onClick={() => setSelectedProject(null)}
+          role="dialog"
+          aria-modal="true"
+          aria-label={selectedProject.title}
+        >
           <div
-            className="project-modal-backdrop"
-            onClick={() => setSelectedProject(null)}
-            role="dialog"
-            aria-modal="true"
-            aria-label={selectedProject.title}
+            className="project-modal-card"
+            onClick={(e) => e.stopPropagation()}
           >
-            <div
-              className="project-modal-card"
-              onClick={(e) => e.stopPropagation()}
+            {/* Close Button */}
+            <button
+              className="project-modal-close"
+              onClick={() => setSelectedProject(null)}
+              aria-label="Close enlarged view"
             >
-              {/* Close Button */}
-              <button
-                className="project-modal-close"
-                onClick={() => setSelectedProject(null)}
-                aria-label="Close enlarged view"
-              >
-                ✕
-              </button>
+              ✕
+            </button>
 
-              {/* Flat High-Res Image View */}
-              <div className="project-modal-img-wrap">
-                <img
-                  src={selectedProject.img}
-                  alt={selectedProject.title}
-                  className="project-modal-img"
-                />
-              </div>
+            {/* Flat High-Res Image View */}
+            <div className="project-modal-img-wrap">
+              <img
+                src={selectedProject.img}
+                alt={selectedProject.title}
+                className="project-modal-img"
+              />
+            </div>
 
-              {/* Text Info */}
-              <div className="project-modal-info">
-                <h2 className="project-modal-title">{selectedProject.title}</h2>
-                <p className="project-modal-full-desc">{selectedProject.fullDesc}</p>
-              </div>
+            {/* Text Info */}
+            <div className="project-modal-info">
+              <h2 className="project-modal-title">{selectedProject.title}</h2>
+              <p className="project-modal-full-desc">{selectedProject.fullDesc}</p>
             </div>
           </div>
-        )}
-      </main>
+        </div>
+      )}
+
       <Footer />
     </>
   )
