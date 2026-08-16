@@ -418,6 +418,9 @@ export default function ProjectsPage() {
       } else if (isPageAtTop && e.deltaY < 0 && !isGalleryAtStart) {
         if (e.cancelable) e.preventDefault()
         state.scrollPos = THREE.MathUtils.clamp(state.scrollPos + e.deltaY, 0, state.projectsHeight)
+      } else if (isPageAtTop && e.deltaY > 0 && isGalleryAtEnd) {
+        // Gallery exhausted — smoothly scroll page down to footer
+        window.scrollTo({ top: window.innerHeight, behavior: 'smooth' })
       }
 
       // Hide title a bit later once user has scrolled past 280px into the gallery
@@ -429,7 +432,11 @@ export default function ProjectsPage() {
     }
 
     let touchY = 0
-    function onTouchStart(e) { touchY = e.touches[0].clientY }
+    let footerScrollTriggered = false
+    function onTouchStart(e) {
+      touchY = e.touches[0].clientY
+      footerScrollTriggered = false
+    }
     function onTouchMove(e) {
       const currentY = e.touches[0].clientY
       const dy = touchY - currentY
@@ -445,6 +452,10 @@ export default function ProjectsPage() {
       } else if (isPageAtTop && dy < 0 && !isGalleryAtStart) {
         if (e.cancelable) e.preventDefault()
         state.scrollPos = THREE.MathUtils.clamp(state.scrollPos + dy * 1.2, 0, state.projectsHeight)
+      } else if (isPageAtTop && dy > 0 && isGalleryAtEnd && !footerScrollTriggered) {
+        // Gallery exhausted — smoothly scroll page down to reveal footer
+        footerScrollTriggered = true
+        window.scrollTo({ top: window.innerHeight, behavior: 'smooth' })
       }
 
       // Hide title a bit later once user has swiped past 280px into the gallery
