@@ -77,10 +77,10 @@ export default function HomePage() {
 
           {/* ── Text overlay on top ── */}
           <div className="home-hero-text">
-            <span className="home-eyebrow">Welcome</span>
+            <span className="home-eyebrow"></span>
             <h1 className="home-headline">
-              Shaping the world<br />
-              <em>where stories begin</em>
+              Shaping the World
+              <em>Where Stories Begin</em>
             </h1>
             <div className="home-hero-divider" />
             <p className="home-hero-subtagline">

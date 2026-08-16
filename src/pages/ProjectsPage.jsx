@@ -27,62 +27,99 @@ const DEFAULTS = {
   innerScale: 1.0,
 }
 
+const BASE = import.meta.env.BASE_URL || '/'
+
 const PROJECT_DATA = [
   {
     id: 1,
-    title: 'Vault House',
-    desc: 'Residential · Lisbon, 2024',
-    img: 'https://images.unsplash.com/photo-1487958449943-2429e8be8625?w=1600&h=900&fit=crop&auto=format&q=85',
-    fullDesc: 'A monolith carved from local limestone. Vault House negotiates extreme topography with quiet architectural restraint, forming raw concrete lightwells and subterranean courtyards.'
+    title: 'Aura Cinema',
+    desc: 'Cinema Architecture · Mumbai, 2024',
+    img: `${BASE}gallery/1.avif`,
+    fullDesc: 'An ultra-luxury bespoke auditorium featuring acoustic stepped ceiling geometry, seamless atmospheric lighting channels, and custom ergonomic seating tailored for optimal sightlines.'
   },
   {
     id: 2,
-    title: 'Brutalist Pavilion',
-    desc: 'Cultural · Brussels, 2023',
-    img: 'https://images.unsplash.com/photo-1486325212027-8081e485255e?w=1600&h=900&fit=crop&auto=format&q=85',
-    fullDesc: 'Designed as a temporary exhibition venue, the pavilion utilizes textured cast-in-place concrete walls to filter natural daylight into solemn, atmospheric gallery chambers.'
+    title: 'Lumina Screen Lounge',
+    desc: 'VIP Experience · Dubai, 2024',
+    img: `${BASE}gallery/2.avif`,
+    fullDesc: 'Private screening theater with warm gold ambient illumination, bespoke acoustic timber fluting, and plush velvet recliner modules designed for unmatched comfort.'
   },
   {
     id: 3,
-    title: 'Helix Stair',
-    desc: 'Interior · Stockholm, 2024',
-    img: 'https://images.unsplash.com/photo-1464938050520-ef2270bb8ce8?w=1600&h=900&fit=crop&auto=format&q=85',
-    fullDesc: 'A continuous spiral forged from raw black steel, serving as the vertical spine for a multi-level art foundation in central Stockholm.'
+    title: 'Grand Horizon Multiplex',
+    desc: 'Commercial Cinema · London, 2023',
+    img: `${BASE}gallery/3.avif`,
+    fullDesc: 'Dynamic stadium-seating cinema engineered with multi-tiered geometric sound traps, pristine sightline clearances, and high-contrast ambient finishes.'
   },
   {
     id: 4,
-    title: 'Coastal Residence',
-    desc: 'Residential · Lagos, 2023',
-    img: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1600&h=900&fit=crop&auto=format&q=85',
-    fullDesc: 'Perched along rugged Atlantic ocean bluffs, this cantilevered glass and timber home balances exposure to panoramic sea vistas with deep solar shading overhangs.'
+    title: 'Obsidian Premier Theater',
+    desc: 'Auditorium Design · Singapore, 2024',
+    img: `${BASE}gallery/4.avif`,
+    fullDesc: 'Monolithic deep dark interior envelope with integrated linear gold light vectors and tuned acoustic dampeners for pure cinematic immersion.'
   },
   {
     id: 5,
-    title: 'Concrete Atrium',
-    desc: 'Office · Tokyo, 2022',
-    img: 'https://images.unsplash.com/photo-1531971589569-0d9370cbe1e5?w=1600&h=900&fit=crop&auto=format&q=85',
-    fullDesc: 'A seven-story central atrium enveloped in geometric acoustic concrete baffles, drawing soft diffuse overhead daylight deep into the interior office floors.'
+    title: 'Velvet Horizon',
+    desc: 'Boutique Cinema · Paris, 2023',
+    img: `${BASE}gallery/5.avif`,
+    fullDesc: 'Refined intimate screening hall celebrating tactile materials, rich scarlet and gold accents, and state-of-the-art Dolby Atmos spatial audio calibration.'
   },
   {
     id: 6,
-    title: 'Light Vault',
-    desc: 'Cultural · Oslo, 2024',
-    img: 'https://images.unsplash.com/photo-1524758631624-e2822e304c36?w=1600&h=900&fit=crop&auto=format&q=85',
-    fullDesc: 'An underground subterranean archive illuminated solely by vertical skylight tubes, combining timber ceiling ribbons with polished dark terrazzo flooring.'
+    title: 'The Apex Grand Screen',
+    desc: 'Flagship Venue · New York, 2024',
+    img: `${BASE}gallery/6.avif`,
+    fullDesc: 'Large-format exhibition hall with expansive curved projection plane, algorithmic crowd flow aisles, and sculpted perimeter acoustic baffling.'
   },
   {
     id: 7,
-    title: 'Market Hall',
-    desc: 'Public · Rotterdam, 2023',
-    img: 'https://images.unsplash.com/photo-1503174971373-b1f69850bded?w=1600&h=900&fit=crop&auto=format&q=85',
-    fullDesc: 'A civic roof canopy constructed from prefabricated glulam arches, spanning 60 meters to shelter an open-air artisanal food market.'
+    title: 'Elysium Suite',
+    desc: 'Private Screening Room · Zurich, 2023',
+    img: `${BASE}gallery/7.avif`,
+    fullDesc: 'Minimalist private viewing theater featuring hidden audio transducers, flush architectural light channels, and handcrafted acoustic leather paneling.'
   },
   {
     id: 8,
-    title: 'Tower Studio',
-    desc: 'Residential · Vienna, 2024',
-    img: 'https://images.unsplash.com/photo-1449157291145-7efd050a4d0e?w=1600&h=900&fit=crop&auto=format&q=85',
-    fullDesc: 'A vertical penthouse restoration featuring blackened brass joinery, full-height double-glazed apertures, and bespoke minimalist furniture pieces.'
+    title: 'Starlight Pavilion',
+    desc: 'Immersive Theater · Tokyo, 2024',
+    img: `${BASE}gallery/8.avif`,
+    fullDesc: 'Next-generation entertainment space integrating starry fiber-optic ceiling lattices, seamless acoustic walls, and fluid circulation pathways.'
+  },
+  {
+    id: 9,
+    title: 'Kinetica Hall',
+    desc: 'Cinema Architecture · Berlin, 2023',
+    img: `${BASE}gallery/9.avif`,
+    fullDesc: 'Sculptural acoustic ribs wrapping from floor to ceiling, providing both striking visual cadence and precise reverberation control across all frequencies.'
+  },
+  {
+    id: 10,
+    title: 'Nocturne Screening Room',
+    desc: 'Luxury Screening · Los Angeles, 2024',
+    img: `${BASE}gallery/10.1.avif`,
+    fullDesc: 'Ultra-exclusive private cinema combining midnight velvet surfaces, warm bronze lighting niches, and reference-grade studio acoustics.'
+  },
+  {
+    id: 11,
+    title: 'Mirage Auditorium',
+    desc: 'Multiplex Development · Doha, 2024',
+    img: `${BASE}gallery/11.avif`,
+    fullDesc: 'High-capacity cinema hall with optimized parabolic seating tiers, wide-angle screen coverage, and noise-isolated sound locks.'
+  },
+  {
+    id: 12,
+    title: 'Celestial Screen',
+    desc: 'Premium Large Format · Sydney, 2023',
+    img: `${BASE}gallery/12.avif`,
+    fullDesc: 'Flagship cinema experience featuring custom acoustic perimeter fins, dynamic warm-amber pathway lighting, and laser projection integration.'
+  },
+  {
+    id: 13,
+    title: 'Solstice Cinema Hall',
+    desc: 'Cultural Architecture · Milan, 2024',
+    img: `${BASE}gallery/13.avif`,
+    fullDesc: 'Architectural cinema theater with integrated brass accents, sculpted acoustic contours, and seamless crowd egress planning.'
   },
 ]
 
