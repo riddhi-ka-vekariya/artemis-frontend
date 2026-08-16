@@ -113,17 +113,33 @@ const MOBIUS_PHOTOS = [
   `${BASE}mobius-strip-photos/p.webp`,
 ]
 
+// Eagerly initiate preloading of all images immediately upon JS module import
+const eagerPreloadPromise = Promise.allSettled(MOBIUS_PHOTOS.map(loadImage)).then((results) =>
+  results.map((r) => (r.status === 'fulfilled' ? r.value : null))
+)
+
+let cachedCanvasTexture = null
+
 async function buildFilmTexture(renderer) {
+  if (cachedCanvasTexture) {
+    const tex = new THREE.CanvasTexture(cachedCanvasTexture)
+    tex.wrapS = THREE.RepeatWrapping
+    tex.wrapT = THREE.ClampToEdgeWrapping
+    tex.anisotropy = renderer.capabilities.getMaxAnisotropy()
+    tex.needsUpdate = true
+    return tex
+  }
+
   const frameCount = MOBIUS_PHOTOS.length, cell = 220, holeRowH = 34
   const W = cell * frameCount, H = (cell - 12) + holeRowH * 2 + 8
   const c = document.createElement('canvas')
   c.width = W; c.height = H
   const ctx = c.getContext('2d')
   ctx.fillStyle = '#040404'; ctx.fillRect(0, 0, W, H)
+
   let images = []
   try {
-    const results = await Promise.allSettled(MOBIUS_PHOTOS.map(loadImage))
-    images = results.map(r => r.status === 'fulfilled' ? r.value : null)
+    images = (await eagerPreloadPromise) || []
   } catch {
     images = []
   }
@@ -215,6 +231,8 @@ async function buildFilmTexture(renderer) {
     ctx.lineWidth = 1
     ctx.stroke()
   }
+
+  cachedCanvasTexture = c
   const tex = new THREE.CanvasTexture(c)
   tex.wrapS = THREE.RepeatWrapping
   tex.wrapT = THREE.ClampToEdgeWrapping

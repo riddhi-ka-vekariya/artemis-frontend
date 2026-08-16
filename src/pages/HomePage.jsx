@@ -21,24 +21,24 @@ const PRINCIPLES = [
     num: '02',
     tag: 'Acoustic Engineering',
     title: 'Acoustically Driven Design',
-    summary: 'Integrated architecture and sound planning.',
-    desc: 'Custom surface geometry, tuned sound traps, and dampening materials engineered in tandem with spatial audio systems.',
+    summary: 'Integrated design and sound planning.',
+    desc: 'Every surface of auditorium is treated to ensure adequate absroptions and prevention of sound leaks.',
     icon: `${BASE}acoustic.png`,
   },
   {
     num: '03',
     tag: 'Spatial Circulation',
     title: 'Crowd Flow Optimization',
-    summary: 'Efficient entry, intermission, and exit circulation.',
-    desc: 'Clear movement paths streamline high-density foot traffic without bottleneck congestion.',
+    summary: 'Efficient entry and exit circulation.',
+    desc: 'Clear movement paths streamline high-density foot traffic without congestion.',
     icon: `${BASE}crowd.png`,
   },
   {
     num: '04',
     tag: 'Commercial Strategy',
     title: 'Revenue-Oriented Planning',
-    summary: 'Maximizing concession and lobby opportunities.',
-    desc: 'VIP lounges, concession hubs, and merchandising galleries are integrated into the guest journey.',
+    summary: 'Maximizing seating cpapcity while balancing concessions and lobby.',
+    desc: 'Lounges, concession hubs, and waiting areas are integrated into the guest journey.',
     icon: `${BASE}revenue.png`,
   },
 ]
@@ -151,9 +151,8 @@ export default function HomePage() {
               <div
                 key={item.num}
                 ref={(el) => (cardRefs.current[idx] = el)}
-                className={`principle-card${idx % 2 !== 0 ? ' principle-card--reverse' : ''}${
-                  activeCardIndex === idx ? ' is-center-active' : ''
-                }`}
+                className={`principle-card${idx % 2 !== 0 ? ' principle-card--reverse' : ''}${activeCardIndex === idx ? ' is-center-active' : ''
+                  }`}
               >
                 <div className="principle-card-num-wrap">
                   {item.icon && (

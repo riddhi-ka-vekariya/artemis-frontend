@@ -421,15 +421,15 @@ export default function ProjectsPage() {
       if (isPageAtTop && e.deltaY > 0 && !isGalleryAtEnd) {
         if (e.cancelable) e.preventDefault()
         state.scrollPos = THREE.MathUtils.clamp(state.scrollPos + e.deltaY, 0, state.projectsHeight)
-        // User scrolled down manually — hide the title
-        setHeaderHidden(true)
       } else if (isPageAtTop && e.deltaY < 0 && !isGalleryAtStart) {
         if (e.cancelable) e.preventDefault()
         state.scrollPos = THREE.MathUtils.clamp(state.scrollPos + e.deltaY, 0, state.projectsHeight)
       }
 
-      // Show title only when user has scrolled all the way back to the gallery top
-      if (state.scrollPos <= 2 && window.scrollY <= 2) {
+      // Hide title a bit later once user has scrolled past 280px into the gallery
+      if (state.scrollPos > 280 || window.scrollY > 30) {
+        setHeaderHidden(true)
+      } else if (state.scrollPos <= 80 && window.scrollY <= 5) {
         setHeaderHidden(false)
       }
     }
@@ -448,24 +448,24 @@ export default function ProjectsPage() {
       if (isPageAtTop && dy > 0 && !isGalleryAtEnd) {
         if (e.cancelable) e.preventDefault()
         state.scrollPos = THREE.MathUtils.clamp(state.scrollPos + dy * 1.2, 0, state.projectsHeight)
-        // User swiped up manually — hide the title
-        setHeaderHidden(true)
       } else if (isPageAtTop && dy < 0 && !isGalleryAtStart) {
         if (e.cancelable) e.preventDefault()
         state.scrollPos = THREE.MathUtils.clamp(state.scrollPos + dy * 1.2, 0, state.projectsHeight)
       }
 
-      // Show title only when user has scrolled all the way back to the gallery top
-      if (state.scrollPos <= 2 && window.scrollY <= 2) {
+      // Hide title a bit later once user has swiped past 280px into the gallery
+      if (state.scrollPos > 280 || window.scrollY > 30) {
+        setHeaderHidden(true)
+      } else if (state.scrollPos <= 80 && window.scrollY <= 5) {
         setHeaderHidden(false)
       }
     }
 
     function onScroll() {
       const currentScrollY = window.scrollY
-      if (currentScrollY > 5) {
+      if (currentScrollY > 30 || state.scrollPos > 280) {
         setHeaderHidden(true)
-      } else if (currentScrollY <= 2 && state.scrollPos <= 2) {
+      } else if (currentScrollY <= 5 && state.scrollPos <= 80) {
         setHeaderHidden(false)
       }
     }
