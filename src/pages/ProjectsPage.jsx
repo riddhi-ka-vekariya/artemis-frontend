@@ -380,7 +380,7 @@ export default function ProjectsPage() {
       state.colGap = colGap
 
       const winH = window.innerHeight
-      const yStartOffset = MQ.md.matches ? 80 : 30
+      const yStartOffset = MQ.md.matches ? 80 : (MQ.sm.matches ? 30 : 0)
 
       state.projectsHeight = 0
 
@@ -553,7 +553,7 @@ export default function ProjectsPage() {
       }
 
       const { meshSize, bendPoint, cols, colGap, rowH, scaleAdj } = getLayoutParams()
-      const yStartOffset = MQ.md.matches ? 80 : 30
+      const yStartOffset = MQ.md.matches ? 80 : (MQ.sm.matches ? 30 : 0)
       const rows = Math.ceil(PROJECT_DATA.length / cols)
 
       // Strip world-space width — proportional to card size (7.5% = half of original 15%)
