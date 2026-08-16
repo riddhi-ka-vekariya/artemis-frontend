@@ -290,20 +290,11 @@ export default function ProjectsPage() {
         ctx.fillStyle = scrim
         ctx.fillRect(0, 0, w, imgH)
 
-        // Typography — Black & Gold style
-        const titlePx = Math.round(Math.max(imgH * 0.082, 16))
+        // Typography — title only
+        const titlePx = Math.round(Math.max(imgH * 0.062, 14))
         ctx.fillStyle = 'rgba(242,242,242,0.96)'
         ctx.font = `700 ${titlePx}px "The Seasons Bold", "The Seasons", Georgia, serif`
-        ctx.fillText(data.title, 28, imgH * 0.74)
-
-        const descPx = Math.round(Math.max(imgH * 0.057, 11))
-        ctx.fillStyle = 'rgba(194,194,194,0.65)'
-        ctx.font = `600 ${descPx}px "Behind The Nineties Sans SemiBold", "Behind The Nineties Sans", "IBM Plex Mono", monospace`
-        ctx.fillText(data.desc.toUpperCase(), 28, imgH * 0.74 + titlePx * 1.45)
-
-        // Gold Bottom Rule at the bottom of the image
-        ctx.fillStyle = 'rgba(193,148,0,0.4)'
-        ctx.fillRect(0, imgH - 2, w, 2)
+        ctx.fillText(data.title, 28, imgH * 0.84)
 
         tex.needsUpdate = true
       }
@@ -490,12 +481,12 @@ export default function ProjectsPage() {
       const ctx = cvs.getContext('2d')
       ctx.scale(res, res)
 
-      // Solid flat background (warm obsidian gold tint)
-      ctx.fillStyle = '#161410'
+      // Solid flat background (slightly lightened warm obsidian gold shade)
+      ctx.fillStyle = '#26221b'
       ctx.fillRect(0, 0, w, h)
 
       // Side edge border lines in gold
-      ctx.fillStyle = 'rgba(209, 148, 0, 0.28)'
+      ctx.fillStyle = 'rgba(209, 148, 0, 0.36)'
       ctx.fillRect(0, 0, 1, h)
       ctx.fillRect(w - 1, 0, 1, h)
 
@@ -514,12 +505,12 @@ export default function ProjectsPage() {
           ctx.beginPath()
           ctx.roundRect(holeX, y, holeW, holeH, 2)
           ctx.fill()
-          ctx.strokeStyle = 'rgba(209, 148, 0, 0.22)'
+          ctx.strokeStyle = 'rgba(209, 148, 0, 0.30)'
           ctx.lineWidth = 1
           ctx.stroke()
         } else {
           ctx.fillRect(holeX, y, holeW, holeH)
-          ctx.strokeStyle = 'rgba(209, 148, 0, 0.22)'
+          ctx.strokeStyle = 'rgba(209, 148, 0, 0.30)'
           ctx.lineWidth = 1
           ctx.strokeRect(holeX, y, holeW, holeH)
         }
@@ -714,7 +705,7 @@ export default function ProjectsPage() {
           <header className={`projects-header-overlay${isHeaderHidden ? ' hidden' : ''}`}>
             <span className="projects-eyebrow"></span>
             <h1 className="projects-title">
-              Our <em>Projects</em>
+              Studio <em>Showcase</em>
             </h1>
           </header>
 
@@ -754,11 +745,7 @@ export default function ProjectsPage() {
 
               {/* Text Info */}
               <div className="project-modal-info">
-                <span className="project-modal-eyebrow">
-                  Selected View
-                </span>
                 <h2 className="project-modal-title">{selectedProject.title}</h2>
-                <p className="project-modal-desc">{selectedProject.desc}</p>
                 <p className="project-modal-full-desc">{selectedProject.fullDesc}</p>
               </div>
             </div>

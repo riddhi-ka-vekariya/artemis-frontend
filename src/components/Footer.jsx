@@ -46,25 +46,25 @@ export default function Footer() {
           <ul className="footer-contact-list">
             <li>
               <span className="contact-label">Email:</span>
-              <a href="mailto:contact@artemis-studios.com" className="contact-value">
-                contact@artemis-studios.com
+              <a href="mailto:design@artemisstudios.in" className="contact-value">
+                design@artemisstudios.in
               </a>
             </li>
             <li>
               <span className="contact-label">Phone:</span>
-              <a href="tel:+15552348900" className="contact-value">
-                +1 (555) 234-8900
+              <a href="tel:+917874445403" className="contact-value">
+                +91 78744 45403
               </a>
             </li>
             <li>
               <span className="contact-label">Instagram:</span>
               <a
-                href="https://instagram.com"
+                href="https://www.instagram.com/artemis.studios.amd/"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="contact-value contact-link-social"
               >
-                @artemis.studios ↗
+                @artemis.studios.amd ↗
               </a>
             </li>
           </ul>
