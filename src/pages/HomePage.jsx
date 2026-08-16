@@ -4,31 +4,42 @@ import Navbar from '../components/Navbar'
 import MoltenMetal from '../components/MoltenMetal'
 import FilmstripViewer from '../components/FilmstripViewer'
 import Footer from '../components/Footer'
+import GlareHover from '../components/GlareHover'
+
+const BASE = import.meta.env.BASE_URL || '/'
 
 const PRINCIPLES = [
   {
+    num: '01',
     tag: 'Visibility & Focus',
     title: 'Sightlines First',
     summary: 'Every seat optimized for screen visibility.',
     desc: 'Precision geometric sightline modeling guarantees unobstructed viewing angles across every tier.',
+    icon: `${BASE}Sightline.png`,
   },
   {
+    num: '02',
     tag: 'Acoustic Engineering',
     title: 'Acoustically Driven Design',
     summary: 'Integrated architecture and sound planning.',
     desc: 'Custom surface geometry, tuned sound traps, and dampening materials engineered in tandem with spatial audio systems.',
+    icon: `${BASE}acoustic.png`,
   },
   {
+    num: '03',
     tag: 'Spatial Circulation',
     title: 'Crowd Flow Optimization',
     summary: 'Efficient entry, intermission, and exit circulation.',
     desc: 'Clear movement paths streamline high-density foot traffic without bottleneck congestion.',
+    icon: `${BASE}crowd.png`,
   },
   {
+    num: '04',
     tag: 'Commercial Strategy',
     title: 'Revenue-Oriented Planning',
     summary: 'Maximizing concession and lobby opportunities.',
     desc: 'VIP lounges, concession hubs, and merchandising galleries are integrated into the guest journey.',
+    icon: `${BASE}revenue.png`,
   },
 ]
 
@@ -100,8 +111,11 @@ export default function HomePage() {
                 className={`principle-card${idx % 2 !== 0 ? ' principle-card--reverse' : ''}`}
               >
                 <div className="principle-card-num-wrap">
-                  <span className="principle-card-num">{item.num}</span>
-                  <div className="principle-card-line" />
+                  {item.icon && (
+                    <div className="principle-card-icon-box">
+                      <img src={item.icon} alt={item.title} className="principle-card-icon" />
+                    </div>
+                  )}
                 </div>
                 <div className="principle-card-content">
                   <span className="principle-card-tag">{item.tag}</span>
@@ -115,13 +129,27 @@ export default function HomePage() {
 
           {/* ── View Projects CTA Button at Bottom ── */}
           <div className="home-view-projects-wrap">
-            <button
-              className="btn-view-projects"
-              onClick={() => navigate('/projects')}
-              aria-label="View Projects"
+            <GlareHover
+              width="auto"
+              height="auto"
+              background="transparent"
+              borderRadius="2px"
+              borderColor="transparent"
+              glareColor="#ffffff"
+              glareOpacity={0.7}
+              glareAngle={-30}
+              glareSize={300}
+              transitionDuration={700}
+              playOnce={true}
             >
-              View Selected Projects <span className="btn-arrow">→</span>
-            </button>
+              <button
+                className="btn-view-projects"
+                onClick={() => navigate('/projects')}
+                aria-label="View Projects"
+              >
+                View Selected Projects <span className="btn-arrow">→</span>
+              </button>
+            </GlareHover>
           </div>
         </section>
       </main>

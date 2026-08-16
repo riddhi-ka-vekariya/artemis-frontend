@@ -1516,19 +1516,19 @@ body,
 .home-principles-grid {
   display: flex;
   flex-direction: column;
-  gap: 40px;
+  gap: 28px;
 }
 
 .principle-card {
   display: flex;
   align-items: center;
-  gap: 60px;
+  gap: 40px;
   background: rgba(18, 18, 18, 0.75);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   border: 1px solid rgba(193, 148, 0, 0.12);
   border-radius: 4px;
-  padding: 56px 64px;
+  padding: 32px 48px;
   transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
   position: relative;
   overflow: hidden;
@@ -1561,16 +1561,51 @@ body,
 }
 
 .principle-card-num-wrap {
-  flex: 0 0 140px;
+  flex: 0 0 130px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
 }
 
+.principle-card-icon-box {
+  width: 76px;
+  height: 76px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  padding: 0;
+  margin-bottom: 0;
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.principle-card:hover .principle-card-icon-box {
+  background: transparent;
+  border: none;
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: none;
+}
+
+.principle-card-icon {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: none;
+  opacity: 0.9;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.principle-card:hover .principle-card-icon {
+  opacity: 1;
+  filter: none;
+  transform: scale(1.05);
+}
+
 .principle-card-num {
   font-family: var(--font-display);
-  font-size: 64px;
+  font-size: 52px;
   font-weight: 300;
   line-height: 1;
   color: rgba(193, 148, 0, 0.35);
@@ -1585,7 +1620,7 @@ body,
   width: 40px;
   height: 1px;
   background: rgba(193, 148, 0, 0.25);
-  margin-top: 16px;
+  margin-top: 12px;
 }
 
 .principle-card-content {
@@ -1598,32 +1633,32 @@ body,
   letter-spacing: 0.15em;
   text-transform: uppercase;
   color: var(--color-gold);
-  margin-bottom: 12px;
+  margin-bottom: 8px;
   display: block;
 }
 
 .principle-card-heading {
   font-family: var(--font-display);
-  font-size: clamp(24px, 2.5vw, 32px);
+  font-size: clamp(22px, 2.2vw, 28px);
   font-weight: 500;
   color: var(--text-primary);
-  margin-bottom: 14px;
+  margin-bottom: 8px;
   line-height: 1.25;
 }
 
 .principle-card-summary {
   font-family: var(--font-body);
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 500;
   color: var(--color-paper);
-  margin-bottom: 12px;
-  line-height: 1.5;
+  margin-bottom: 6px;
+  line-height: 1.4;
 }
 
 .principle-card-desc {
   font-family: var(--font-body);
   font-size: 14px;
-  line-height: 1.7;
+  line-height: 1.6;
   color: var(--text-secondary);
   max-width: 680px;
 }
@@ -1637,8 +1672,8 @@ body,
   .principle-card--reverse {
     flex-direction: column;
     align-items: flex-start;
-    gap: 24px;
-    padding: 40px 32px;
+    gap: 20px;
+    padding: 28px 24px;
   }
 
   .principle-card-num-wrap {
