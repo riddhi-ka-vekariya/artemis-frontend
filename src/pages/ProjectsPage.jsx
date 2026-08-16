@@ -293,16 +293,17 @@ export default function ProjectsPage() {
         ctx.fillStyle = scrim
         ctx.fillRect(0, 0, w, imgH)
 
-        // Typography — micro-scale title sizing
+        // Typography — micro-scale title sizing attached to picture bottom
         const isMobile = !MQ.sm.matches
         const titlePx = isMobile
           ? Math.round(Math.max(imgH * 0.015, 5))
           : Math.round(Math.max(imgH * 0.030, 8))
-        const textIndent = isMobile ? 8 : 16
-        const textY = isMobile ? imgH * 0.93 : imgH * 0.90
+        const textIndent = titlePx
+        const textY = imgH - titlePx
 
         ctx.fillStyle = 'rgba(242,242,242,0.96)'
         ctx.font = `700 ${titlePx}px "The Seasons Bold", "The Seasons", Georgia, serif`
+        ctx.textBaseline = 'bottom'
         ctx.fillText(data.title, textIndent, textY)
 
         tex.needsUpdate = true
