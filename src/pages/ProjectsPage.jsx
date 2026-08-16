@@ -293,11 +293,17 @@ export default function ProjectsPage() {
         ctx.fillStyle = scrim
         ctx.fillRect(0, 0, w, imgH)
 
-        // Typography — title only
-        const titlePx = Math.round(Math.max(imgH * 0.030, 8))
+        // Typography — micro-scale title sizing
+        const isMobile = !MQ.sm.matches
+        const titlePx = isMobile
+          ? Math.round(Math.max(imgH * 0.015, 5))
+          : Math.round(Math.max(imgH * 0.030, 8))
+        const textIndent = isMobile ? 8 : 16
+        const textY = isMobile ? imgH * 0.93 : imgH * 0.90
+
         ctx.fillStyle = 'rgba(242,242,242,0.96)'
         ctx.font = `700 ${titlePx}px "The Seasons Bold", "The Seasons", Georgia, serif`
-        ctx.fillText(data.title, 18, imgH * 0.90)
+        ctx.fillText(data.title, textIndent, textY)
 
         tex.needsUpdate = true
       }
@@ -481,8 +487,7 @@ export default function ProjectsPage() {
       camera.fov = 2 * Math.atan(winH / 2 / CAMERA_Z) * (180 / Math.PI)
       camera.aspect = w / winH
       camera.updateProjectionMatrix()
-      positionProjects()
-      buildFilmstripBorders()
+      buildProjects()
     }
 
     // ── Filmstrip Texture (Canvas2D) ─────────────────────────────────
