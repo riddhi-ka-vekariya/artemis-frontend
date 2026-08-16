@@ -274,6 +274,7 @@ export default function FilmstripViewer() {
   const containerRef = useRef(null)
   const mobileRotationRef = useRef([...MOBILE_ROT_VAL])
   const [mobileAngles, setMobileAngles] = useState([-93, 115, 90])
+  const [isLoaded, setIsLoaded] = useState(false)
 
   const handleMobileAngleChange = (index, degrees) => {
     const nextAngles = [...mobileAngles]
@@ -347,6 +348,7 @@ export default function FilmstripViewer() {
     renderer.domElement.addEventListener('pointerup', onPointerUp)
     renderer.domElement.addEventListener('pointercancel', onPointerUp)
 
+    // ── Resize ───────────────────────────────────────────────────────────
     const ro = new ResizeObserver(() => {
       if (disposed) return
       camera.aspect = container.offsetWidth / container.offsetHeight
@@ -360,14 +362,28 @@ export default function FilmstripViewer() {
     const clock = new THREE.Clock()
     let mobius = null
     let reflection = null
+    let fadeProgress = 0
+    let lastTime = performance.now()
 
     function animate() {
       if (disposed) return
       rafId = requestAnimationFrame(animate)
       const t = clock.getElapsedTime()
 
+      const now = performance.now()
+      const delta = Math.min((now - lastTime) / 1000, 0.1)
+      lastTime = now
+
+      // Smooth 1.2s fade-in once texture & geometry are loaded
+      if (fadeProgress < 1.0) {
+        fadeProgress = Math.min(1.0, fadeProgress + delta * 0.8)
+        const easeOpacity = 1 - Math.pow(1 - fadeProgress, 3)
+        if (mobius) mobius.material.opacity = easeOpacity
+        if (reflection) reflection.material.opacity = easeOpacity * 0.16
+      }
+
       // Desktop keeps its locked transform; mobile angles come from the controls.
-      if (mobius) {
+      if (mobius && !isDragging) {
         const angles = window.matchMedia('(max-width: 768px)').matches
           ? mobileRotationRef.current
           : ROT_VAL
@@ -380,11 +396,6 @@ export default function FilmstripViewer() {
         filmTexture.offset.x = t * 0.02
       }
 
-      // Pulse rim light
-      scene.children.forEach(ch => {
-        if (ch.isPointLight && ch._isRim) ch.intensity = 3.2 + Math.sin(t * 1.1) * 0.4
-      })
-
       camera.lookAt(0, 0, 0)
       renderer.render(scene, camera)
     }
@@ -395,7 +406,12 @@ export default function FilmstripViewer() {
 
       const geo = buildStripFromPath(PATH_POINTS, 0.85, 32, 1)
       const mat = new THREE.MeshStandardMaterial({
-        map: filmTexture, metalness: 0.3, roughness: 0.4, side: THREE.DoubleSide,
+        map: filmTexture,
+        metalness: 0.3,
+        roughness: 0.4,
+        side: THREE.DoubleSide,
+        transparent: true,
+        opacity: 0,
       })
       mobius = new THREE.Mesh(geo, mat)
       const stripScale = window.matchMedia('(max-width: 768px)').matches ? MOBILE_STRIP_SCALE : 1.7
@@ -407,7 +423,7 @@ export default function FilmstripViewer() {
       reflection = mobius.clone()
       reflection.material = mat.clone()
       reflection.material.transparent = true
-      reflection.material.opacity = 0.16
+      reflection.material.opacity = 0
       reflection.scale.set(stripScale, -stripScale, stripScale)
       reflection.position.y = -4.0
       const activeAngles = window.matchMedia('(max-width: 768px)').matches ? MOBILE_ROT_VAL : ROT_VAL
@@ -429,6 +445,7 @@ export default function FilmstripViewer() {
       const front = new THREE.PointLight(0xffffff, 2.0, 16)
       front.position.set(0, 1, 7); scene.add(front)
 
+      setIsLoaded(true)
       animate()
     }
 
@@ -451,7 +468,7 @@ export default function FilmstripViewer() {
   }, [])
 
   return (
-    <div className="filmstrip-viewer" ref={containerRef}>
+    <div className={`filmstrip-viewer${isLoaded ? ' is-loaded' : ''}`} ref={containerRef}>
       <div className="filmstrip-mobile-controls">
         <span className="filmstrip-mobile-controls-title">Mobile Angle</span>
         <label className="filmstrip-mobile-control">

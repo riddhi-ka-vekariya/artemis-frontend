@@ -765,6 +765,12 @@ body,
   height: 100%;
   display: block;
   position: relative;
+  opacity: 0;
+  transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.filmstrip-viewer.is-loaded {
+  opacity: 1;
 }
 
 .filmstrip-mobile-controls {
