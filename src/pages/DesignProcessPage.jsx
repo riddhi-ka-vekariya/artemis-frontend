@@ -6,16 +6,17 @@ const steps = [
   {
     num: '01',
     title: <>Project <em>Insights</em></>,
-    intro:
-      'Every project begins with understanding its location, existing conditions, target audience, operational requirements, budget, and overall vision — identifying the opportunities and constraints that will shape the design.',
-    sub: 'We look at',
+    intro: [
+      'Every project begins with understanding its location, existing conditions, target audience, operational requirements, budget, and overall vision. The goal is to identify the opportunities and constraints that will shape the design.',
+    ],
+    sub: 'We look at:',
     items: [
       'Existing site conditions',
-      'Project brief & objectives',
-      'Seating capacity & programme',
-      'Brand & audience profile',
-      'Budget & constraints',
-      'Services & infrastructure',
+      'Project brief and objectives',
+      'Expected Seating capacity and Programme',
+      'Brand and audience profile',
+      'Budget and project constraints',
+      'Existing services and infrastructure',
     ],
     image: `${import.meta.env.BASE_URL}process-insights.jpg`,
     alt: 'Architectural site analysis drawn in gold ink on black paper',
@@ -23,14 +24,16 @@ const steps = [
   {
     num: '02',
     title: <>Planning & <em>Concept</em></>,
-    intro:
-      'We develop the spatial strategy around audience movement, operational efficiency, visibility, comfort and functionality — auditorium layouts, circulation, foyers and support spaces as one connected experience, then define the zoning, atmosphere and identity of the cinema.',
-    sub: 'Key focus areas',
+    intro: [
+      'We begin developing the spatial strategy around audience movement, operational efficiency, visibility, comfort, and functionality. Auditorium layouts, seating arrangements, circulation, entrances, exits, foyers, and support spaces are considered as part of one connected experience.',
+      'Once the planning direction is established, we develop the initial design concept, defining the zoning of all activities, atmosphere, and identity of the cinema.',
+    ],
+    sub: 'Key focus areas:',
     items: [
       'Space planning',
       'Auditorium configuration',
-      'Seating & circulation',
-      'Sightlines & movement',
+      'Seating and circulation',
+      'Sightlines and audience movement',
       'Concept development',
     ],
     image: `${import.meta.env.BASE_URL}process-planning.jpg`,
@@ -39,56 +42,66 @@ const steps = [
   {
     num: '03',
     title: <>Design <em>Development</em></>,
-    intro:
-      'The concept takes shape. Materials, colours, lighting, design elements and feature details are given form to create a consistent design language — each element evaluated for practicality, durability and suitability for a high-footfall environment.',
-    sub: 'This stage includes',
+    intro: [
+      'This is where the concept takes shape.',
+      'We refine the selected direction into a cohesive interior environment. Materials, colours, lighting, design elements, and feature details are given shape to create a consistent design language throughout the cinema.',
+      'Every element is evaluated for its practicality, durability, maintenance, and suitability for a high-footfall environment.',
+    ],
+    sub: 'This stage includes:',
     items: [
-      'Material & colour palettes',
-      'Interior elements & details',
-      'Ceiling & wall concepts',
+      'Material and colour palettes',
+      'Interior elements and feature details',
+      'Ceiling and wall concepts',
       'Lighting concepts',
       'Design refinement',
     ],
     image: `${import.meta.env.BASE_URL}process-development.jpg`,
-    alt: 'Macro study of cinema interior materials — terrazzo, brass, felt, walnut',
+    alt: 'Macro study of cinema interior materials: terrazzo, brass, felt, walnut',
   },
   {
     num: '04',
     title: <><em>Visualisation</em></>,
-    intro:
-      'Before the design becomes reality, we make it visible. Detailed 3D visualisations communicate scale, proportions, materials, lighting and atmosphere — and provide the chance to review and refine before execution.',
+    intro: [
+      'Before the design becomes reality, we make it visible.',
+      'Detailed 3D visualisations help communicate scale, proportions, materials, lighting, atmosphere, and the relationship between different design elements.',
+      'Visualisation also provides an opportunity to review and refine the design before it moves into execution.',
+    ],
     image: `${import.meta.env.BASE_URL}process-visualisation.jpg`,
     alt: 'Photorealistic 3D render of a cinema auditorium with brass fins and gold light',
   },
   {
     num: '05',
     title: <>Technical <em>Drawings</em></>,
-    intro:
-      'We translate the finalised concept into the technical drawings required for execution, with attention to dimensions, materials, construction details, finishes and coordination requirements.',
-    sub: 'Documentation includes',
+    intro: [
+      'Once the design is finalised, we translate the concept into the technical drawings required for execution. Drawings are developed with attention to dimensions, materials, construction details, finishes, and coordination requirements.',
+    ],
+    sub: 'Documentation includes:',
     items: [
       'Detailed layouts',
-      'Floor & ceiling plans',
+      'Floor and ceiling plans',
       'Elevations',
       'Interior details',
-      'Material & finish specs',
-      'Feature element details',
+      'Material and finish specifications',
+      'Feature Element details',
     ],
     image: `${import.meta.env.BASE_URL}process-technical.jpg`,
     alt: 'Technical wall section and acoustic detail drawn in gold line work',
   },
   {
     num: '06',
-    title: <>Execution <em>Coordination</em></>,
-    intro:
-      'The process continues beyond the drawings. We provide design support to resolve queries, review proposed changes and maintain consistency between the approved design and the finished space.',
-    sub: 'Support includes',
+    title: <>Execution <em>coordination</em></>,
+    intro: [
+      'The design process continues beyond the drawings.',
+      'During execution, design decisions often need clarification or refinement. We provide design support to help resolve queries, review proposed changes, and maintain consistency between the approved design and the finished space.',
+      'Our role is to help ensure that the details developed during the design process translate successfully into the built environment.',
+    ],
+    sub: 'Support includes:',
     items: [
       'Design clarifications',
       'Review of site queries',
-      'Material & finish guidance',
-      'Design revisions',
-      'Coordination with teams',
+      'Material and finish guidance',
+      'Design revisions where required',
+      'Coordination with execution teams',
     ],
     image: `${import.meta.env.BASE_URL}process-execution.jpg`,
     alt: 'Built detail of a brass threshold meeting a black acoustic wall',
@@ -136,7 +149,7 @@ export default function DesignPhilosophyPage() {
             The Design <em>Process</em>
           </h1>
           <p className="dp-hero__lede">
-            From the first conversation to the final detail — a structured process
+            From the first conversation to the final detail, a structured process
             where creative vision and practical thinking meet at every stage of the work.
           </p>
           <div className="dp-diamond-row" aria-hidden="true">
@@ -178,7 +191,13 @@ export default function DesignPhilosophyPage() {
                     <span className="dp-rule" />
                     <h2 className="dp-row__title">{s.title}</h2>
                   </div>
-                  <p className="dp-row__intro">{s.intro}</p>
+                  {Array.isArray(s.intro) ? (
+                    s.intro.map((para, pIdx) => (
+                      <p key={pIdx} className="dp-row__intro">{para}</p>
+                    ))
+                  ) : (
+                    <p className="dp-row__intro">{s.intro}</p>
+                  )}
                   {s.items && s.items.length > 0 && (
                     <>
                       {s.sub && <p className="dp-row__sub">{s.sub}</p>}
@@ -197,14 +216,14 @@ export default function DesignPhilosophyPage() {
 
         {/* ── Approach Closer ── */}
         <section className="dp-approach">
-          <span className="dp-eyebrow">The Artemis Approach</span>
+          <span className="dp-eyebrow">The Artemis Studios Approach:-</span>
           <p className="dp-approach__motto">
             <b>Understand.</b> <b>Plan.</b> <b>Design.</b> <b>Detail.</b> <b>Deliver.</b>
           </p>
           <p className="dp-approach__body">
             We believe the strongest cinema environments are created when creative
             vision and practical thinking work together. Our process is structured
-            to bring both into every stage of the project — from the first
+            to bring both into every stage of the project from the first
             conversation to the final detail.
           </p>
         </section>

@@ -30,7 +30,7 @@ const PRINCIPLES = [
     tag: 'Spatial Circulation',
     title: 'Crowd Flow Optimization',
     summary: 'Efficient entry and exit circulation.',
-    desc: 'Clear movement paths streamline high-density foot traffic without congestion.',
+    desc: 'Clear movement paths streamline high density foot traffic without congestion.',
     icon: `${BASE}crowd.png`,
   },
   {
@@ -137,6 +137,31 @@ export default function HomePage() {
               An Architecture Studio <br />specialising in Cinema Design            </p>
           </div>
         </section>
+
+        {/* ── View Selected Projects CTA Banner below Hero ── */}
+        <div className="home-hero-cta-banner">
+          <GlareHover
+            width="auto"
+            height="auto"
+            background="transparent"
+            borderRadius="2px"
+            borderColor="transparent"
+            glareColor="#ffffff"
+            glareOpacity={0.7}
+            glareAngle={-30}
+            glareSize={300}
+            transitionDuration={700}
+            playOnce={true}
+          >
+            <button
+              className="btn-view-projects"
+              onClick={() => navigate('/projects')}
+              aria-label="View Selected Projects"
+            >
+              View Selected Projects <span className="btn-arrow">→</span>
+            </button>
+          </GlareHover>
+        </div>
 
         {/* ── Architectural Principles / Framework Section ── */}
         <section className="home-principles-section" aria-label="Architectural Principles">

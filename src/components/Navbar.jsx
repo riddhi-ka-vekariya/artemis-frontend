@@ -43,7 +43,7 @@ export default function Navbar() {
           id="nav-wordmark"
           className="navbar-wordmark"
           onClick={() => handleNavClick('/home')}
-          aria-label="Artemis Studios - Home"
+          aria-label="Artemis Studios · Home"
         >
           <img
             src={`${import.meta.env.BASE_URL}artemis-logo.png`}

@@ -1761,7 +1761,17 @@ canvas#unseen-gl-canvas {
   }
 }
 
-/* ─── Home Page View Projects CTA Button ────────────────────────── */
+/* ─── Home Page View Projects CTA Buttons ────────────────────────── */
+.home-hero-cta-banner {
+  padding: 48px 24px 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: var(--color-ink);
+  position: relative;
+  z-index: 10;
+}
+
 .home-view-projects-wrap {
   margin-top: 72px;
   text-align: center;
@@ -1769,12 +1779,29 @@ canvas#unseen-gl-canvas {
   justify-content: center;
 }
 
+@keyframes goldPulseGlow {
+  0%, 100% {
+    box-shadow:
+      0 0 16px rgba(209, 148, 0, 0.35),
+      0 0 32px rgba(209, 148, 0, 0.18),
+      0 8px 24px rgba(0, 0, 0, 0.6);
+    border-color: rgba(209, 148, 0, 0.75);
+  }
+  50% {
+    box-shadow:
+      0 0 26px rgba(209, 148, 0, 0.6),
+      0 0 52px rgba(209, 148, 0, 0.28),
+      0 8px 24px rgba(0, 0, 0, 0.6);
+    border-color: rgba(209, 148, 0, 1);
+  }
+}
+
 .btn-view-projects {
   display: inline-flex;
   align-items: center;
   gap: 16px;
   padding: 18px 40px;
-  background: rgba(14, 14, 13, 0.8);
+  background: rgba(14, 14, 13, 0.88);
   border: 1px solid var(--color-gold);
   border-radius: 2px;
   color: var(--text-primary);
@@ -1784,7 +1811,11 @@ canvas#unseen-gl-canvas {
   letter-spacing: 0.02em;
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  box-shadow:
+    0 0 18px rgba(209, 148, 0, 0.4),
+    0 0 36px rgba(209, 148, 0, 0.2),
+    0 8px 24px rgba(0, 0, 0, 0.6);
+  animation: goldPulseGlow 3.5s ease-in-out infinite;
 }
 
 .btn-view-projects .btn-arrow {
@@ -1796,8 +1827,9 @@ canvas#unseen-gl-canvas {
 .btn-view-projects:hover {
   background: var(--color-gold);
   color: var(--color-ink-deep);
-  box-shadow: 0 12px 36px rgba(193, 148, 0, 0.3);
+  box-shadow: 0 0 30px rgba(209, 148, 0, 0.7), 0 12px 36px rgba(193, 148, 0, 0.45);
   transform: translateY(-2px);
+  animation: none;
 }
 
 .btn-view-projects:hover .btn-arrow {
@@ -3219,6 +3251,10 @@ canvas#unseen-gl-canvas {
   font-size: 0.98rem;
   color: var(--text-secondary);
   line-height: 1.75;
+}
+
+.dp-row__intro + .dp-row__intro {
+  margin-top: 0.9rem;
 }
 
 .dp-row__sub {

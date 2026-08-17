@@ -33,91 +33,91 @@ const BASE = import.meta.env.BASE_URL || '/'
 const PROJECT_DATA = [
   {
     id: 1,
-    title: 'Aura Cinema',
+    title: 'Cineprime Cinema, Ahmedabad',
     desc: 'Cinema Architecture · Mumbai, 2024',
     img: `${BASE}gallery/1.avif`,
-    fullDesc: 'An ultra-luxury bespoke auditorium featuring acoustic stepped ceiling geometry, seamless atmospheric lighting channels, and custom ergonomic seating tailored for optimal sightlines.'
+    fullDesc: 'An ultra luxury bespoke auditorium featuring acoustic stepped ceiling geometry, seamless atmospheric lighting channels, and custom ergonomic seating tailored for optimal sightlines.'
   },
   {
     id: 2,
-    title: 'Lumina Screen Lounge',
+    title: 'Cineprime Cinema, Ahmedabad',
     desc: 'VIP Experience · Dubai, 2024',
     img: `${BASE}gallery/2.avif`,
     fullDesc: 'Private screening theater with warm gold ambient illumination, bespoke acoustic timber fluting, and plush velvet recliner modules designed for unmatched comfort.'
   },
   {
     id: 3,
-    title: 'Grand Horizon Multiplex',
+    title: 'Cineprime Cinema, Ahmedabad',
     desc: 'Commercial Cinema · London, 2023',
     img: `${BASE}gallery/3.avif`,
-    fullDesc: 'Dynamic stadium-seating cinema engineered with multi-tiered geometric sound traps, pristine sightline clearances, and high-contrast ambient finishes.'
+    fullDesc: 'Dynamic stadium seating cinema engineered with multi tiered geometric sound traps, pristine sightline clearances, and high contrast ambient finishes.'
   },
   {
     id: 4,
-    title: 'Obsidian Premier Theater',
+    title: 'Cineprime Cinema, Ahmedabad',
     desc: 'Auditorium Design · Singapore, 2024',
     img: `${BASE}gallery/4.avif`,
     fullDesc: 'Monolithic deep dark interior envelope with integrated linear gold light vectors and tuned acoustic dampeners for pure cinematic immersion.'
   },
   {
     id: 5,
-    title: 'Velvet Horizon',
+    title: 'Cineprime Cinema, Ahmedabad',
     desc: 'Boutique Cinema · Paris, 2023',
     img: `${BASE}gallery/5.avif`,
-    fullDesc: 'Refined intimate screening hall celebrating tactile materials, rich scarlet and gold accents, and state-of-the-art Dolby Atmos spatial audio calibration.'
+    fullDesc: 'Refined intimate screening hall celebrating tactile materials, rich scarlet and gold accents, and state of the art Dolby Atmos spatial audio calibration.'
   },
   {
     id: 6,
-    title: 'The Apex Grand Screen',
+    title: 'Cineprime Cinema, Ahmedabad',
     desc: 'Flagship Venue · New York, 2024',
     img: `${BASE}gallery/6.avif`,
-    fullDesc: 'Large-format exhibition hall with expansive curved projection plane, algorithmic crowd flow aisles, and sculpted perimeter acoustic baffling.'
+    fullDesc: 'Large format exhibition hall with expansive curved projection plane, algorithmic crowd flow aisles, and sculpted perimeter acoustic baffling.'
   },
   {
     id: 7,
-    title: 'Elysium Suite',
+    title: 'Star Cinemas, Tadepalligudem',
     desc: 'Private Screening Room · Zurich, 2023',
     img: `${BASE}gallery/7.avif`,
     fullDesc: 'Minimalist private viewing theater featuring hidden audio transducers, flush architectural light channels, and handcrafted acoustic leather paneling.'
   },
   {
     id: 8,
-    title: 'Starlight Pavilion',
+    title: 'Star Cinemas, Tadepalligudem',
     desc: 'Immersive Theater · Tokyo, 2024',
     img: `${BASE}gallery/8.avif`,
-    fullDesc: 'Next-generation entertainment space integrating starry fiber-optic ceiling lattices, seamless acoustic walls, and fluid circulation pathways.'
+    fullDesc: 'Next generation entertainment space integrating starry fiber optic ceiling lattices, seamless acoustic walls, and fluid circulation pathways.'
   },
   {
     id: 9,
-    title: 'Kinetica Hall',
+    title: 'Star Cinemas, Tadepalligudem',
     desc: 'Cinema Architecture · Berlin, 2023',
     img: `${BASE}gallery/9.avif`,
     fullDesc: 'Sculptural acoustic ribs wrapping from floor to ceiling, providing both striking visual cadence and precise reverberation control across all frequencies.'
   },
   {
     id: 10,
-    title: 'Nocturne Screening Room',
+    title: 'Star Cinemas, Tadepalligudem',
     desc: 'Luxury Screening · Los Angeles, 2024',
     img: `${BASE}gallery/10.1.avif`,
     fullDesc: 'Ultra-exclusive private cinema combining midnight velvet surfaces, warm bronze lighting niches, and reference-grade studio acoustics.'
   },
   {
     id: 11,
-    title: 'Mirage Auditorium',
+    title: 'Star Cinemas, Tadepalligudem',
     desc: 'Multiplex Development · Doha, 2024',
     img: `${BASE}gallery/11.avif`,
     fullDesc: 'High-capacity cinema hall with optimized parabolic seating tiers, wide-angle screen coverage, and noise-isolated sound locks.'
   },
   {
     id: 12,
-    title: 'Celestial Screen',
+    title: 'Star Cinemas, Tadepalligudem',
     desc: 'Premium Large Format · Sydney, 2023',
     img: `${BASE}gallery/12.avif`,
     fullDesc: 'Flagship cinema experience featuring custom acoustic perimeter fins, dynamic warm-amber pathway lighting, and laser projection integration.'
   },
   {
     id: 13,
-    title: 'Solstice Cinema Hall',
+    title: 'Star Cinemas, Tadepalligudem',
     desc: 'Cultural Architecture · Milan, 2024',
     img: `${BASE}gallery/13.avif`,
     fullDesc: 'Architectural cinema theater with integrated brass accents, sculpted acoustic contours, and seamless crowd egress planning.'
