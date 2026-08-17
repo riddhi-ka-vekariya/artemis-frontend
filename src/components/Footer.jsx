@@ -32,7 +32,7 @@ export default function Footer() {
               <button onClick={() => navigate('/projects')}>Projects</button>
             </li>
             <li>
-              <button onClick={() => navigate('/design-philosophy')}>Design Philosophy</button>
+              <button onClick={() => navigate('/design-process')}>Design Process</button>
             </li>
             <li>
               <button onClick={() => navigate('/about')}>About Me</button>
