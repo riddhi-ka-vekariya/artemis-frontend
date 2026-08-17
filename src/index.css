@@ -1277,8 +1277,13 @@ canvas#unseen-gl-canvas {
 }
 
 @keyframes modalFadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
 }
 
 .project-modal-card {
@@ -1301,6 +1306,7 @@ canvas#unseen-gl-canvas {
     opacity: 0;
     transform: scale(0.95) translateY(10px);
   }
+
   to {
     opacity: 1;
     transform: scale(1) translateY(0);
@@ -1395,14 +1401,12 @@ canvas#unseen-gl-canvas {
   inset: 0;
   z-index: 1;
   pointer-events: none;
-  background: radial-gradient(
-    ellipse 58% 100% at 50% 50%,
-    rgba(4, 4, 4, 0.97) 0%,
-    rgba(4, 4, 4, 0.92) 38%,
-    rgba(4, 4, 4, 0.60) 62%,
-    rgba(4, 4, 4, 0.10) 80%,
-    transparent 100%
-  );
+  background: radial-gradient(ellipse 58% 100% at 50% 50%,
+      rgba(4, 4, 4, 0.97) 0%,
+      rgba(4, 4, 4, 0.92) 38%,
+      rgba(4, 4, 4, 0.60) 62%,
+      rgba(4, 4, 4, 0.10) 80%,
+      transparent 100%);
 }
 
 /* ─── Projects Header Title Overlay ─────────────────────────────── */
@@ -1815,38 +1819,93 @@ canvas#unseen-gl-canvas {
 
 /* ── Hero Header ── */
 .about-hero {
-  padding: 140px 6vw 70px;
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
   border-bottom: 1px solid var(--border-hairline);
-  background: radial-gradient(circle at 50% 0%, #1e1b17 0%, var(--color-ink) 75%);
   text-align: center;
+  padding: 0 1.5rem;
+}
+
+.about-hero-bg {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.about-hero-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 10%;
+  display: block;
+}
+
+@media (min-width: 640px) {
+  .about-hero-img {
+    object-position: center 30%;
+  }
+}
+
+.about-hero-overlay {
+  position: absolute;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.55);
+}
+
+.about-hero-vignette {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(ellipse at 50% 40%, transparent 0%, rgba(0, 0, 0, 0.7) 80%);
 }
 
 .about-hero-inner {
-  max-width: 860px;
+  position: relative;
+  z-index: 10;
+  max-width: 64rem;
   margin: 0 auto;
+  padding: 0 1.5rem;
+  text-align: center;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 16px;
+  animation: heroReveal 900ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 
 .about-eyebrow {
-  font-family: var(--font-mono);
-  font-size: 13px;
-  font-weight: 500;
-  letter-spacing: 0.16em;
+  font-family: var(--font-sans), var(--font-mono), sans-serif;
+  font-size: 0.6875rem;
+  letter-spacing: 0.3em;
   text-transform: uppercase;
   color: var(--color-gold);
-  opacity: 0.9;
+  margin: 0;
 }
 
 .about-hero-title {
+  margin-top: 2.5rem;
+  margin-bottom: 0;
   font-family: var(--font-display);
-  font-size: clamp(48px, 6.5vw, 84px);
-  font-weight: 400;
-  color: var(--text-primary);
+  font-size: clamp(3rem, 7vw, 3.75rem);
   line-height: 1.05;
-  letter-spacing: -0.015em;
+  letter-spacing: -0.025em;
+  color: #ffffff;
+}
+
+@media (min-width: 768px) {
+  .about-hero-title {
+    font-size: 6rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .about-hero-title {
+    font-size: 8rem;
+  }
 }
 
 .about-hero-title em {
@@ -1854,20 +1913,64 @@ canvas#unseen-gl-canvas {
   color: var(--color-gold);
 }
 
-.about-gold-line {
-  width: 60px;
-  height: 2px;
-  background: var(--color-gold);
-  margin: 12px 0 8px;
-  opacity: 0.8;
+.about-gold-divider {
+  margin-top: 3rem;
+  margin-bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+}
+
+.about-gold-line-half {
+  width: 4rem;
+  height: 1px;
+  background-color: rgba(193, 148, 0, 0.5);
+}
+
+.about-gold-diamond {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  background-color: var(--color-gold);
+  transform: rotate(45deg);
 }
 
 .about-hero-subtitle {
+  margin-top: 2.5rem;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 0;
+  max-width: 28rem;
   font-family: var(--font-body);
-  font-size: clamp(16px, 1.4vw, 19px);
-  color: var(--text-secondary);
-  line-height: 1.6;
-  max-width: 600px;
+  font-size: 0.875rem;
+  line-height: 1.625;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+@media (min-width: 768px) {
+  .about-hero-subtitle {
+    font-size: 1rem;
+  }
+}
+
+@keyframes heroReveal {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .about-hero-inner {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
 }
 
 /* ── Chapters Wrap ── */
@@ -2132,7 +2235,7 @@ canvas#unseen-gl-canvas {
 .callout-statement {
   font-family: var(--font-display);
   font-size: 20px;
-  font-style: italic;
+  font-style: normal;
   color: var(--text-primary);
   margin: 0;
 }
@@ -2662,7 +2765,16 @@ canvas#unseen-gl-canvas {
   }
 
   .about-hero {
-    padding: 48px 20px 24px;
+    min-height: 100vh;
+    padding: 0 1.25rem 8vh;
+  }
+
+  .about-hero-inner {
+    margin-top: -5vh;
+  }
+
+  .about-hero-img {
+    object-position: center 10%;
   }
 
   .about-content-wrap {
@@ -2760,8 +2872,31 @@ canvas#unseen-gl-canvas {
     font-size: clamp(25px, 6.8vw, 31px);
   }
 
+  .about-hero {
+    min-height: 100vh;
+    padding: 0 1rem 12vh;
+  }
+
+  .about-hero-inner {
+    margin-top: -8vh;
+  }
+
   .about-hero-title {
-    font-size: 32px;
+    font-size: clamp(2.4rem, 10vw, 3.25rem);
+    margin-top: 1.5rem;
+  }
+
+  .about-gold-divider {
+    margin-top: 2rem;
+  }
+
+  .about-gold-line-half {
+    width: 3rem;
+  }
+
+  .about-hero-subtitle {
+    margin-top: 1.75rem;
+    font-size: 0.8125rem;
   }
 
   .about-mission-card {

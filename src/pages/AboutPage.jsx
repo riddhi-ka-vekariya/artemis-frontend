@@ -10,14 +10,37 @@ export default function AboutPage() {
     <>
       <Navbar />
       <main className="page-wrapper page-enter about-page" id="page-about">
-        {/* ── Editorial Header ── */}
+        {/* ── Editorial Hero ── */}
         <header className="about-hero">
+          {/* Responsive Cinema Background & Overlays */}
+          <div className="about-hero-bg">
+            <picture>
+              <source media="(max-width: 640px)" srcSet={`${import.meta.env.BASE_URL}hero-cinema.jpg`} />
+              <img
+                src={`${import.meta.env.BASE_URL}hero-cinema.jpg`}
+                alt="Dark luxury cinema auditorium with gold wall lighting"
+                width={1920}
+                height={1080}
+                className="about-hero-img"
+                fetchPriority="high"
+                decoding="async"
+              />
+            </picture>
+            <div className="about-hero-overlay" />
+            <div className="about-hero-vignette" />
+          </div>
+
+          {/* Hero Content */}
           <div className="about-hero-inner">
-            <span className="about-eyebrow">Profile &amp; Philosophy</span>
+            <p className="about-eyebrow">Profile &amp; Philosophy</p>
             <h1 className="about-hero-title">
               Meet the <em>Designer</em>
             </h1>
-            <div className="about-gold-line" />
+            <div className="about-gold-divider">
+              <span className="about-gold-line-half" />
+              <span className="about-gold-diamond" />
+              <span className="about-gold-line-half" />
+            </div>
             <p className="about-hero-subtitle">
               The journey, vision, and architectural pursuit behind Artemis Studios.
             </p>
