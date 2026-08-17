@@ -35,11 +35,13 @@
     0 0;
 }
 
-.glare-hover:hover {
+.glare-hover:hover,
+.glare-hover.is-active {
   cursor: pointer;
 }
 
-.glare-hover:hover::before {
+.glare-hover:hover::before,
+.glare-hover.is-active::before {
   background-position:
     250% 250%,
     0 0;
@@ -49,7 +51,8 @@
   transition: none;
 }
 
-.glare-hover--play-once:hover::before {
+.glare-hover--play-once:hover::before,
+.glare-hover--play-once.is-active::before {
   transition: var(--gh-duration) ease;
   background-position:
     250% 250%,

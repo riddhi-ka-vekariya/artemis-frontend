@@ -46,7 +46,11 @@ const PRINCIPLES = [
 export default function HomePage() {
   const navigate = useNavigate()
   const [activeCardIndex, setActiveCardIndex] = useState(null)
+  const [isTopBtnActive, setIsTopBtnActive] = useState(false)
+  const [isBottomBtnActive, setIsBottomBtnActive] = useState(false)
   const cardRefs = useRef([])
+  const topBtnRef = useRef(null)
+  const bottomBtnRef = useRef(null)
 
   useEffect(() => {
     const isMobileQuery = window.matchMedia('(max-width: 900px)')
@@ -54,6 +58,8 @@ export default function HomePage() {
     const handleScroll = () => {
       if (!isMobileQuery.matches) {
         setActiveCardIndex(null)
+        setIsTopBtnActive(false)
+        setIsBottomBtnActive(false)
         return
       }
 
@@ -76,6 +82,20 @@ export default function HomePage() {
       })
 
       setActiveCardIndex(closestIdx)
+
+      // Top CTA Button center-active detection on mobile
+      if (topBtnRef.current) {
+        const rect = topBtnRef.current.getBoundingClientRect()
+        const btnCenter = rect.top + rect.height / 2
+        setIsTopBtnActive(Math.abs(btnCenter - centerY) < 180)
+      }
+
+      // Bottom CTA Button center-active detection on mobile
+      if (bottomBtnRef.current) {
+        const rect = bottomBtnRef.current.getBoundingClientRect()
+        const btnCenter = rect.top + rect.height / 2
+        setIsBottomBtnActive(Math.abs(btnCenter - centerY) < 180)
+      }
     }
 
     window.addEventListener('scroll', handleScroll, { passive: true })
@@ -139,7 +159,7 @@ export default function HomePage() {
         </section>
 
         {/* ── View Selected Projects CTA Banner below Hero ── */}
-        <div className="home-hero-cta-banner">
+        <div className="home-hero-cta-banner" ref={topBtnRef}>
           <GlareHover
             width="auto"
             height="auto"
@@ -152,9 +172,10 @@ export default function HomePage() {
             glareSize={300}
             transitionDuration={700}
             playOnce={true}
+            className={isTopBtnActive ? 'is-active' : ''}
           >
             <button
-              className="btn-view-projects"
+              className={`btn-view-projects${isTopBtnActive ? ' is-center-active' : ''}`}
               onClick={() => navigate('/projects')}
               aria-label="View Selected Projects"
             >
@@ -198,7 +219,7 @@ export default function HomePage() {
           </div>
 
           {/* ── View Projects CTA Button at Bottom ── */}
-          <div className="home-view-projects-wrap">
+          <div className="home-view-projects-wrap" ref={bottomBtnRef}>
             <GlareHover
               width="auto"
               height="auto"
@@ -211,9 +232,10 @@ export default function HomePage() {
               glareSize={300}
               transitionDuration={700}
               playOnce={true}
+              className={isBottomBtnActive ? 'is-active' : ''}
             >
               <button
-                className="btn-view-projects"
+                className={`btn-view-projects${isBottomBtnActive ? ' is-center-active' : ''}`}
                 onClick={() => navigate('/projects')}
                 aria-label="View Projects"
               >
