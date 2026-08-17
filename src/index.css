@@ -2003,17 +2003,7 @@ canvas#unseen-gl-canvas {
   justify-content: center;
   position: relative;
   padding: 20px 0 0;
-  /* Initial hidden state */
-  opacity: 0;
-  transform: scale(0.55);
-  transition:
-    opacity 1200ms cubic-bezier(0.22, 1, 0.36, 1),
-    transform 1200ms cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-.about-logo-reveal-wrap.about-logo-reveal--visible {
-  opacity: 1;
-  transform: scale(1);
+  will-change: transform, opacity;
 }
 
 .about-logo-reveal-glow {
@@ -2025,13 +2015,8 @@ canvas#unseen-gl-canvas {
       rgba(200, 200, 220, 0.08) 40%,
       transparent 70%);
   pointer-events: none;
-  opacity: 0;
-  transition: opacity 1200ms ease 300ms;
-  filter: blur(12px);
-}
-
-.about-logo-reveal-wrap.about-logo-reveal--visible .about-logo-reveal-glow {
-  opacity: 1;
+  filter: blur(16px);
+  will-change: opacity;
 }
 
 .about-logo-reveal-img {
@@ -2349,8 +2334,12 @@ canvas#unseen-gl-canvas {
 }
 
 .about-identity-body strong {
-  color: var(--color-gold);
+  font-family: var(--font-display);
+  color: var(--text-primary);
+  font-size: 1.18em;
+  font-weight: 700;
   font-style: normal;
+  letter-spacing: 0.02em;
 }
 
 /* ── Chapter 04: Mission Card & Action ── */

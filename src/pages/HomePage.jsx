@@ -134,9 +134,7 @@ export default function HomePage() {
             </h1>
             <div className="home-hero-divider" />
             <p className="home-hero-subtagline">
-              WHERE SPACE BECOMES<br />
-              A PART OF THE STORY
-            </p>
+              An Architecture Studio <br />specialising in Cinema Design            </p>
           </div>
         </section>
 

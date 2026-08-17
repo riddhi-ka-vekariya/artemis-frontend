@@ -1,5 +1,6 @@
 import React, { useRef, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import Lenis from 'lenis'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
 
@@ -7,21 +8,67 @@ export default function AboutPage() {
   const navigate = useNavigate()
 
   const logoRevealRef = useRef(null)
+  const glowRef = useRef(null)
 
   useEffect(() => {
-    const el = logoRevealRef.current
-    if (!el) return
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          el.classList.add('about-logo-reveal--visible')
-          observer.disconnect()
-        }
-      },
-      { threshold: 0.25 }
-    )
-    observer.observe(el)
-    return () => observer.disconnect()
+    const lenis = new Lenis({
+      duration: 1.2,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      smoothWheel: true,
+    })
+
+    let rafId
+
+    const updateLogo = () => {
+      const el = logoRevealRef.current
+      if (!el) return
+
+      const rect = el.getBoundingClientRect()
+      const windowHeight = window.innerHeight
+
+      // Calculate reveal progress: 0 when entering viewport bottom, 1 when reaching 55% from the top
+      const start = windowHeight
+      const end = windowHeight * 0.55
+      const rawProgress = (start - rect.top) / (start - end)
+      const progress = Math.min(Math.max(rawProgress, 0), 1)
+
+      // Smoothstep interpolation
+      const eased = progress * progress * (3 - 2 * progress)
+
+      const opacity = eased
+      const scale = 0.86 + 0.14 * eased
+      const translateY = (1 - eased) * 28
+
+      el.style.opacity = opacity.toFixed(3)
+      el.style.transform = `scale(${scale.toFixed(3)}) translateY(${translateY.toFixed(1)}px)`
+
+      if (glowRef.current) {
+        const glowOpacity = Math.max(0, (eased - 0.25) / 0.75)
+        glowRef.current.style.opacity = glowOpacity.toFixed(3)
+      }
+    }
+
+    const onScroll = () => {
+      updateLogo()
+    }
+
+    lenis.on('scroll', onScroll)
+
+    function raf(time) {
+      lenis.raf(time)
+      rafId = requestAnimationFrame(raf)
+    }
+    rafId = requestAnimationFrame(raf)
+
+    // Initial update
+    updateLogo()
+    window.addEventListener('resize', updateLogo)
+
+    return () => {
+      window.removeEventListener('resize', updateLogo)
+      if (rafId) cancelAnimationFrame(rafId)
+      lenis.destroy()
+    }
   }, [])
 
   return (
@@ -128,7 +175,7 @@ export default function AboutPage() {
 
           {/* ── Logo Reveal ── */}
           <div className="about-logo-reveal-wrap" ref={logoRevealRef}>
-            <div className="about-logo-reveal-glow" />
+            <div className="about-logo-reveal-glow" ref={glowRef} />
             <img
               src={`${import.meta.env.BASE_URL}artemis-logo-f.png`}
               alt="Artemis Studios"
@@ -145,7 +192,7 @@ export default function AboutPage() {
             </p>
             <p className="about-identity-body">
               The name <strong>Artemis</strong> is inspired by the Greek goddess associated with the moon.
-              This idea became the inspiration behind the identity and ethos of the studio.
+              This idea became the inspiration behind the identity of the studio.
             </p>
           </div>
 
