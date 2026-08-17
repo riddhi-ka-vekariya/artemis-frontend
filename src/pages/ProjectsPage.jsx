@@ -36,91 +36,93 @@ const PROJECT_DATA = [
     title: 'Cineprime Cinema, Ahmedabad',
     desc: 'Cinema Architecture · Mumbai, 2024',
     img: `${BASE}gallery/1.avif`,
-    fullDesc: 'An ultra luxury bespoke auditorium featuring acoustic stepped ceiling geometry, seamless atmospheric lighting channels, and custom ergonomic seating tailored for optimal sightlines.'
+    fullDesc: 'Designed to make an impression with flowing lines, integrated lighting, and premium seating. An auditorium that is bold, immersive, and built for comfort.'
   },
   {
     id: 2,
     title: 'Cineprime Cinema, Ahmedabad',
     desc: 'VIP Experience · Dubai, 2024',
     img: `${BASE}gallery/2.avif`,
-    fullDesc: 'Private screening theater with warm gold ambient illumination, bespoke acoustic timber fluting, and plush velvet recliner modules designed for unmatched comfort.'
+    fullDesc: 'Designed to make an impression with flowing lines, integrated lighting, and premium seating. An auditorium that is bold, immersive, and built for comfort.'
   },
   {
     id: 3,
     title: 'Cineprime Cinema, Ahmedabad',
     desc: 'Commercial Cinema · London, 2023',
     img: `${BASE}gallery/3.avif`,
-    fullDesc: 'Dynamic stadium seating cinema engineered with multi tiered geometric sound traps, pristine sightline clearances, and high contrast ambient finishes.'
+    fullDesc: 'The auditorium features warm tones, refined lighting and comfortable seats with premium upholstery.'
   },
   {
     id: 4,
     title: 'Cineprime Cinema, Ahmedabad',
     desc: 'Auditorium Design · Singapore, 2024',
     img: `${BASE}gallery/4.avif`,
-    fullDesc: 'Monolithic deep dark interior envelope with integrated linear gold light vectors and tuned acoustic dampeners for pure cinematic immersion.'
+    fullDesc: 'The auditorium features warm tones, refined lighting and comfortable seats with premium upholstery.'
   },
   {
     id: 5,
     title: 'Cineprime Cinema, Ahmedabad',
     desc: 'Boutique Cinema · Paris, 2023',
     img: `${BASE}gallery/5.avif`,
-    fullDesc: 'Refined intimate screening hall celebrating tactile materials, rich scarlet and gold accents, and state of the art Dolby Atmos spatial audio calibration.'
+    fullDesc: 'This auditorium uses clean geometric forms, integrated blue LED lighting, and layered materials to create a calm, futuristic atmosphere.'
+
+
   },
   {
     id: 6,
     title: 'Cineprime Cinema, Ahmedabad',
     desc: 'Flagship Venue · New York, 2024',
     img: `${BASE}gallery/6.avif`,
-    fullDesc: 'Large format exhibition hall with expansive curved projection plane, algorithmic crowd flow aisles, and sculpted perimeter acoustic baffling.'
+    fullDesc: 'This auditorium uses clean geometric forms, integrated blue LED lighting, and layered materials to create a calm, futuristic atmosphere.'
   },
   {
     id: 7,
     title: 'Star Cinemas, Tadepalligudem',
     desc: 'Private Screening Room · Zurich, 2023',
     img: `${BASE}gallery/7.avif`,
-    fullDesc: 'Minimalist private viewing theater featuring hidden audio transducers, flush architectural light channels, and handcrafted acoustic leather paneling.'
+    fullDesc: 'The custom illuminated wall feature creates rhythm, defines circulation, and adds depth to the auditorium. A simple detail, executed with precision, transforms the entire space.'
   },
   {
     id: 8,
     title: 'Star Cinemas, Tadepalligudem',
     desc: 'Immersive Theater · Tokyo, 2024',
     img: `${BASE}gallery/8.avif`,
-    fullDesc: 'Next generation entertainment space integrating starry fiber optic ceiling lattices, seamless acoustic walls, and fluid circulation pathways.'
+    fullDesc: 'The custom illuminated wall feature creates rhythm, defines circulation, and adds depth to the auditorium. A simple detail, executed with precision, transforms the entire space.'
   },
   {
     id: 9,
     title: 'Star Cinemas, Tadepalligudem',
     desc: 'Cinema Architecture · Berlin, 2023',
     img: `${BASE}gallery/9.avif`,
-    fullDesc: 'Sculptural acoustic ribs wrapping from floor to ceiling, providing both striking visual cadence and precise reverberation control across all frequencies.'
+    fullDesc: 'The custom illuminated wall feature creates rhythm, defines circulation, and adds depth to the auditorium. A simple detail, executed with precision, transforms the entire space.'
   },
   {
     id: 10,
     title: 'Star Cinemas, Tadepalligudem',
     desc: 'Luxury Screening · Los Angeles, 2024',
     img: `${BASE}gallery/10.1.avif`,
-    fullDesc: 'Ultra-exclusive private cinema combining midnight velvet surfaces, warm bronze lighting niches, and reference-grade studio acoustics.'
+    fullDesc: 'The custom illuminated wall feature creates rhythm, defines circulation, and adds depth to the auditorium. A simple detail, executed with precision, transforms the entire space.'
   },
   {
     id: 11,
     title: 'Star Cinemas, Tadepalligudem',
     desc: 'Multiplex Development · Doha, 2024',
     img: `${BASE}gallery/11.avif`,
-    fullDesc: 'High-capacity cinema hall with optimized parabolic seating tiers, wide-angle screen coverage, and noise-isolated sound locks.'
+    fullDesc: 'With premium recliners, layered ambient lighting, curated fabric prints, and acoustically integrated wall panels, this auditorium was designed to deliver comfort, luxury, and grandeur for every guest.'
   },
   {
     id: 12,
     title: 'Star Cinemas, Tadepalligudem',
     desc: 'Premium Large Format · Sydney, 2023',
     img: `${BASE}gallery/12.avif`,
-    fullDesc: 'Flagship cinema experience featuring custom acoustic perimeter fins, dynamic warm-amber pathway lighting, and laser projection integration.'
+    fullDesc: 'With premium recliners, layered ambient lighting, curated fabric prints, and acoustically integrated wall panels, this auditorium was designed to deliver comfort, luxury, and grandeur for every guest.'
   },
   {
     id: 13,
     title: 'Star Cinemas, Tadepalligudem',
     desc: 'Cultural Architecture · Milan, 2024',
     img: `${BASE}gallery/13.avif`,
-    fullDesc: 'Architectural cinema theater with integrated brass accents, sculpted acoustic contours, and seamless crowd egress planning.'
+    fullDesc: 'With premium recliners, layered ambient lighting, curated fabric prints, and acoustically integrated wall panels, this auditorium was designed to deliver comfort, luxury, and grandeur for every guest.'
   },
 ]
 
