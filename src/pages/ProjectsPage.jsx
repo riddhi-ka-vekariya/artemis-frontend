@@ -239,14 +239,18 @@ export default function ProjectsPage() {
 
       const cols = MQ.md.matches ? 2 : 1
       const colGap = Math.round(state.params.cardGap * 0.5) // Reduced by half (14px)
-      const rowGapAmount = state.params.cardGap // former gap between rows
+      const isMobile = !MQ.sm.matches
+      const rowGapAmount = isMobile ? 6 : state.params.cardGap // 6px tight film reel gap on mobile (< 768px), 28px on desktop
       const padRatio = rowGapAmount / (baseMeshSize.y + rowGapAmount)
 
       // Total mesh height includes the former gap amount
       const meshSize = new THREE.Vector2(baseMeshSize.x, baseMeshSize.y + rowGapAmount)
       const rowH = meshSize.y
 
-      return { meshSize, baseMeshSize, bendPoint, cols, colGap, rowGapAmount, padRatio, rowH, scaleAdj }
+      // Starting Y position offset: gentle -10px offset on mobile (< 768px)
+      const yStartOffset = MQ.md.matches ? 80 : (MQ.sm.matches ? 30 : -10)
+
+      return { meshSize, baseMeshSize, bendPoint, cols, colGap, rowGapAmount, padRatio, rowH, scaleAdj, yStartOffset }
     }
 
     // ── Texture Builder ──────────────────────────────────────────────────────
@@ -374,7 +378,7 @@ export default function ProjectsPage() {
     function positionProjects() {
       if (!state.projectsGroup) return
 
-      const { meshSize, bendPoint, cols, colGap, rowH, scaleAdj } = getLayoutParams()
+      const { meshSize, bendPoint, cols, colGap, rowH, scaleAdj, yStartOffset } = getLayoutParams()
 
       // Cache layout for strip positioning
       state.meshSize = meshSize
@@ -382,7 +386,6 @@ export default function ProjectsPage() {
       state.colGap = colGap
 
       const winH = window.innerHeight
-      const yStartOffset = MQ.md.matches ? 80 : (MQ.sm.matches ? 30 : 0)
 
       state.projectsHeight = 0
 
@@ -554,8 +557,7 @@ export default function ProjectsPage() {
         )
       }
 
-      const { meshSize, bendPoint, cols, colGap, rowH, scaleAdj } = getLayoutParams()
-      const yStartOffset = MQ.md.matches ? 80 : (MQ.sm.matches ? 30 : 0)
+      const { meshSize, bendPoint, cols, colGap, rowH, scaleAdj, yStartOffset } = getLayoutParams()
       const rows = Math.ceil(PROJECT_DATA.length / cols)
 
       // Strip world-space width — proportional to card size (7.5% = half of original 15%)
