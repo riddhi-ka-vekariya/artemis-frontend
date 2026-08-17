@@ -1995,6 +1995,73 @@ canvas#unseen-gl-canvas {
       transparent 100%);
 }
 
+/* ── Logo Reveal ── */
+.about-logo-reveal-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  padding: 20px 0 0;
+  /* Initial hidden state */
+  opacity: 0;
+  transform: scale(0.55);
+  transition:
+    opacity 1200ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 1200ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.about-logo-reveal-wrap.about-logo-reveal--visible {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.about-logo-reveal-glow {
+  position: absolute;
+  inset: -40px;
+  border-radius: 50%;
+  background: radial-gradient(ellipse at 50% 50%,
+      rgba(220, 220, 230, 0.18) 0%,
+      rgba(200, 200, 220, 0.08) 40%,
+      transparent 70%);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 1200ms ease 300ms;
+  filter: blur(12px);
+}
+
+.about-logo-reveal-wrap.about-logo-reveal--visible .about-logo-reveal-glow {
+  opacity: 1;
+}
+
+.about-logo-reveal-img {
+  width: clamp(200px, 20vw, 250px);
+  height: auto;
+  display: block;
+  position: relative;
+  z-index: 2;
+  filter: drop-shadow(0 0 18px rgba(220, 220, 235, 0.35)) drop-shadow(0 0 40px rgba(200, 200, 225, 0.15));
+}
+
+@media (max-width: 640px) {
+  .about-logo-reveal-img {
+    width: clamp(160px, 45vw, 210px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .about-logo-reveal-wrap {
+    opacity: 1;
+    transform: scale(1);
+    transition: none;
+  }
+
+  .about-logo-reveal-glow {
+    opacity: 1;
+    transition: none;
+  }
+}
+
 /* ── Chapter Grid ── */
 .about-chapter--grid {
   display: grid;
@@ -2059,7 +2126,7 @@ canvas#unseen-gl-canvas {
 
 /* Artist Portrait Placeholder Frame */
 .artist-portrait-wrap {
-  margin-top: 20px;
+  margin-top: 0;
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -2195,6 +2262,11 @@ canvas#unseen-gl-canvas {
   gap: 24px;
 }
 
+.about-chapter-body--center {
+  justify-content: center;
+  align-self: center;
+}
+
 .about-lead-text {
   font-family: var(--font-display);
   font-size: clamp(22px, 2vw, 26px);
@@ -2247,76 +2319,38 @@ canvas#unseen-gl-canvas {
 }
 
 /* ── Chapter 03: Lunar Identity Feature Card ── */
-.about-lunar-card {
-  position: relative;
-  border: 1px solid rgba(193, 148, 0, 0.2);
-  border-radius: 4px;
-  background: linear-gradient(145deg, rgba(28, 25, 22, 0.8) 0%, rgba(14, 13, 12, 0.95) 100%);
-  padding: 60px 8%;
-  overflow: hidden;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
-}
-
-.about-lunar-glow {
-  position: absolute;
-  top: -80px;
-  right: -80px;
-  width: 320px;
-  height: 320px;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(193, 148, 0, 0.08) 0%, transparent 70%);
-  pointer-events: none;
-}
-
-.about-lunar-inner {
-  position: relative;
-  z-index: 2;
+/* ── Identity & Symbolism Text Block ── */
+.about-identity-block {
   display: flex;
   flex-direction: column;
-  gap: 28px;
+  align-items: center;
+  text-align: center;
+  gap: 24px;
+  max-width: 740px;
+  margin: 0 auto;
+  padding: 20px 0 8px;
 }
 
-.about-lunar-header {
-  display: flex;
-  align-items: baseline;
-  gap: 16px;
-}
-
-.about-lunar-title {
+.about-identity-quote {
   font-family: var(--font-display);
-  font-size: clamp(38px, 4.5vw, 56px);
-  font-weight: 400;
-  color: var(--color-gold);
-  letter-spacing: -0.01em;
-  line-height: 1;
-}
-
-.about-lunar-quote-wrap {
-  padding-left: 24px;
-  border-left: 2px solid var(--color-gold);
-  margin: 8px 0;
-}
-
-.about-lunar-quote {
-  font-family: var(--font-display);
-  font-size: clamp(20px, 2.2vw, 27px);
+  font-size: clamp(22px, 2.4vw, 30px);
   font-style: normal;
   color: var(--text-primary);
   line-height: 1.55;
+  margin: 0;
 }
 
-.about-lunar-description {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
+.about-identity-body {
   font-family: var(--font-body);
-  font-size: 16px;
+  font-size: clamp(15px, 1.3vw, 17px);
   color: var(--text-secondary);
   line-height: 1.75;
+  margin: 0;
 }
 
-.about-lunar-description strong {
+.about-identity-body strong {
   color: var(--color-gold);
+  font-style: normal;
 }
 
 /* ── Chapter 04: Mission Card & Action ── */
@@ -2403,9 +2437,6 @@ canvas#unseen-gl-canvas {
     order: 2;
   }
 
-  .about-lunar-card {
-    padding: 40px 24px;
-  }
 }
 
 
@@ -2923,9 +2954,5 @@ canvas#unseen-gl-canvas {
 
   .about-mission-card {
     padding: 20px 16px;
-  }
-
-  .about-lunar-card {
-    padding: 28px 16px;
   }
 }

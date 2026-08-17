@@ -1,10 +1,28 @@
-import React from 'react'
+import React, { useRef, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
 
 export default function AboutPage() {
   const navigate = useNavigate()
+
+  const logoRevealRef = useRef(null)
+
+  useEffect(() => {
+    const el = logoRevealRef.current
+    if (!el) return
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          el.classList.add('about-logo-reveal--visible')
+          observer.disconnect()
+        }
+      },
+      { threshold: 0.25 }
+    )
+    observer.observe(el)
+    return () => observer.disconnect()
+  }, [])
 
   return (
     <>
@@ -55,7 +73,7 @@ export default function AboutPage() {
                 <div className="artist-portrait-frame">
                   <img
                     src={`${import.meta.env.BASE_URL}designer.jpeg`}
-                    alt="The Designer — Founder of Artemis Studios"
+                    alt="AR Tanvi Chaag — Founder & Principal Architect"
                     className="artist-portrait-img"
                     loading="lazy"
                     decoding="async"
@@ -71,7 +89,7 @@ export default function AboutPage() {
               </div>
 
             </div>
-            <div className="about-chapter-body">
+            <div className="about-chapter-body about-chapter-body--center">
               <p className="about-lead-text">
                 My journey into architecture began with a fascination for buildings and the way thoughtfully designed spaces influence how people feel and interact.
               </p>
@@ -108,32 +126,28 @@ export default function AboutPage() {
 
           <div className="about-section-divider" />
 
-          {/* ── Chapter: The Name (Lunar Feature Card) ── */}
-          <section className="about-lunar-card">
-            <div className="about-lunar-glow" />
-            <div className="about-lunar-inner">
-              <div className="about-lunar-header">
-                <span className="about-chapter-tag">The Identity &amp; Symbolism</span>
-              </div>
+          {/* ── Logo Reveal ── */}
+          <div className="about-logo-reveal-wrap" ref={logoRevealRef}>
+            <div className="about-logo-reveal-glow" />
+            <img
+              src={`${import.meta.env.BASE_URL}artemis-logo-f.png`}
+              alt="Artemis Studios"
+              className="about-logo-reveal-img"
+              loading="lazy"
+              decoding="async"
+            />
+          </div>
 
-              <h2 className="about-lunar-title">Artemis</h2>
-
-              <div className="about-lunar-quote-wrap">
-                <blockquote className="about-lunar-quote">
-                  "For me, the moon symbolizes a light that shines through darkness, similarly a cinema transforms a dark auditorium into an immersive world through light."
-                </blockquote>
-              </div>
-
-              <div className="about-lunar-description">
-                <p>
-                  The name <strong>Artemis</strong> is inspired by the Greek goddess associated with the moon.
-                </p>
-                <p>
-                  This idea became the inspiration behind the identity and ethos of the studio.
-                </p>
-              </div>
-            </div>
-          </section>
+          {/* ── Identity & Symbolism Text ── */}
+          <div className="about-identity-block">
+            <p className="about-identity-quote">
+              For me, the moon symbolizes a light that shines through darkness, similarly a cinema transforms a dark auditorium into an immersive world through light.
+            </p>
+            <p className="about-identity-body">
+              The name <strong>Artemis</strong> is inspired by the Greek goddess associated with the moon.
+              This idea became the inspiration behind the identity and ethos of the studio.
+            </p>
+          </div>
 
           <div className="about-section-divider" />
 
@@ -151,14 +165,12 @@ export default function AboutPage() {
               <p className="about-body-text">
                 Each project has reinforced my belief that credibility is built through expertise, attention to detail, and consistently delivering value.
               </p>
+              <p className="about-body-text">Today, my focus remains the same:
+                To design cinemas that are thoughtful, functional, and memorable spaces where great design brings together the audience's experience and the exhibitor's vision.
 
-              {/* Mission Card */}
-              <div className="about-mission-card">
-                <span className="mission-badge">Today, my focus remains the same:</span>
-                <p className="mission-statement">
-                  To design cinemas that are thoughtful, functional, and memorable spaces where great design brings together the audience's experience and the exhibitor's vision.
-                </p>
-              </div>
+              </p>
+
+
 
               <p className="about-closing-note">
                 Follow along as we share our work, ideas and journey in Cinema Design.
