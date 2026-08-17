@@ -163,12 +163,12 @@ export default function DesignPhilosophyPage() {
             const rev = i % 2 === 1
             return (
               <article key={s.num} className={`dp-row${rev ? ' dp-row--rev' : ''}`}>
-                <span
+                {/* <span
                   className={`dp-num-wm ${rev ? 'dp-num-wm--r' : 'dp-num-wm--l'}`}
                   aria-hidden="true"
                 >
                   {s.num}
-                </span>
+                </span> */}
 
                 {/* Image */}
                 <div className="dp-row__img">
@@ -186,7 +186,6 @@ export default function DesignPhilosophyPage() {
 
                 {/* Text */}
                 <div className="dp-row__txt">
-                  <span className="dp-phase">Stage {s.num}</span>
                   <div className="dp-row__head">
                     <span className="dp-rule" />
                     <h2 className="dp-row__title">{s.title}</h2>
