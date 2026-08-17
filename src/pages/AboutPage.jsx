@@ -32,15 +32,11 @@ export default function AboutPage() {
 
           {/* Hero Content */}
           <div className="about-hero-inner">
-            <p className="about-eyebrow">Profile &amp; Philosophy</p>
+            <span className="about-eyebrow">Profile &amp; Philosophy</span>
             <h1 className="about-hero-title">
               Meet the <em>Designer</em>
             </h1>
-            <div className="about-gold-divider">
-              <span className="about-gold-line-half" />
-              <span className="about-gold-diamond" />
-              <span className="about-gold-line-half" />
-            </div>
+            <div className="about-gold-line" />
             <p className="about-hero-subtitle">
               The journey, vision, and architectural pursuit behind Artemis Studios.
             </p>
@@ -53,9 +49,27 @@ export default function AboutPage() {
           {/* ── Chapter: Genesis ── */}
           <section className="about-chapter about-chapter--grid">
             <div className="about-chapter-meta">
-              <span className="about-chapter-tag">Genesis &amp; Passion</span>
-              <h2 className="about-chapter-heading">Meet the Designer ...</h2>
-              <div className="about-meta-divider" />
+
+              {/* Designer Portrait */}
+              <div className="artist-portrait-wrap">
+                <div className="artist-portrait-frame">
+                  <img
+                    src={`${import.meta.env.BASE_URL}designer.jpeg`}
+                    alt="The Designer — Founder of Artemis Studios"
+                    className="artist-portrait-img"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                  <span className="portrait-bracket portrait-bracket--tl" />
+                  <span className="portrait-bracket portrait-bracket--tr" />
+                  <span className="portrait-bracket portrait-bracket--bl" />
+                  <span className="portrait-bracket portrait-bracket--br" />
+                </div>
+                <h2 className="about-chapter-heading">AR Tanvi Chaag</h2>
+
+                <p className="artist-portrait-caption">Founder & principal architect · Artemis Studios</p>
+              </div>
+
             </div>
             <div className="about-chapter-body">
               <p className="about-lead-text">
@@ -101,9 +115,9 @@ export default function AboutPage() {
               <div className="about-lunar-header">
                 <span className="about-chapter-tag">The Identity &amp; Symbolism</span>
               </div>
-              
+
               <h2 className="about-lunar-title">Artemis</h2>
-              
+
               <div className="about-lunar-quote-wrap">
                 <blockquote className="about-lunar-quote">
                   "For me, the moon symbolizes a light that shines through darkness, similarly a cinema transforms a dark auditorium into an immersive world through light."
@@ -130,41 +144,41 @@ export default function AboutPage() {
               <h2 className="about-chapter-heading">Looking Ahead ...</h2>
               <div className="about-meta-divider" />
             </div>
-    <div className="about-chapter-body">
-      <p className="about-body-text">
-        I believe great cinema design isn't just about aesthetics; it's about understanding audience behavior, operational efficiency, and the business behind every project.
-      </p>
-      <p className="about-body-text">
-        Each project has reinforced my belief that credibility is built through expertise, attention to detail, and consistently delivering value.
-      </p>
+            <div className="about-chapter-body">
+              <p className="about-body-text">
+                I believe great cinema design isn't just about aesthetics; it's about understanding audience behavior, operational efficiency, and the business behind every project.
+              </p>
+              <p className="about-body-text">
+                Each project has reinforced my belief that credibility is built through expertise, attention to detail, and consistently delivering value.
+              </p>
 
-      {/* Mission Card */}
-      <div className="about-mission-card">
-        <span className="mission-badge">Today, my focus remains the same:</span>
-        <p className="mission-statement">
-          To design cinemas that are thoughtful, functional, and memorable spaces where great design brings together the audience's experience and the exhibitor's vision.
-        </p>
-      </div>
+              {/* Mission Card */}
+              <div className="about-mission-card">
+                <span className="mission-badge">Today, my focus remains the same:</span>
+                <p className="mission-statement">
+                  To design cinemas that are thoughtful, functional, and memorable spaces where great design brings together the audience's experience and the exhibitor's vision.
+                </p>
+              </div>
 
-      <p className="about-closing-note">
-        Follow along as we share our work, ideas and journey in Cinema Design.
-      </p>
+              <p className="about-closing-note">
+                Follow along as we share our work, ideas and journey in Cinema Design.
+              </p>
 
-      <div className="about-actions-wrap">
-        <button
-          className="btn-view-projects"
-          onClick={() => navigate('/projects')}
-          aria-label="View Selected Projects"
-        >
-          View Selected Projects <span className="btn-arrow">→</span>
-        </button>
-      </div>
-    </div>
-  </section>
+              <div className="about-actions-wrap">
+                <button
+                  className="btn-view-projects"
+                  onClick={() => navigate('/projects')}
+                  aria-label="View Selected Projects"
+                >
+                  View Selected Projects <span className="btn-arrow">→</span>
+                </button>
+              </div>
+            </div>
+          </section>
 
         </div >
       </main >
-    <Footer />
+      <Footer />
     </>
   )
 }
