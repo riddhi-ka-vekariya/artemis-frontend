@@ -130,7 +130,7 @@ export default function AboutPage() {
                   <span className="portrait-bracket portrait-bracket--bl" />
                   <span className="portrait-bracket portrait-bracket--br" />
                 </div>
-                <h2 className="about-chapter-heading">AR Tanvi Chaag</h2>
+                <h2 className="about-chapter-heading">Ar. Tanvi Chhag</h2>
 
                 <p className="artist-portrait-caption">Founder & Principal Architect · Artemis Studios</p>
               </div>
