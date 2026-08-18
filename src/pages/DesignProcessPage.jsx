@@ -18,7 +18,7 @@ const steps = [
       'Budget and project constraints',
       'Existing services and infrastructure',
     ],
-    image: `${import.meta.env.BASE_URL}process-insights.jpg`,
+    image: `${import.meta.env.BASE_URL}process-insights.png`,
     alt: 'Architectural site analysis drawn in gold ink on black paper',
   },
   {
@@ -36,7 +36,7 @@ const steps = [
       'Sightlines and audience movement',
       'Concept development',
     ],
-    image: `${import.meta.env.BASE_URL}process-planning.jpg`,
+    image: `${import.meta.env.BASE_URL}process-planning.png`,
     alt: 'Cinema auditorium seating layout and sightline diagram',
   },
   {
@@ -55,7 +55,7 @@ const steps = [
       'Lighting concepts',
       'Design refinement',
     ],
-    image: `${import.meta.env.BASE_URL}process-development.jpg`,
+    image: `${import.meta.env.BASE_URL}process-development.png`,
     alt: 'Macro study of cinema interior materials: terrazzo, brass, felt, walnut',
   },
   {
