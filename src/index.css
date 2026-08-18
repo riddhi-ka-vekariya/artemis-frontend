@@ -3089,6 +3089,7 @@ canvas#unseen-gl-canvas {
   .dp-row--rev .dp-row__img {
     order: 2;
   }
+
   .dp-row--rev .dp-row__txt {
     order: 1;
     text-align: right;
@@ -3233,7 +3234,7 @@ canvas#unseen-gl-canvas {
   line-height: 1.75;
 }
 
-.dp-row__intro + .dp-row__intro {
+.dp-row__intro+.dp-row__intro {
   margin-top: 0.9rem;
 }
 
@@ -3259,6 +3260,7 @@ canvas#unseen-gl-canvas {
   .dp-row--rev .dp-list {
     justify-content: flex-end;
   }
+
   .dp-row--rev .dp-row__head {
     justify-content: flex-end;
     flex-direction: row-reverse;
@@ -3326,16 +3328,20 @@ canvas#unseen-gl-canvas {
   .dp-hero {
     padding: 5rem 1.25rem 3.5rem;
   }
+
   .dp-grid {
     padding: 0.5rem 1.25rem 2rem;
   }
+
   .dp-row {
     padding: 3.5rem 0;
   }
+
   .dp-approach {
     padding: 4rem 1.25rem 5rem;
   }
+
   .dp-row__head {
     gap: 0.75rem;
   }
-}
+}
