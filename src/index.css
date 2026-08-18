@@ -1375,6 +1375,7 @@ canvas#unseen-gl-canvas {
   color: var(--color-silver);
   margin-top: 2px;
   opacity: 0.88;
+  white-space: pre-line;
 }
 
 /* ─── Projects Page MoltenMetal Background ───────────────────────── */

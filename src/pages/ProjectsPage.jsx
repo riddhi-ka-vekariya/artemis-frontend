@@ -124,6 +124,36 @@ const PROJECT_DATA = [
     img: `${BASE}gallery/13.avif`,
     fullDesc: 'With premium recliners, layered ambient lighting, curated fabric prints, and acoustically integrated wall panels, this auditorium was designed to deliver comfort, luxury, and grandeur for every guest.'
   },
+  {
+    id: 14,
+    title: 'Star Cinemas, Tadepalligudem',
+    img: `${BASE}gallery/14.webp`,
+    fullDesc: `The best designs are not remembered just for a grand gesture, they're remembered for the details.\n\nCurated wall features, integrated lighting, custom stitches and carefully selected materials come together to create an environment that feels immersive long before the movie begins.\n\nDesigned to be seen up close`
+  },
+  {
+    id: 15,
+    title: 'Star Cinemas, Tadepalligudem',
+    img: `${BASE}gallery/15.webp`,
+    fullDesc: `A foyer designed as the beginning of the experience.\n\nBold geometric flooring, illuminated feature panels, and layered ceiling details come together to create a foyer that feels distinctive and premium.`
+  },
+  {
+    id: 16,
+    title: 'Star Cinemas, Tadepalligudem',
+    img: `${BASE}gallery/16.webp`,
+    fullDesc: `Where the movie experience begins.\nA cinema café designed with warm integrated lighting, fluted detailing, dark framing, and reflective finishes giving the space a premium and inviting character.\n\nThe design keeps the counter functional and also making it an integral part of the overall cinema experience.`
+  },
+  {
+    id: 17,
+    title: 'Star Cinemas, Tadepalligudem',
+    img: `${BASE}gallery/17.webp`,
+    fullDesc: `Where the movie experience begins.\nA cinema café designed with warm integrated lighting, fluted detailing, dark framing, and reflective finishes giving the space a premium and inviting character.\n\nThe design keeps the counter functional and also making it an integral part of the overall cinema experience.`
+  },
+  {
+    id: 18,
+    title: 'Star Cinemas, Tadepalligudem',
+    img: `${BASE}gallery/18.webp`,
+    fullDesc: `A foyer designed as the beginning of the experience.\n\nBold geometric flooring, illuminated feature panels, and layered ceiling details come together to create a foyer that feels distinctive and premium.`
+  },
 ]
 
 export default function ProjectsPage() {
