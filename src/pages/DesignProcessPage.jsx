@@ -23,7 +23,7 @@ const steps = [
   },
   {
     num: '02',
-    title: <>Planning & <em>Concept</em></>,
+    title: <>Planning and <em>Concept</em></>,
     intro: [
       'We begin developing the spatial strategy around audience movement, operational efficiency, visibility, comfort, and functionality. Auditorium layouts, seating arrangements, circulation, entrances, exits, foyers, and support spaces are considered as part of one connected experience.',
       'Once the planning direction is established, we develop the initial design concept, defining the zoning of all activities, atmosphere, and identity of the cinema.',
