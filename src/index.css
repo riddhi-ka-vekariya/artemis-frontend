@@ -1902,7 +1902,8 @@ canvas#unseen-gl-canvas {
 .about-hero-title {
   margin-top: 2.5rem;
   margin-bottom: 0;
-  font-family: var(--font-display);
+  font-family: 'The Seasons', 'Newsreader', Georgia, serif;
+  font-weight: 400;
   font-size: clamp(3rem, 7vw, 3.75rem);
   line-height: 1.05;
   letter-spacing: -0.025em;
@@ -2996,8 +2997,8 @@ canvas#unseen-gl-canvas {
 
 .dp-hero__title {
   margin-top: 1.6rem;
-  font-family: var(--font-display);
-  font-weight: 700;
+  font-family: 'The Seasons', 'Newsreader', Georgia, serif;
+  font-weight: 400;
   font-size: clamp(2.6rem, 7vw, 5rem);
   line-height: 1.02;
   letter-spacing: -0.01em;
