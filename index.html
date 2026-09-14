@@ -1,35 +1,57 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Artemis — Design &amp; Development Portfolio</title>
-    <meta name="description" content="A cinematic portfolio showcasing design philosophy, projects, and craftsmanship in dark, editorial Black &amp; Gold." />
-    <!-- Black & Gold Design System Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Tenor+Sans&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500&display=swap" rel="stylesheet">
-    <!-- Preload Mobius strip photos for instant high-speed startup -->
-    <link rel="preload" as="image" href="/mobius-strip-photos/a.webp" fetchpriority="high" />
-    <link rel="preload" as="image" href="/mobius-strip-photos/b.webp" fetchpriority="high" />
-    <link rel="preload" as="image" href="/mobius-strip-photos/c.webp" fetchpriority="high" />
-    <link rel="preload" as="image" href="/mobius-strip-photos/d.webp" fetchpriority="high" />
-    <link rel="preload" as="image" href="/mobius-strip-photos/e.webp" fetchpriority="high" />
-    <link rel="preload" as="image" href="/mobius-strip-photos/f.webp" fetchpriority="high" />
-    <link rel="preload" as="image" href="/mobius-strip-photos/g.webp" fetchpriority="high" />
-    <link rel="preload" as="image" href="/mobius-strip-photos/h.webp" fetchpriority="high" />
-    <link rel="preload" as="image" href="/mobius-strip-photos/i.webp" fetchpriority="high" />
-    <link rel="preload" as="image" href="/mobius-strip-photos/j.webp" fetchpriority="high" />
-    <link rel="preload" as="image" href="/mobius-strip-photos/k.webp" fetchpriority="high" />
-    <link rel="preload" as="image" href="/mobius-strip-photos/l.webp" fetchpriority="high" />
-    <link rel="preload" as="image" href="/mobius-strip-photos/m.webp" fetchpriority="high" />
-    <link rel="preload" as="image" href="/mobius-strip-photos/n.webp" fetchpriority="high" />
-    <link rel="preload" as="image" href="/mobius-strip-photos/o.webp" fetchpriority="high" />
-    <link rel="preload" as="image" href="/mobius-strip-photos/p.webp" fetchpriority="high" />
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
-  </body>
+
+<head>
+
+  <!-- Google Tag Manager -->
+  <script>(function (w, d, s, l, i) {
+      w[l] = w[l] || []; w[l].push({
+        'gtm.start':
+          new Date().getTime(), event: 'gtm.js'
+      }); var f = d.getElementsByTagName(s)[0],
+        j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
+          'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
+    })(window, document, 'script', 'dataLayer', 'GTM-KF96FD55');</script>
+  <!-- End Google Tag Manager -->
+
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Artemis — Design &amp; Development Portfolio</title>
+  <meta name="description"
+    content="A cinematic portfolio showcasing design philosophy, projects, and craftsmanship in dark, editorial Black &amp; Gold." />
+  <!-- Black & Gold Design System Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Tenor+Sans&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500&display=swap"
+    rel="stylesheet">
+  <!-- Preload Mobius strip photos for instant high-speed startup -->
+  <link rel="preload" as="image" href="/mobius-strip-photos/a.webp" fetchpriority="high" />
+  <link rel="preload" as="image" href="/mobius-strip-photos/b.webp" fetchpriority="high" />
+  <link rel="preload" as="image" href="/mobius-strip-photos/c.webp" fetchpriority="high" />
+  <link rel="preload" as="image" href="/mobius-strip-photos/d.webp" fetchpriority="high" />
+  <link rel="preload" as="image" href="/mobius-strip-photos/e.webp" fetchpriority="high" />
+  <link rel="preload" as="image" href="/mobius-strip-photos/f.webp" fetchpriority="high" />
+  <link rel="preload" as="image" href="/mobius-strip-photos/g.webp" fetchpriority="high" />
+  <link rel="preload" as="image" href="/mobius-strip-photos/h.webp" fetchpriority="high" />
+  <link rel="preload" as="image" href="/mobius-strip-photos/i.webp" fetchpriority="high" />
+  <link rel="preload" as="image" href="/mobius-strip-photos/j.webp" fetchpriority="high" />
+  <link rel="preload" as="image" href="/mobius-strip-photos/k.webp" fetchpriority="high" />
+  <link rel="preload" as="image" href="/mobius-strip-photos/l.webp" fetchpriority="high" />
+  <link rel="preload" as="image" href="/mobius-strip-photos/m.webp" fetchpriority="high" />
+  <link rel="preload" as="image" href="/mobius-strip-photos/n.webp" fetchpriority="high" />
+  <link rel="preload" as="image" href="/mobius-strip-photos/o.webp" fetchpriority="high" />
+  <link rel="preload" as="image" href="/mobius-strip-photos/p.webp" fetchpriority="high" />
+</head>
+
+<body>
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KF96FD55" height="0" width="0"
+      style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+  <div id="root"></div>
+  <script type="module" src="/src/main.jsx"></script>
+</body>
+
 </html>
