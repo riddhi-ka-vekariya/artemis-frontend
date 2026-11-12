@@ -2020,26 +2020,88 @@ canvas#unseen-gl-canvas {
   will-change: transform, opacity;
 }
 
+/* Halo: silver core fading into a faint gold corona (Black & Gold) */
 .about-logo-reveal-glow {
   position: absolute;
-  inset: -40px;
+  inset: -60px -20px -40px;
   border-radius: 50%;
-  background: radial-gradient(ellipse at 50% 50%,
-      rgba(220, 220, 230, 0.18) 0%,
-      rgba(200, 200, 220, 0.08) 40%,
-      transparent 70%);
+  background: radial-gradient(ellipse at 50% 48%,
+      rgba(230, 230, 242, 0.20) 0%,
+      rgba(210, 210, 228, 0.09) 30%,
+      rgba(193, 148, 0, 0.06) 52%,
+      transparent 72%);
   pointer-events: none;
-  filter: blur(16px);
-  will-change: opacity;
+  filter: blur(18px);
+  opacity: 0;
+  will-change: opacity, transform;
+}
+
+/* Breathing inner core — its own layer so it doesn't fight the JS-driven opacity */
+.about-logo-reveal-glow::after {
+  content: '';
+  position: absolute;
+  inset: 22%;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(240, 240, 250, 0.16) 0%, transparent 70%);
+  opacity: 0;
+  transition: opacity 1.2s ease;
+}
+
+.about-logo-reveal-wrap.is-revealed .about-logo-reveal-glow::after {
+  opacity: 1;
+  animation: about-halo-breathe 6s ease-in-out 0.6s infinite;
+}
+
+@keyframes about-halo-breathe {
+  0%, 100% { transform: scale(1);    opacity: 0.7; }
+  50%      { transform: scale(1.12); opacity: 1;   }
+}
+
+/* Mark: holds the logo + sheen, receives the moonrise mask from JS */
+.about-logo-reveal-mark {
+  position: relative;
+  z-index: 2;
+  /* Padding gives the drop-shadow room inside the mask box (masks clip to the border box) */
+  padding: 48px;
+  margin: -48px;
+  will-change: transform, mask-image;
 }
 
 .about-logo-reveal-img {
   width: clamp(200px, 20vw, 250px);
   height: auto;
   display: block;
-  position: relative;
-  z-index: 2;
-  filter: drop-shadow(0 0 18px rgba(220, 220, 235, 0.35)) drop-shadow(0 0 40px rgba(200, 200, 225, 0.15));
+  filter: drop-shadow(0 0 18px rgba(225, 225, 240, 0.4)) drop-shadow(0 0 44px rgba(193, 148, 0, 0.12));
+}
+
+/* Specular sweep: a light band masked to the logo's shape, played once per reveal */
+.about-logo-reveal-sheen {
+  position: absolute;
+  inset: 48px;
+  pointer-events: none;
+  background: linear-gradient(105deg,
+      transparent 35%,
+      rgba(255, 255, 255, 0.0) 42%,
+      rgba(255, 255, 255, 0.85) 50%,
+      rgba(255, 240, 200, 0.35) 54%,
+      transparent 62%);
+  background-size: 300% 100%;
+  background-position: 120% 0;
+  -webkit-mask: var(--logo-url) center / contain no-repeat;
+  mask: var(--logo-url) center / contain no-repeat;
+  mix-blend-mode: screen;
+  opacity: 0;
+}
+
+.about-logo-reveal-wrap.is-revealed .about-logo-reveal-sheen {
+  animation: about-logo-sheen 1.8s cubic-bezier(0.45, 0, 0.2, 1) 0.15s 1 both;
+}
+
+@keyframes about-logo-sheen {
+  0%   { background-position: 120% 0; opacity: 0; }
+  15%  { opacity: 1; }
+  85%  { opacity: 1; }
+  100% { background-position: -20% 0; opacity: 0; }
 }
 
 @media (max-width: 640px) {
@@ -2048,16 +2110,15 @@ canvas#unseen-gl-canvas {
   }
 }
 
+/* Reduced motion: JS pins the final revealed state; here we stop the looping/sweeping extras */
 @media (prefers-reduced-motion: reduce) {
-  .about-logo-reveal-wrap {
-    opacity: 1;
-    transform: scale(1);
-    transition: none;
+  .about-logo-reveal-wrap.is-revealed .about-logo-reveal-glow::after,
+  .about-logo-reveal-wrap.is-revealed .about-logo-reveal-sheen {
+    animation: none;
   }
 
-  .about-logo-reveal-glow {
-    opacity: 1;
-    transition: none;
+  .about-logo-reveal-sheen {
+    display: none;
   }
 }
 

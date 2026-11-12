@@ -9,6 +9,8 @@ export default function AboutPage() {
 
   const logoRevealRef = useRef(null)
   const glowRef = useRef(null)
+  const markRef = useRef(null)
+  const logoImgRef = useRef(null)
 
   useEffect(() => {
     const lenis = new Lenis({
@@ -18,34 +20,69 @@ export default function AboutPage() {
     })
 
     let rafId
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+
+    // Glow halo response to reveal progress t (0 → 1). Returns { opacity, scale }.
+    const glowCurve = (t) => {
+      // TODO(human): shape how the halo blooms as the logo is revealed
+      return { opacity: t, scale: 1 }
+    }
+
+    const applyLogoState = (eased) => {
+      const wrap = logoRevealRef.current
+      const mark = markRef.current
+      const img = logoImgRef.current
+      const glow = glowRef.current
+      if (!wrap || !mark || !img) return
+
+      // Whole block: gentle lift + settle
+      wrap.style.opacity = Math.min(1, eased * 1.6).toFixed(3)
+      wrap.style.transform = `translateY(${((1 - eased) * 36).toFixed(1)}px)`
+
+      // Moonrise: a soft-edged mask uncovers the mark from the bottom up
+      const edge = -25 + eased * 150 // gradient edge travels from below to past the top
+      const mask = eased >= 0.999
+        ? 'none'
+        : `linear-gradient(to top, #000 ${edge.toFixed(1)}%, transparent ${(edge + 25).toFixed(1)}%)`
+      mark.style.webkitMaskImage = mask
+      mark.style.maskImage = mask
+      mark.style.transform = `scale(${(0.92 + 0.08 * eased).toFixed(3)})`
+
+      // Focus pull: blurred → sharp, with the rim light strengthening as it sharpens
+      const blur = (1 - eased) * 10
+      const rim = 0.12 + 0.28 * eased
+      img.style.filter =
+        `blur(${blur.toFixed(2)}px) ` +
+        `drop-shadow(0 0 18px rgba(225, 225, 240, ${rim.toFixed(3)})) ` +
+        `drop-shadow(0 0 44px rgba(193, 148, 0, ${(rim * 0.3).toFixed(3)}))`
+
+      if (glow) {
+        const { opacity, scale } = glowCurve(eased)
+        glow.style.opacity = Math.min(Math.max(opacity, 0), 1).toFixed(3)
+        glow.style.transform = `scale(${scale.toFixed(3)})`
+      }
+
+      // Once fully revealed, play the light sweep + start the breathing halo.
+      // Reset when scrolled back out so it replays on the next reveal.
+      if (eased >= 0.995) wrap.classList.add('is-revealed')
+      else if (eased <= 0.01) wrap.classList.remove('is-revealed')
+    }
 
     const updateLogo = () => {
       const el = logoRevealRef.current
       if (!el) return
+      if (reduceMotion) return applyLogoState(1)
 
       const rect = el.getBoundingClientRect()
       const windowHeight = window.innerHeight
 
-      // Calculate reveal progress: 0 when entering viewport bottom, 1 when reaching 55% from the top
+      // Reveal progress: 0 when entering viewport bottom, 1 when reaching 50% from the top
       const start = windowHeight
-      const end = windowHeight * 0.55
-      const rawProgress = (start - rect.top) / (start - end)
-      const progress = Math.min(Math.max(rawProgress, 0), 1)
+      const end = windowHeight * 0.5
+      const progress = Math.min(Math.max((start - rect.top) / (start - end), 0), 1)
 
       // Smoothstep interpolation
-      const eased = progress * progress * (3 - 2 * progress)
-
-      const opacity = eased
-      const scale = 0.86 + 0.14 * eased
-      const translateY = (1 - eased) * 28
-
-      el.style.opacity = opacity.toFixed(3)
-      el.style.transform = `scale(${scale.toFixed(3)}) translateY(${translateY.toFixed(1)}px)`
-
-      if (glowRef.current) {
-        const glowOpacity = Math.max(0, (eased - 0.25) / 0.75)
-        glowRef.current.style.opacity = glowOpacity.toFixed(3)
-      }
+      applyLogoState(progress * progress * (3 - 2 * progress))
     }
 
     const onScroll = () => {
@@ -176,13 +213,22 @@ export default function AboutPage() {
           {/* ── Logo Reveal ── */}
           <div className="about-logo-reveal-wrap" ref={logoRevealRef}>
             <div className="about-logo-reveal-glow" ref={glowRef} />
-            <img
-              src={`${import.meta.env.BASE_URL}artemis-logo-f.png`}
-              alt="Artemis Studios"
-              className="about-logo-reveal-img"
-              loading="lazy"
-              decoding="async"
-            />
+            <div
+              className="about-logo-reveal-mark"
+              ref={markRef}
+              style={{ '--logo-url': `url(${import.meta.env.BASE_URL}artemis-logo-f.png)` }}
+            >
+              <img
+                src={`${import.meta.env.BASE_URL}artemis-logo-f.png`}
+                alt="Artemis Studios"
+                className="about-logo-reveal-img"
+                ref={logoImgRef}
+                loading="lazy"
+                decoding="async"
+              />
+              {/* Specular light sweep, masked to the logo's own shape */}
+              <span className="about-logo-reveal-sheen" aria-hidden="true" />
+            </div>
           </div>
 
           {/* ── Identity & Symbolism Text ── */}
