@@ -485,7 +485,7 @@ export default function UnseenCurlDemoPage() {
               </div>
 
               <div className="unseen-ctrl-group">
-                <div className="unseen-ctrl-group-label">Wave & Zoom</div>
+                <div className="unseen-ctrl-group-label">Wave &amp; Zoom</div>
                 <label className="unseen-ctrl-row">
                   <span>Noise Amp</span>
                   <span className="unseen-ctrl-val">{params.noiseAmp}</span>

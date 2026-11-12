@@ -50,7 +50,7 @@ export function ControlsHUD({
           </div>
           <div>
             <div className="brand-title">CHAIR 3D STUDIO</div>
-            <div className="brand-tag">Drei & Three.js POC</div>
+            <div className="brand-tag">Drei &amp; Three.js POC</div>
           </div>
         </div>
 

@@ -157,7 +157,7 @@ export default function AboutPage() {
                 <div className="artist-portrait-frame">
                   <img
                     src={`${import.meta.env.BASE_URL}designer.jpeg`}
-                    alt="Ar. Tanvi Chhag · Founder & Principal Architect"
+                    alt="Ar. Tanvi Chhag · Founder &amp; Principal Architect"
                     className="artist-portrait-img"
                     loading="lazy"
                     decoding="async"
@@ -169,7 +169,7 @@ export default function AboutPage() {
                 </div>
                 <h2 className="about-chapter-heading">Ar. Tanvi Chhag</h2>
 
-                <p className="artist-portrait-caption">Founder & Principal Architect · Artemis Studios</p>
+                <p className="artist-portrait-caption">Founder &amp; Principal Architect · Artemis Studios</p>
               </div>
 
             </div>

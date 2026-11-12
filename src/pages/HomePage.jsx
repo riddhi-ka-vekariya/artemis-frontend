@@ -20,7 +20,7 @@ const PRINCIPLES = [
   {
     num: '02',
     tag: 'Acoustic Insulation',
-    title: 'Acoustics and Design',
+    title: 'Acoustics & Design',
     summary: 'Integrated design and sound planning.',
     desc: 'Every surface of auditorium is treated to ensure adequate absroptions and prevention of sound leaks.',
     icon: `${BASE}acoustic.png`,

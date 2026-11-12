@@ -976,7 +976,7 @@ export default function PlaygroundPage() {
 
             {/* Buttons & Links */}
             <div>
-              <span style={s.sectionNumeral}>Buttons & Links</span>
+              <span style={s.sectionNumeral}>Buttons &amp; Links</span>
               <div style={s.goldLine} />
               <div style={{ display: 'flex', gap: 20, flexWrap: 'wrap', alignItems: 'center', marginBottom: 20 }}>
                 <button
