@@ -7,6 +7,8 @@
 @font-face {
   font-family: 'The Seasons';
   src: url('/fonts/TheSeasons-Bold.otf') format('opentype');
+  /* Demo font: 28 ASCII glyphs (& ' " - ( ) 4 ! etc.) are 'DEMO' stamps — only use its 67 clean ones; the rest fall back to Newsreader */
+  unicode-range: U+0020, U+002C, U+002E, U+0030-0033, U+0035-003B, U+003F, U+0041-005A, U+0061-007A;
   font-weight: 700;
   font-weight: bold;
   font-style: normal;
@@ -16,6 +18,8 @@
 @font-face {
   font-family: 'The Seasons';
   src: url('/fonts/TheSeasons-BoldItalic.otf') format('opentype');
+  /* Demo font: 28 ASCII glyphs (& ' " - ( ) 4 ! etc.) are 'DEMO' stamps — only use its 67 clean ones; the rest fall back to Newsreader */
+  unicode-range: U+0020, U+002C, U+002E, U+0030-0033, U+0035-003B, U+003F, U+0041-005A, U+0061-007A;
   font-weight: 700;
   font-weight: bold;
   font-style: italic;
@@ -25,6 +29,8 @@
 @font-face {
   font-family: 'The Seasons';
   src: url('/fonts/TheSeasons-Regular.otf') format('opentype');
+  /* Demo font: 28 ASCII glyphs (& ' " - ( ) 4 ! etc.) are 'DEMO' stamps — only use its 67 clean ones; the rest fall back to Newsreader */
+  unicode-range: U+0020, U+002C, U+002E, U+0030-0033, U+0035-003B, U+003F, U+0041-005A, U+0061-007A;
   font-weight: 400;
   font-weight: normal;
   font-style: normal;
@@ -34,6 +40,8 @@
 @font-face {
   font-family: 'The Seasons';
   src: url('/fonts/TheSeasons-Italic.otf') format('opentype');
+  /* Demo font: 28 ASCII glyphs (& ' " - ( ) 4 ! etc.) are 'DEMO' stamps — only use its 67 clean ones; the rest fall back to Newsreader */
+  unicode-range: U+0020, U+002C, U+002E, U+0030-0033, U+0035-003B, U+003F, U+0041-005A, U+0061-007A;
   font-weight: 400;
   font-weight: normal;
   font-style: italic;
@@ -43,6 +51,8 @@
 @font-face {
   font-family: 'The Seasons';
   src: url('/fonts/TheSeasons-Light.otf') format('opentype');
+  /* Demo font: 28 ASCII glyphs (& ' " - ( ) 4 ! etc.) are 'DEMO' stamps — only use its 67 clean ones; the rest fall back to Newsreader */
+  unicode-range: U+0020, U+002C, U+002E, U+0030-0033, U+0035-003B, U+003F, U+0041-005A, U+0061-007A;
   font-weight: 300;
   font-style: normal;
   font-display: swap;
@@ -51,6 +61,8 @@
 @font-face {
   font-family: 'The Seasons';
   src: url('/fonts/TheSeasons-LightItalic.otf') format('opentype');
+  /* Demo font: 28 ASCII glyphs (& ' " - ( ) 4 ! etc.) are 'DEMO' stamps — only use its 67 clean ones; the rest fall back to Newsreader */
+  unicode-range: U+0020, U+002C, U+002E, U+0030-0033, U+0035-003B, U+003F, U+0041-005A, U+0061-007A;
   font-weight: 300;
   font-style: italic;
   font-display: swap;
@@ -59,6 +71,8 @@
 @font-face {
   font-family: 'The Seasons Bold';
   src: url('/fonts/TheSeasons-Bold.otf') format('opentype');
+  /* Demo font: 28 ASCII glyphs (& ' " - ( ) 4 ! etc.) are 'DEMO' stamps — only use its 67 clean ones; the rest fall back to Newsreader */
+  unicode-range: U+0020, U+002C, U+002E, U+0030-0033, U+0035-003B, U+003F, U+0041-005A, U+0061-007A;
   font-weight: normal;
   font-style: normal;
   font-display: swap;
@@ -67,6 +81,8 @@
 @font-face {
   font-family: 'The Seasons Bold';
   src: url('/fonts/TheSeasons-Bold.otf') format('opentype');
+  /* Demo font: 28 ASCII glyphs (& ' " - ( ) 4 ! etc.) are 'DEMO' stamps — only use its 67 clean ones; the rest fall back to Newsreader */
+  unicode-range: U+0020, U+002C, U+002E, U+0030-0033, U+0035-003B, U+003F, U+0041-005A, U+0061-007A;
   font-weight: bold;
   font-style: normal;
   font-display: swap;
@@ -75,6 +91,8 @@
 @font-face {
   font-family: 'The Seasons Bold';
   src: url('/fonts/TheSeasons-BoldItalic.otf') format('opentype');
+  /* Demo font: 28 ASCII glyphs (& ' " - ( ) 4 ! etc.) are 'DEMO' stamps — only use its 67 clean ones; the rest fall back to Newsreader */
+  unicode-range: U+0020, U+002C, U+002E, U+0030-0033, U+0035-003B, U+003F, U+0041-005A, U+0061-007A;
   font-weight: normal;
   font-style: italic;
   font-display: swap;
@@ -83,6 +101,8 @@
 @font-face {
   font-family: 'The Seasons Bold';
   src: url('/fonts/TheSeasons-BoldItalic.otf') format('opentype');
+  /* Demo font: 28 ASCII glyphs (& ' " - ( ) 4 ! etc.) are 'DEMO' stamps — only use its 67 clean ones; the rest fall back to Newsreader */
+  unicode-range: U+0020, U+002C, U+002E, U+0030-0033, U+0035-003B, U+003F, U+0041-005A, U+0061-007A;
   font-weight: bold;
   font-style: italic;
   font-display: swap;
